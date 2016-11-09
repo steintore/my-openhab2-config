@@ -1,0 +1,70 @@
+import org.openhab.core.library.types.*
+
+rule "Log in to smappee every 20 minutes"
+ 	when
+ 		Time cron "0 0/20 * * * ?"
+ 	then
+ 		var String htp = "http://{{smappee_ip}}/gateway/apipublic/logon"
+		sendHttpPostRequest(htp, "application/json", "admin")
+end
+
+rule "Updated power"
+	when
+		Item smappee_power_phase1 changed or
+		Item smappee_power_phase2 changed or
+		Item smappee_power_phase3 changed
+	then
+	var Double one = new Double(smappee_power_phase1.state.toString())
+	var Double two = new Double(smappee_power_phase2.state.toString())
+	var Double three = new Double(smappee_power_phase3.state.toString())
+	var Double total = (one + two + three) 
+
+	postUpdate(smappee_power, total)
+	if(smappee_power != null) {
+		val startOfDay = now.toDateMidnight
+        postUpdate(smappee_power_max, smappee_power.maximumSince(startOfDay).state)
+        postUpdate(smappee_power_min, smappee_power.minimumSince(startOfDay).state)
+    }
+end
+
+rule "Updated ampere"
+	when
+		Item smappee_ampere_phase1 changed or
+		Item smappee_ampere_phase2 changed or
+		Item smappee_ampere_phase3 changed
+	then
+	var Double one = new Double(smappee_ampere_phase1.state.toString())
+	var Double two = new Double(smappee_ampere_phase2.state.toString())
+	var Double three = new Double(smappee_ampere_phase3.state.toString())
+	var Double total = (one + two + three) 
+
+	postUpdate(smappee_ampere, total)
+end
+
+rule "Updated cosfi"
+	when
+		Item smappee_cosfi_phase1 changed or
+		Item smappee_cosfi_phase2 changed or
+		Item smappee_cosfi_phase3 changed
+	then
+	var Double one = new Double(smappee_cosfi_phase1.state.toString())
+	var Double two = new Double(smappee_cosfi_phase2.state.toString())
+	var Double three = new Double(smappee_cosfi_phase3.state.toString())
+	var Double total = (one + two + three) 
+
+	postUpdate(smappee_cosfi, total)
+end
+
+rule "Updated peak"
+	when
+		Item smappee_peak_phase1 changed or
+		Item smappee_peak_phase2 changed or
+		Item smappee_peak_phase3 changed
+	then
+	var Double one = new Double(smappee_peak_phase1.state.toString())
+	var Double two = new Double(smappee_peak_phase2.state.toString())
+	var Double three = new Double(smappee_peak_phase3.state.toString())
+	var Double total = (one + two + three) 
+
+	postUpdate(smappee_peak, total)
+end

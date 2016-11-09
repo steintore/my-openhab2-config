@@ -1,0 +1,7 @@
+String   SpeedtestSummary    "Speedtest [%s]"                <"network-icon">
+Number   SpeedtestResultPing "Ping [%.3f ms]"                <"next-5-icon">
+Number   SpeedtestResultDown "Downlink [%.2f Mbit/s]"        <"download-icon">
+Number   SpeedtestResultUp   "Uplink [%.2f Mbit/s]"          <"upload-icon">
+String   SpeedtestRunning    "Speedtest running ... [%s]"    <"new-icon">
+Switch   SpeedtestRerun      "Manuell start"               <"reload-2-icon">
+DateTime SpeedtestResultDate "Sist kjørt [%1$td.%1$tm.%1$tY, %1$tH:%1$tM]" <"problem-4-icon">

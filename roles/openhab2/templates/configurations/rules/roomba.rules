@@ -1,0 +1,71 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+/* http://www.robotappstore.com/files/KB/Roomba/Roomba_SCI_Spec_Manual.pdf */
+rule "Got command to send to Roomba"
+	when
+		Item scene_roomba received command
+	then
+		switch(receivedCommand) {
+			case 0: { // DOCK THIS THING
+				if (roombaCurrentState.state == 1 || roombaCurrentState.state == 4)
+					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=DOCK')	
+				sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=DOCK')
+				postUpdate(roombaCurrentState, 2)
+			}
+			case 1: { // CLEAN PLEASE
+			    if (roombaBatteryPercentage.state > 50) {
+					if (roombaCurrentState.state > 1)
+						sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=CLEAN')
+					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=CLEAN')
+					postUpdate(roombaCurrentState, 4)
+				} else {
+					pushover("Kan ikke starte støvsuging, det er for lite batteri: " + roombaBatteryPercentage.state + "%")
+				}
+			}
+			case 2: { // SPOT CLEANING
+				if (roombaCurrentState.state > 0)
+					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=SPOT')
+				sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=SPOT')
+				postUpdate(roombaCurrentState, 4)
+			}
+		}
+end
+
+rule "Changing state from Roomba"
+	when
+		Item roombaRaw changed
+	then
+	
+	postUpdate(roombaLastUpdate, new DateTimeType())
+	
+	var String json = (roombaRaw.state as StringType).toString
+
+	var String charge = transform("JSONPATH", "$.response.r18.value", json)
+	var String capacity = transform("JSONPATH", "$.response.r19.value", json)
+	postUpdate(roombaBatteryPercentage, ((new Double(charge) / new Double(capacity))*100))
+	
+	postUpdate(roombaCharge, charge)
+	postUpdate(roombaCapacity, capacity)
+	
+	postUpdate(roombaChargingStatus, transform("JSONPATH", "$.response.r14.value", json))
+	postUpdate(roombaTemperature, transform("JSONPATH", "$.response.r17.value", json))
+	postUpdate(roombaDistance, transform("JSONPATH", "$.response.r12.value", json))
+	
+	postUpdate(roombaVoltage, transform("JSONPATH", "$.response.r15.value", json))
+	postUpdate(roombaCurrent, transform("JSONPATH", "$.response.r16.value", json))
+	
+	if ((roombaChargingStatus.state == 0 || roombaChargingStatus.state == 4) && roombaDistance.state != 0 && roombaCurrentState.state != 2) {
+		postUpdate(roombaCurrentState, 4) // It is probably cleaning
+		postUpdate(scene_roomba, 1)
+	} else if (roombaDistance.state == 0) {
+		postUpdate(roombaCurrentState, 0) // Roomba is probably docked / stopped
+		postUpdate(scene_roomba, 0)
+	} else if ((roombaChargingStatus.state == 0 || roombaChargingStatus.state == 4) && roombaDistance.state == 0) {
+		postUpdate(roombaCurrentState, 1) // Stopped not in the dock
+	} else {
+		postUpdate(roombaCurrentState, 3) // Unknown state
+	}
+	
+end

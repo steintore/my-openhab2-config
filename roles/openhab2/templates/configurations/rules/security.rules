@@ -1,0 +1,16 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+  
+rule "FireAlarm"
+when
+	Item smoke_detector received update
+then
+	if(!smoke_detector.updatedSince(now.minusSeconds(20))) {
+		pushover("Røykvarsleren er utløst!")
+		sendMail(stein_email.state.toString, "[openhab] Røykvarlser utløst", "Røykvarsleren er utløst.")
+		logInfo("org.openhab.security", "Røykvarsler utløst.")
+		sendCommand(gLight, ON)
+	}
+end

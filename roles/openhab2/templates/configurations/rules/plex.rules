@@ -1,0 +1,29 @@
+rule "Lights on when Plex on XBOX paused or stopped"
+when
+    Item PlexTVStatus changed to Paused or 
+    Item PlexTVStatus changed to Stopped
+then 
+    sendCommand(light_basement_power, ON)
+end
+
+rule "Lights off when Plex on XBOX playing"
+when
+    Item PlexTVStatus changed to Playing  
+then
+    sendCommand(light_basement_power, OFF)
+end
+
+rule "Lights on when Plex on TV paused or stopped"
+when
+    Item PlexTVStatus changed to Paused or 
+    Item PlexTVStatus changed to Stopped
+then 
+    sendCommand(scene_light_livingroom, 1) // ON
+end
+
+rule "Lights off when Plex on TV playing"
+when
+    Item PlexTVStatus changed to Playing  
+then
+   sendCommand(scene_light_livingroom, 2) // MOVIE
+end

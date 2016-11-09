@@ -1,0 +1,6 @@
+openhab_install_dir: "/usr/share/openhab2"
+openhab_configuration_dir: "/etc/openhab2"
+#openhab_version: 1.8.2
+#openhab_snapshot_version: 1.9.0-SNAPSHOT
+
+#rfxcom_tty: ttyUSB0

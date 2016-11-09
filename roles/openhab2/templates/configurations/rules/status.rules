@@ -1,0 +1,329 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import java.util.Map
+import org.joda.time.DateTime
+
+var Timer timerRouterLAN = null
+var Timer timerDryer = null
+
+rule "Startup"
+	when
+		System started
+	then
+	
+	createTimer(now.plusSeconds(120)) [|
+		if (ac_night_temp.state == Uninitialized) {
+			sendCommand(ac_night_temp, 17)
+		}
+		if (ac_heat_temp.state == Uninitialized) {
+			sendCommand(ac_heat_temp, 22)
+		}
+		if (ac_cool_temp.state == Uninitialized) {
+			sendCommand(ac_cool_temp, 20)
+		}
+		if (mode.state == Uninitialized || mode.state < 0 || mode.state > 2) {
+			sendCommand(mode, 0)
+		}
+		if (previous_mode.state == Uninitialized) {
+			sendCommand(previous_mode, 0)
+		}
+		if (scene_garage_2.state == Uninitialized) {
+			postUpdate(scene_garage_2, 0)
+		}
+		if (scene_garage_1.state == Uninitialized) {
+			postUpdate(scene_garage_1, 0)
+		}
+		if (AC_lower_temp_threshold.state == Uninitialized)
+			postUpdate(AC_lower_temp_threshold, -5)
+			
+		if (AC_quiet_temp_threshold.state == Uninitialized)
+			postUpdate(AC_quiet_temp_threshold, -5)
+			
+		if (AC_additional_degrees.state == Uninitialized)
+			postUpdate(AC_additional_degrees, 1)
+		
+		postUpdate(scene_light_hall_gf, 2) // SET TO AUTO
+		
+		if (floor_holiday_power_level.state == Uninitialized) {
+			postUpdate(floor_holiday_power_level, 2)	
+		}
+		
+		if (floor_day_power_level.state == Uninitialized) {
+			postUpdate(floor_day_power_level, 4)	
+		}
+		
+		if (floor_night_power_level.state == Uninitialized) {
+			postUpdate(floor_night_power_level, 2)
+		}
+		
+		if (basementFloorWeekdaysON.state == Uninitialized) {
+			postUpdate(basementFloorWeekdaysON, 14)	
+		}
+		
+		if (basementFloorWeekdaysOFF.state == Uninitialized) {
+			postUpdate(basementFloorWeekdaysOFF, 21)	
+		}
+		
+		if (basementFloorWeekendON.state == Uninitialized) {
+			postUpdate(basementFloorWeekendON, 8)	
+		}
+		
+		if (basementFloorWeekendOFF == Uninitialized) {
+			postUpdate(basementFloorWeekendOFF, 22)	
+		}
+		
+		if (floor_holiday_mode.state == Uninitialized) {
+			postUpdate(floor_holiday_mode, 2)	
+		}
+			
+		if (SpeedtestSummary.state == Uninitialized || SpeedtestSummary.state == "") { 
+			SpeedtestSummary.postUpdate("⁉ (ukjent)")
+		}
+		postUpdate(holiday_mode, OFF)	
+	]		
+end
+
+
+
+rule "Leaving home, we think"
+when
+	Item home_away_lan changed from ON to OFF
+then
+	logInfo("org.openhab.rules","Arduino disconnected, started timer.")
+	if( timerRouterLAN == null ) {
+		timerRouterLAN = createTimer(now.plusSeconds(10)) [|
+			logInfo("org.openhab.rules", "Timer has timed out. Checking status from Alarm")
+			var String json = executeCommandLine("nodejs@@./configurations/scripts/alarm.js", 2000)
+			var String alarmstate =  transform("JSONPATH", "$.status", json)
+			logInfo("org.openhab.rules", "JSON is {}, and alarmstate is then {}", json, alarmstate)
+			postUpdate(alarm_alarm, alarmstate)
+			if(timerRouterLAN!=null) {
+				if(timerRouterLAN.running) {
+					timerRouterLAN.cancel()
+				}
+				timerRouterLAN= null
+			}
+		]
+	} else {
+		timerRouterLAN.reschedule(now.plusSeconds(30))
+	}
+end
+
+rule "Alarm is being disarmed"
+	when
+		Item home_away_lan changed from OFF to ON
+	then
+		if(timerRouterLAN != null) {
+			timerRouterLAN.cancel()
+			timerRouterLAN = null
+		}
+		sendCommand(mode, 0)
+end
+
+rule "When text is changed, send a push message"
+	when
+		Item push_message_text received update
+	then
+		logInfo('org.openhab', 'message text is: ' + push_message_text.state + ' , with url: ' + push_message_url.state)
+		try {
+			callScript('pushMessages')
+		} catch (org.openhab.core.scriptengine.ScriptExecutionException e) {
+			pushover('Could not send push message: ' + push_message_text.state.toString)
+		}
+end
+
+// Creates an item that stores the last update time of this item
+rule "Records last outdoor update time"
+when
+  Item OutdoorTemperature received update
+then
+  postUpdate(OutdoorTemperature_LastUpdate, new DateTimeType())
+end
+
+rule "Records last office temperature update time"
+when
+  Item OfficeTemperature received update
+then
+  postUpdate(OfficeTemperature_LastUpdate, new DateTimeType())
+end
+
+rule "Records last basement temperature update time"
+when
+  Item BasementTemperature received update
+then
+  postUpdate(BasementTemperature_LastUpdate, new DateTimeType())
+end
+
+rule "Records last living room temperature update time"
+when
+  Item LivingRoomTemperature received update
+then
+  postUpdate(LivingRoomTemperature_LastUpdate, new DateTimeType())
+end
+
+/** 
+ * This rule will be used to test Scale transformation service
+ */
+rule "Compute humidex"
+when Item OutdoorTemperature changed or
+	 Item OutdoorHumidity changed 
+then
+	var Number T = OutdoorTemperature.state as DecimalType
+	var Number H = OutdoorHumidity.state as DecimalType	
+	var Number x = 7.5 * T/(237.7 + T)
+	var Number e = 6.112 * Math::pow(10, x.doubleValue) * H/100
+	var Number humidex = T + (new Double(5) / new Double(9)) * (e - 10)
+	Outdoor_Humidex.postUpdate(humidex)
+end
+
+rule "Update max and min temperatures"
+when
+	Item OutdoorTemperature changed or
+	Time cron "0 0 0 * * ?" or
+	System started
+then	
+	postUpdate(Outdoor_Temp_Max, OutdoorTemperature.maximumSince(now.toLocalDate.toDateTimeAtStartOfDay).state)
+	postUpdate(Outdoor_Temp_Min, OutdoorTemperature.minimumSince(now.toLocalDate.toDateTimeAtStartOfDay).state)
+	//logInfo("Weather","Temperature evolved of " + OutdoorTemperature.deltaSince(now.minusMinutes(2)).toString + " degrees.")
+end
+
+rule "Record last update received from Samsung Air Conditioner"
+when
+ 	Item ac_current_temp received update
+then
+	postUpdate(ac_lastUpdate, new DateTimeType())
+end
+
+rule "Set Samsung TV to same state as LAN-checking, and set Air Conditioner to QUIET-mode if TV is being switched on"
+when
+	Item tv_power changed
+then
+	if (tv_power.state == ON && ac_mode.state != 1 && ac_power.state == ON && (mode.state == 0 || mode.state == 3)) {
+		var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
+		var double quietThreshold = new Double(AC_quiet_temp_threshold.state.toString())
+		if (!(ac_scene.state == 1 && tempOutdoor < quietThreshold)) {
+			ac_mode_previous.sendCommand(ac_mode.state.toString)
+			ac_mode.sendCommand(1)
+		}
+	} else if (tv_power.state == OFF && ac_mode_previous.state.toString != "99" && ac_mode.state != ac_mode_previous.state && ac_power.state == ON) {
+		ac_mode.sendCommand(ac_mode_previous.state.toString)
+		ac_mode_previous.sendCommand(99)
+	}
+end
+
+rule "If we manually change to quiet mode when the tv is on"
+when 	
+	Item ac_mode changed
+then
+	if (tv_power.state == ON && (ac_mode_previous.state == Uninitialized || ac_mode_previous.state.toString == '99')) {
+		ac_mode_previous.sendCommand(ac_mode.previousState(true).state.toString())
+	}
+end
+
+rule "Dryer has been started, notify me when it is done"
+when
+	Item power_dryer changed
+then
+	if (dryer.state == ON) {
+		var double w = new Double(power_dryer.state.toString())
+		if (w > 0 && w < 1) w = 1
+		var double maxLastHour = new Double(power_dryer.maximumSince(now.minusHours(1)).state.toString())
+		var double maxLastTwoMinutes = new Double(power_dryer.maximumSince(now.minusMinutes(2)).state.toString())
+		if (w <= 5 && maxLastHour > 200 && (maxLastTwoMinutes <= (w*2) || w == 0)) {
+			if (timerDryer == null) {
+			postUpdate(push_message_text, "Tørketrommelen er ferdig!")
+				timerDryer = createTimer(now.plusSeconds(240)) [|
+					var double w2 = new Double(power_dryer.state.toString())
+					if (w2 > 0 && w2 < 1) w2 = 1
+					var double maxLastTwo = new Double(power_dryer.maximumSince(now.minusMinutes(2)).state.toString())
+					if (maxLastTwo <= (w2*2) || w2 == 0) {
+						sendCommand(dryer, OFF)
+					}
+					if(timerDryer != null) {
+						if(timerDryer.running) {
+							timerDryer.cancel()
+						}
+						timerDryer= null
+					}
+				]
+			}
+		}
+	} else if(timerDryer != null) {
+		if(timerDryer.running) {
+			timerDryer.cancel()
+		}
+		timerDryer= null	
+	}
+end
+
+rule "Freezer is suddenly using less power"
+when
+	Item power_freezer changed
+then
+	var double w = new Double(power_freezer.state.toString())
+	var double maxLastHour = new Double(power_freezer.maximumSince(now.minusHours(1)).state.toString())
+	if (w < 5 || (w < 70 && maxLastHour < 70 )) {
+		pushover("Fryseren drar plutselig mindre strøm enn vanlig, nå kun: " + w + " watt og maks siste time er: " + maxLastHour)
+	}
+end
+
+rule "Send a status message at 22 if anything is NOT ok"
+	when
+		Time cron "0 0 22 ? * *"
+	then
+		if (garage_door_1.state == ON || garage_door_2.state == ON) {
+			postUpdate(push_message_text, "Venstre: " + garage_door_1.state.toString() + ", Høyre:" + garage_door_2.state.toString())
+		}
+		if (boss_lan.state == OFF && !boss_lan.changedSince(now.minusHours(12))) {
+			pushover('Boss is not responding, and has been off for 12 hours (' + boss_lan.lastUpdate.toString + ')')
+		}
+		if (nas_lan.state == OFF && !nas_lan.changedSince(now.minusHours(12))) {
+			pushover('NAS is not responding, and has been off for 12 hours(' + nas_lan.lastUpdate.toString + ')')
+		} 	
+		if (mode.state != 0 && mode.state != 3 && tv_power.state == ON) {
+			pushover('TV står på, men du har enten lagt deg eller er borte..')
+		} 	
+		
+		if (!zWaveStatus.state.toString().equalsIgnoreCase("200 OK")) {
+			pushover('Z-Wave status er: ' + zWaveStatus.state.toString())
+		}
+end
+
+rule "Battery level changed"
+when
+	Item BatteryLevel_10 changed or
+	Item BatteryLevel_100 changed
+then
+	if (BatteryLevel_10.state <= 2) {
+		BatteryLevel_10?.members.forEach [item | 
+			if (item.state <= 2) {
+				logInfo('battery', item.name + " : " + item.state)
+				pushover('' + item.name + ' har lavt batterinivå: ' + item.state.toString)
+			}
+		]
+	}
+	if (BatteryLevel_100.state <= 20) {
+		BatteryLevel_100?.members.forEach [item | 
+			if (item.state <= 20) {
+				pushover(''+ item.name + ' har lavt batterinivå: ' + item.state.toString + '%')
+			}
+		]	
+	} 
+end
+
+rule "Luminance Hall GF changed" 
+when 
+	Item hall_gf_luminance changed
+	then
+		postUpdate(hall_gf_lux_update, new DateTimeType(now.toGregorianCalendar))
+end
+
+rule "Luminance Bathroom 1st floor changed"
+when
+	Item bathroom_lux changed
+then
+	postUpdate(bathroom_lux_update, new DateTimeType(now.toGregorianCalendar))
+end
+	
+

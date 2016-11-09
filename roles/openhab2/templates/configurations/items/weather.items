@@ -1,0 +1,65 @@
+/* Weather binding */
+
+// precipitation
+Number   Rain          "Rain [%.2f mm/h]"  (gOutdoor, gWeather) {weather="locationId=home, type=precipitation, property=rain"}
+Number   Rain_Inches   "Rain [%.2f in/h]"  (gOutdoor, gWeather) {weather="locationId=home, type=precipitation, property=rain, unit=inches"}
+Number   Snow          "Snow [%.2f mm/h]"  (gOutdoor, gWeather) {weather="locationId=home, type=precipitation, property=snow"}
+Number   Snow_Inches   "Snow [%.2f in/h]"  (gOutdoor, gWeather) {weather="locationId=home, type=precipitation, property=snow, unit=inches"}
+Number   Precip_Probability   "Precip probability [%d %%]"  (gOutdoor, gWeather) {weather="locationId=home, type=precipitation, property=probability"}
+
+// condition
+String   Condition        "Forhold [%s]"      {weather="locationId=home, type=condition, property=text"}
+String   Condition_ID     "Condition id [%s]"   {weather="locationId=home, type=condition, property=id"}
+DateTime ObservationTime  "Observation time [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"   {weather="locationId=home, type=condition, property=observationTime"}
+DateTime Weather_LastUpdate       "Siste oppdatering [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"        {weather="locationId=home, type=condition, property=lastUpdate"}
+String   CommonId         "Common id [%s]"      {weather="locationId=home, type=condition, property=commonId"}
+
+// atmosphere
+Number   Weather_Humidity "Luftfuktighet [%d %%]" <temperature>     {weather="locationId=home, type=atmosphere, property=humidity"}
+Number   Visibility       "Visibility [%.2f km]"  {weather="locationId=home, type=atmosphere, property=visibility"}
+Number   Visibility_Mph   "Visibility [%.2f mi]"  {weather="locationId=home, type=atmosphere, property=visibility, unit=mph"}
+Number   Weather_Pressure         "Trykk [%.2f mb]" <temperature>   {weather="locationId=home, type=atmosphere, property=pressure"}
+Number   Pressure_Inches  "Pressure [%.2f in]"    {weather="locationId=home, type=atmosphere, property=pressure, unit=inches"}
+String   Pressure_Trend   "Pressuretrend [%s]"    {weather="locationId=home, type=atmosphere, property=pressureTrend"}
+Number   Ozone            "Ozone [%d ppm]"        {weather="locationId=home, type=atmosphere, property=ozone"}
+Number   UV_Index         "UV Index"              {weather="locationId=home, type=atmosphere, property=uvIndex, scale=0"}
+
+// clouds
+Number   Clouds   "Clouds [%.0f %%]"   {weather="locationId=home, type=clouds, property=percent"}
+
+// temperature
+Number   Weather_Temperature      "Utetemp [%.2f °C]" <temperature>      {weather="locationId=home, type=temperature, property=current"}
+Number   Temp_Feel        "Temperature feel [%.2f °C]"  {weather="locationId=home, type=temperature, property=feel"}
+Number   Temp_Dewpoint    "Dewpoint [%.2f °C]"          {weather="locationId=home, type=temperature, property=dewpoint"}
+// min and max values only available in forecasts
+Number   Weather_Temp_Min         "Temp min [%.2f °C]" <temperature>  {weather="locationId=home, type=temperature, property=min"}
+Number   Weather_Temp_Max         "Temp max [%.2f °C]" <temperature>  {weather="locationId=home, type=temperature, property=max"}
+String   Temp_MinMax      "Min/Max [%s °C]"             {weather="locationId=home, type=temperature, property=minMax"}
+
+// wind
+Number   Wind_Speed           "Windspeed [%.2f km/h]"    {weather="locationId=home, type=wind, property=speed"}
+Number   Wind_Speed_Beaufort  "Windspeed Beaufort [%d]"  {weather="locationId=home, type=wind, property=speed, unit=beaufort"}
+Number   Wind_Speed_Knots     "Windspeed [%.2f kn]"      {weather="locationId=home, type=wind, property=speed, unit=knots"}
+Number   Wind_Speed_Mps       "Windspeed [%.2f mps]"     {weather="locationId=home, type=wind, property=speed, unit=mps"}
+Number   Wind_Speed_Mph       "Windspeed [%.2f mph]"     {weather="locationId=home, type=wind, property=speed, unit=mph"}
+String   Wind_Direction       "Wind direction [%s]"      {weather="locationId=home, type=wind, property=direction"}
+Number   Wind_Degree          "Wind degree [%.0f °]"     {weather="locationId=home, type=wind, property=degree"}
+Number   Wind_Gust            "Wind gust [%.2f km/h]"    {weather="locationId=home, type=wind, property=gust"}
+Number   Wind_Gust_Beaufort   "Wind gust Beaufort [%d]"  {weather="locationId=home, type=wind, property=gust, unit=beaufort"}
+Number   Wind_Gust_Knots      "Wind gust [%.2f kn]"      {weather="locationId=home, type=wind, property=gust, unit=knots"}
+Number   Wind_Gust_Mps        "Wind gust [%.2f mps]"     {weather="locationId=home, type=wind, property=gust, unit=mps"}
+Number   Wind_Gust_Mph        "Wind gust [%.2f mph]"     {weather="locationId=home, type=wind, property=gust, unit=mph"}
+Number   Wind_Chill           "Wind chill [%.2f °C]"     {weather="locationId=home, type=wind, property=chill"}
+Number   Wind_Chill_F         "Wind chill [%.2f °F]"     {weather="locationId=home, type=wind, property=chill, unit=fahrenheit"}
+
+// Forecast
+Number   Temp_Max_0   "Max [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=0, type=temperature, property=max, roundingMode=down, scale=0"}
+Number   Temp_Min_0   "Min [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=0, type=temperature, property=min, roundingMode=down, scale=0"}
+Number   Temp_Max_1   "Max [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=1, type=temperature, property=max, roundingMode=down, scale=0"}
+Number   Temp_Min_1   "Min [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=1, type=temperature, property=min, roundingMode=down, scale=0"}
+Number   Temp_Max_2   "Max [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=2, type=temperature, property=max, roundingMode=down, scale=0"}
+Number   Temp_Min_2   "Min [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=2, type=temperature, property=min, roundingMode=down, scale=0"}
+
+Number	Weather_Chart_Period            "Periode"
+Number  Weather_Humidity_Chart_Period	"Periode"
+Number	Weather_Pressure_Chart_Period 	"Periode"

@@ -1,0 +1,398 @@
+sitemap huset label="Huset"
+{
+	Frame label="Quick" {
+		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
+		Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
+		Switch item=holiday_mode visibility=[mode==2]
+		Switch item=scene_light_livingroom mappings=[0="Av", 1="På"]
+		Switch item=ac_scene mappings=[0="Av", 1="Varm", 2="Kjøl", 3="Luft"]
+		Setpoint item=ac_set_temp minValue=16 maxValue=28 step=1 icon="temperature" visibility=[ac_power==ON]
+		Switch item=ac_mode mappings=[0="Off", 1="Quiet", 5="TurboMode"] visibility=[tv_power==ON, ac_power==ON]
+		Switch item=scene_light_livingroom mappings=[0="Av", 1="På"]
+		Slider item=light_dining_table_dimmer icon="slider" visibility=[scene_light_livingroom==1]
+		Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
+		Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
+		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
+		Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
+	}
+	
+    Frame label="Huset" {
+    	Text item=LivingRoomTemperature label="Første etasje [%.1f °C]" icon="groundfloor" valuecolor=[LivingRoomTemperature_LastUpdate=="Uninitialized"="lightgray",LivingRoomTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    		Frame {	
+    			Text item=LivingRoomTemperature
+    			Text item=LivingRoomHumidity
+				Text item=LivingRoomTemperature_LastUpdate visibility=[LivingRoomTemperature_LastUpdate>1800] valuecolor=[LivingRoomTemperature_LastUpdate>120="orange", LivingRoomTemperature_LastUpdate>300="red"]
+			}
+			Frame label="Lys" {
+				Switch item=scene_light_hall_gf icon="light" mappings=[0="Av", 1="På", 2="Auto"]
+				Switch item=scene_light_livingroom mappings=[0="Av", 1="På"]
+				Slider item=light_dining_table_dimmer icon="slider"
+			}
+			Frame label="Varmepumpe"{
+				Switch item=ac_scene mappings=[0="Av", 1="Varm", 2="Kjøl", 3="Luft"]
+				Setpoint item=ac_set_temp minValue=16 maxValue=28 step=1 icon="temperature" visibility=[ac_power==ON]
+				Text label="Avansert" icon="office" visibility=[ac_power==ON] {
+					Switch item=ac_power icon="heating" valuecolor=[ac_lastUpdate=="Uninitialized"="lightgray", ac_lastUpdate>240="orange", ac_lastUpdate<240="green"]
+					Text item=ac_current_temp visibility=[ac_power==ON]
+					Selection item=ac_mode mappings=[0="Off", 1="Quiet", 2="Sleep", 3="Smart", 4="SoftCool", 5="TurboMode", 6="WindMode1", 7="WindMode2", 8="WindMode3"] visibility=[ac_power==ON]
+					Selection item=ac_op_mode mappings=[0="Auto", 1="Cool", 2="Dry", 3="Wind", 4="Heat"] visibility=[ac_power==ON]
+					Selection item=ac_direction icon="wind" mappings=[1="SwingUD", 2="Rotation", 3="Fixed", 4="SwingLR"] visibility=[ac_power==ON]
+					Selection item=ac_windlevel icon="wind" mappings=[0="Auto", 1="Low", 2="Mid", 3="High", 4="Turbo"] visibility=[ac_power==ON]
+					Setpoint item=ac_night_temp minValue=16 maxValue=28 step=1 icon="temperature"
+					Setpoint item=ac_heat_temp minValue=16 maxValue=28 step=1 icon="temperature"
+					Setpoint item=ac_cool_temp minValue=16 maxValue=28 step=1 icon="temperature"
+					Setpoint item=AC_lower_temp_threshold minValue=-10.0 maxValue=10 step=1 icon="temperature"
+					Setpoint item=AC_quiet_temp_threshold minValue=-10.0 maxValue=20 step=2 icon="temperature"
+					Setpoint item=AC_additional_degrees minValue=0 maxValue=5 step=1 icon="temperature"
+					Text item=ac_error
+				}
+			}
+			Frame label="Rengjøring" {
+				Switch item=scene_roomba mappings=[0='Dock', 1='Clean', 2='Spot'] icon="sofa"
+				Text item=roombaCurrentState label="Roomba status: [MAP(roombaStatus.map):%s]"  icon="sofa"
+				Group item=roomba label="Roomba" icon="sofa"
+			}
+			Frame label="Tempdetaljer" {
+				Image refresh=120000 url="{{grafana_base_url}}?from=now-48h&to=now&panelId=3&theme=light&width=700&height=350"
+			}
+			Frame label="TV" visibility=[tv_power==ON] {
+				Group item=TV icon="television"
+				Selection item=tv_pause_play mappings=[1="Pause", 2="Play"]
+			}
+			Frame label="Plex TV" visibility=[PlexTVPower==ON] {
+        		Switch item=PlexTVPower
+        		Text item=PlexTVStatus
+        		Slider item=PlexTVProgress visibility=[PlexTVStatus!="Stopped"] 
+        		Setpoint item=PlexTVProgress visibility=[PlexTVStatus!="Stopped"] minValue=0 maxValue=100 step=1
+        		Text item=PlexTVTitle visibility=[PlexTVStatus!="Stopped"]
+        		Text item=PlexTVType visibility=[PlexTVStatus!="Stopped"]
+        		Switch item=PlexTVPause
+        		Switch item=PlexTVPlay
+        		Switch item=PlexTVStop mappings=[ON="Stop"]
+        		Slider item=PlexTVVolume
+
+        		Switch item=PlexTVSelect mappings=[ON="Select"]
+        		Switch item=PlexTVBack mappings=[ON="Back"]
+        		Switch item=PlexTVUp mappings=[ON="⬆"]
+        		Switch item=PlexTVDown mappings=[ON="⬇"]
+        		Switch item=PlexTVLeft mappings=[ON="⬅"]
+        		Switch item=PlexTVRight mappings=[ON="➡"]
+
+        		Switch item=PlexTVForward mappings=[ON="⤏"]
+        		Switch item=PlexTVReverse mappings=[ON="⤎"]
+			}
+			Frame label="Alt"   {
+				Group item=gGF
+			}
+		
+    	}
+    	Text item=alarm_temperature_hall_1st label="Andre etasje [%.1f °C]" icon="firstfloor" valuecolor=[alarm_temperature_hall_1st_LastUpdate=="Uninitialized"="lightgray",alarm_temperature_hall_1st_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    		Frame label="Gang" {
+    			Text item=alarm_temperature_hall_1st
+    			Text item=alarm_humidity_hall_1st
+    			Switch item=scene_light_hall mappings=[0="Av", 1="På", 2="Natt"]
+    		}
+    		Frame label="Bad" {
+    			Text item=bathroom_temp
+    			Slider item=light_bathroom_dimmer icon="slider"
+    			Switch item=light_bathroom_mirror
+    		}
+    		Frame label="Kontor"{
+    			Text item=OfficeTemperature
+    			Text item=OfficeHumidity
+				Text item=OfficeTemperature_LastUpdate visibility=[OfficeTemperature_LastUpdate>1800] valuecolor=[OfficeTemperature_LastUpdate>120="orange", OfficeTemperature_LastUpdate>300="red"]
+    		}
+    		Frame label="Varme" {
+    			Switch item=Heating
+    			Text item=power_panelovn_kontor visibility=[kontor_panelovn==ON]
+    			Text item=power_panelovn_gang visibility=[gang_panelovn==ON]
+    		}
+    		Frame label="Alt" {
+    			Group item=gFirstFloor
+    		}
+    	}
+    	Text item=BasementTemperature label="Kjeller [%.1f °C]" icon="cellar" valuecolor=[BasementTemperature_LastUpdate=="Uninitialized"="lightgray",BasementTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    		Frame {
+    			Text item=BasementTemperature
+    			Text item=BasementHumidity
+				Text item=BasementTemperature_LastUpdate visibility=[BasementTemperature_LastUpdate>1800] valuecolor=[BasementTemperature_LastUpdate>120="orange", BasementTemperature_LastUpdate>300="red"]
+			}
+    		Frame label="Lys"{
+    			Switch item=scene_light_basement mappings=[0="Av", 1="På", 2="Natt"]
+    			Switch item=light_basement_power label="Kjellerstue" mappings=[OFF='Av',ON='På']
+    		}
+    		Frame label="Plex Xbox" visibility=[xbox==ON] {
+    			Text label="Plex" {
+    				Switch item=PlexXBoxPower
+    				Text item=PlexXBoxStatus
+    				Slider item=PlexXBoxProgress visibility=[PlexTVStatus!="Stopped"] 
+    				Setpoint item=PlexXBoxProgress visibility=[PlexTVStatus!="Stopped"] minValue=0 maxValue=100 step=1
+    				Text item=PlexXBoxTitle visibility=[PlexTVStatus!="Stopped"]
+    				Text item=PlexXBoxType visibility=[PlexTVStatus!="Stopped"]
+    				Switch item=PlexXBoxPause
+    				Switch item=PlexXBoxPlay
+    				Switch item=PlexXBoxStop mappings=[ON="Stop"]
+    				Slider item=PlexXBoxVolume
+
+	    			Switch item=PlexXBoxSelect mappings=[ON="Select"]
+    				Switch item=PlexXBoxBack mappings=[ON="Back"]
+    				Switch item=PlexXBoxUp mappings=[ON="⬆"]
+    				Switch item=PlexXBoxDown mappings=[ON="⬇"]
+    				Switch item=PlexXBoxLeft mappings=[ON="⬅"]
+    				Switch item=PlexXBoxRight mappings=[ON="➡"]
+
+	        		Switch item=PlexXBoxForward mappings=[ON="⤏"]
+    				Switch item=PlexXBoxReverse mappings=[ON="⤎"]
+    			}
+    		}
+    		Frame label="Denon receiver" {
+    			Switch item=DenonPower
+    			Text label="Avansert" visibility=[DenonPower==ON] {
+    				Frame label="Main Zone" {
+    					Slider item=DenonVolume
+    					Setpoint item=DenonVolume minValue=20 maxValue=80 step=5
+    					Switch item=DenonMute
+    					Switch item=DenonCommand label="Surround Mode" mappings=[MSSTANDARD="Standard", MSSTEREO="Stereo"]
+    					Text item=DenonSurroundMode
+					}
+					Frame label="Main Zone Input" {
+    					Selection label="Input" item=DenonInput mappings=[DVD="XBox One", BD="XBox", "SAT/CBL"="TV", MPLAY="Apple TV", AUX1="PC", SPOTIFY="Spotify", NET="Nettverk"]
+					}
+				}
+    		}
+    		
+    		Frame label="Diverse" {
+    			Text item=alarm_temperature_laundry
+    			Text item=alarm_humidity_laundry
+				Text item=dryer label="Tørketrommel [%s %%]"
+				Text item=power_dryer visibility=[dryer==ON]
+				Text item=power_freezer
+				Text item=power_fridge	
+			}
+			Frame label="Alt" {
+				Group item=gBasement
+			}
+			Frame label="Tempdetaljer" {
+				Switch item=Temperature_Basement_Chart_Period label="Periode" mappings=[0="Timer", 1="Dag", 2="Uke", 3="2 uker"]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=12h" refresh=90000 visibility=[Temperature_Basement_Chart_Period==0, Temperature_Basement_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=D" refresh=90000 visibility=[Temperature_Basement_Chart_Period==1]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==2]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=2W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==3]
+			}
+			
+    	}
+    	Text item=OutdoorTemperature label="Ute [%.1f °C]" icon="garden" valuecolor=[OutdoorTemperature_LastUpdate=="Uninitialized"="lightgray",OutdoorTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    		Frame {
+    			Text item=OutdoorTemperature
+				Text item=OutdoorHumidity
+				Text item=OutdoorTemperature_LastUpdate visibility=[OutdoorTemperature_LastUpdate>30] valuecolor=[OutdoorTemperature_LastUpdate>120="orange", OutdoorTemperature_LastUpdate>300="red"]
+    		}
+    		Frame label="Garasjen" {
+				Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
+				Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
+				Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
+				Text label="Livestream" icon="camera" {
+					Image url="{{garagepi_screenshot_url}}" refresh=5000
+					Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
+					Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
+				}
+			}
+			Frame label="Ute" icon="garden" {
+				Text item=Outdoor_Temp_Max valuecolor=[>25="orange",>15="green",>5="orange",<=5="blue"]
+				Text item=Outdoor_Temp_Min valuecolor=[>25="orange",>15="green",>5="orange",<=5="blue"]
+			}
+			Frame label="Tempdetaljer" {
+				Image refresh=120000 url="{{grafana_base_url}}?from=now-48h&to=now&panelId=1&theme=light&width=700&height=350"
+			}
+			Frame label="Alt" {
+				Group item=gOutdoor
+			}
+    	}
+    }
+    
+    Frame label="Været" {
+    	Text item=Condition icon="sun" {
+        Frame {
+            Text item=Weather_LastUpdate visibility=[Weather_LastUpdate>30] valuecolor=[Weather_LastUpdate>120="orange", Weather_LastUpdate>300="red"]
+            Text item=Weather_Temperature valuecolor=[Weather_LastUpdate=="Uninitialized"="lightgray",Weather_LastUpdate>90="lightgray",>77="orange",>60="green",>40="aqua",<=40="blue"]{
+            Frame {
+                Text item=Weather_Temp_Max valuecolor=[>30="orange",>25="green",>10="aqua",<=0="blue"]
+                Text item=Weather_Temp_Min valuecolor=[>30="orange",>25="green",>10="aqua]",<=0="blue"]
+            }
+            Frame {
+                Switch item=Weather_Chart_Period label="Periode" mappings=[0="Time", 1="Dag", 2="Uke"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Temperature,Weather_Temp_Max,Weather_Temp_Min&period=h" refresh=30000 visibility=[Weather_Chart_Period==0, Weather_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Temperature,Weather_Temp_Max,Weather_Temp_Min&period=D" refresh=30000 visibility=[Weather_Chart_Period==1]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Temperature,Weather_Temp_Max,Weather_Temp_Min&period=W" refresh=30000 visibility=[Weather_Chart_Period==2]
+              }
+        }
+        Text item=Weather_Humidity {
+            Frame {
+                Switch item=Weather_Humidity_Chart_Period label="Periode" mappings=[0="Time", 1="Dag", 2="Uke", 3="2 uker"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=h" refresh=30000 visibility=[Weather_Humidity_Chart_Period==0, Weather_Humidity_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=D" refresh=30000 visibility=[Weather_Humidity_Chart_Period==1]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=W" refresh=30000 visibility=[Weather_Humidity_Chart_Period==2]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=2W" refresh=30000 visibility=[Weather_Humidity_Chart_Period==3]
+            }
+        }
+        Text item=Weather_Pressure {
+            Frame {
+                Switch item=Weather_Pressure_Chart_Period label="Periode" mappings=[0="Time", 1="Dag", 2="Uke", 3="2 uker"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=h" refresh=30000 visibility=[Weather_Pressure_Chart_Period==0, Weather_Pressure_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=D" refresh=30000 visibility=[Weather_Pressure_Chart_Period==1]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=W" refresh=30000 visibility=[Weather_Pressure_Chart_Period==2]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=2W" refresh=30000 visibility=[Weather_Pressure_Chart_Period==3]
+             }
+         }
+         Text item=Sunrise_Time
+		 Text item=Sunset_Time	
+         Webview url="http://localhost:8080/weather?locationId=home&layout=weather&iconset=colorful" height=7
+			}
+		}
+	}
+
+	Frame label="Tilstedeværelse" {
+		Text item=alarm_alarm icon="alarm"
+    	Text label="Moduser" icon="present" {
+			Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
+			
+			Group item=proximity label="Nettverkshelse [(%d)]" icon="present"
+			Group item=Home label="Hjemme [(%d)]" icon="present"
+		}
+	}
+	
+	Frame label="Status" {
+		Text item=smappee_power icon="energy" {
+			Frame {
+				Group item=Energy
+				Group item=Smappee
+				Group item=gBattery label="Batteri" icon="energy"
+			}
+			Frame {
+				Text item=power_dryer
+				Text item=power_freezer
+				Text item=power_panelovn_kontor
+				Text item=power_panelovn_gang
+				Text item=power_fridge
+			}
+			Frame {
+				Image refresh=120000 url="{{grafana_base_url}}?to=now&theme=light&width=700&height=350&panelId=2&from=now-48h"
+			}
+			
+		}
+		Text item=loadAverage1min icon="system" {
+			Frame {
+				Text item=uptime
+			}
+			Frame {
+				Text item=cpuCombined icon="system"
+			}
+			
+			Frame label="Load" {
+				Text item=loadAverage1min
+				Text item=loadAverage5min
+				Text item=loadAverage15min
+			}
+			Frame label="Minnebruk" {
+				Text item=memFreePercent  {
+					Frame {
+						Switch item=memFreePercentPeriod label="Periode" mappings=[0="Time", 1="Dag", 2="Uke"]
+						Chart item=memFreePercent period=h refresh=30000 visibility=[memFreePercentPeriod==0, memFreePercentPeriod=="Uninitialized"]
+						Chart item=memFreePercent period=D refresh=30000 visibility=[memFreePercentPeriod==1]
+						Chart item=memFreePercent period=W refresh=30000 visibility=[memFreePercentPeriod==2]
+					}
+				}
+				Text item=memUsed 
+				Text item=memUsedPercent
+				Text item=memActualFree 
+				Text item=memActualUsed 
+				Text item=memTotal 
+			}
+			
+			Frame label="Swap" {
+				Text item=swapFree 
+				Text item=swapTotal
+				Text item=swapUsed 
+			}
+			
+			Frame label="Openhab" {
+				Text item=openhabRealMem
+				Text item=openhabVirtualMem
+				Text item=openhabCpuPercent
+				Text item=openhabCpuSystem
+				Text item=openhabUptime
+				Text item=openhabUptimeFormatted
+				
+			}
+			Frame label="Resultater" {
+    			Text item=SpeedtestResultDown
+    			Text item=SpeedtestResultUp
+    			Text item=SpeedtestResultPing
+  			}
+  			Frame label="Kontroll" {
+    			Text item=SpeedtestResultDate
+    			Text item=SpeedtestRunning label="Speedtest [%s]" visibility=[SpeedtestRunning != "-"]
+    			Switch item=SpeedtestRerun mappings=[ON="Start"]
+  			}
+  			Frame label="Statistikk" {
+    			Text label="..." icon="analytics-8-icon"
+  			}
+		}
+	}
+	
+	Frame label="Heating" {
+		Group item=Heating
+	}
+	
+	Frame label="Gulvvarme" {
+		Text label="Gulvvarme" icon="heating" {
+			Frame label="Kjeller" {
+				Switch item=scene_basement_floor_heating mappings=[0="Av", 1="Natt", 2="Dag", 3="Ferie"]
+				
+				Setpoint item=basementFloorWeekdaysON minValue=0 maxValue=23 step=1
+				Setpoint item=basementFloorWeekdaysOFF minValue=0 maxValue=23 step=1
+				
+				Setpoint item=basementFloorWeekendON minValue=0 maxValue=23 step=1
+				Setpoint item=basementFloorWeekendOFF minValue=0 maxValue=23 step=1
+				
+				Text item=laundry_basement_floor_temp
+				Text item=laundry_basement_floor_mode
+				Setpoint item=laundry_basement_floor_power_level minValue=0 maxValue=10 step=1
+				
+				Text item=hall_basement_floor_temp
+				Text item=hall_basement_floor_mode
+				Setpoint item=hall_basement_floor_power_level minValue=0 maxValue=10 step=1
+				
+				Text item=tv_room_basement_floor_temp
+				Text item=tv_room_basement_floor_mode
+				Setpoint item=tv_room_basement_floor_power_level minValue=0 maxValue=10 step=1
+			}
+			Frame label="Første etasje" {
+				Text item=hall_gf_floor_temp
+				Text item=hall_gf_floor_mode
+				Setpoint item=hall_gf_floor_power_level minValue=0 maxValue=10 step=1
+				
+				Text item=bathroom_gf_floor_temp
+				Text item=bathroom_gf_floor_mode
+				Setpoint item=bathroom_gf_floor_power_level minValue=0 maxValue=10 step=1
+			}
+			Frame label="Andre etasje" {
+				Text item=bathroom_1st_floor_temp
+				Switch item=bathroom_1st_floor_mode mappings=[0="Av",1="Varme",11="Eco"]
+				Setpoint item=bathroom_1st_floor_set_temp_heating minValue=18 maxValue=30 step=1
+				Setpoint item=bathroom_1st_floor_set_temp_eco minValue=15 maxValue=20 step=1
+								
+			}
+			Frame label="Generelt" {
+				Setpoint item=floor_night_power_level minValue=0 maxValue=10 step=1
+				Setpoint item=floor_day_power_level minValue=0 maxValue=10 step=1
+				Setpoint item=floor_holiday_power_level minValue=0 maxValue=10 step=1
+			}
+		}
+	}
+	
+	Frame label="Bevegelse" icon="office" {
+		Group item=Motion
+		//Text item=livingroom_update 
+	}
+}

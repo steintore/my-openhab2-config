@@ -1,0 +1,59 @@
+body {
+	font-size: 28px;
+	font-family: Helvetica, sans-serif;
+}
+
+table {
+	border-spacing: 0px;
+	border: 0px;
+	padding: 0px;
+	width: 1px;
+}
+
+#weather-table, #weather-location-name{
+	padding-bottom: 10px;
+}
+
+#weather-icon {
+	width: 250px;
+	height: 250px;
+	padding-right: 5px;
+}
+
+#weather-temp {
+	font-size: 70px;
+	width: 1px;
+}
+
+#weather-temp-sign {
+	vertical-align: top;
+	padding-top: 9px;
+	font-size: 32px;
+}
+
+#weather-table-details {
+	font-size: 24px;
+}
+
+#weather-table-details td {
+	white-space: nowrap;
+}
+
+#weather-forecast-table img {
+	width: 140px;
+	height: 140px;
+}
+
+#weather-forecast-table td {
+  text-align: center;
+}
+
+#weather-forecast-table .temp-max {
+	font-size: 36px;
+	color: red;
+}
+
+#weather-forecast-table .temp-min {
+	font-size: 32px;
+	color: blue;
+}

@@ -1,0 +1,26 @@
+
+Group Smappee <energy> (All)
+Number smappee_power_phase1 {http="<[smappeeCache:30000:REGEX(.*Phase 1.*?activePower=(.*?) W,.*)]"}
+Number smappee_power_phase2 {http="<[smappeeCache:30000:REGEX(.*Phase 2.*?activePower=(.*?) W,.*)]"}
+Number smappee_power_phase3 {http="<[smappeeCache:30000:REGEX(.*Phase 3.*?activePower=(.*?) W,.*)]"}
+Number smappee_power "Totalt [%.1f W]" <energy> 	(Smappee, Power_Chart)
+Number smappee_power_max "Dagens max: [%.1f W]" <energy>	(Smappee, Power_Chart)
+Number smappee_power_min "Dagens min: [%.1f W]" <energy>	(Smappee, Power_Chart)
+
+Number smappee_voltage "Voltage [%.1f Vrms]" <energy> (Smappee) {http="<[smappeeCache:30000:REGEX(.*?voltage=(.*?) Vrms.*)]"}
+
+Number smappee_ampere_phase1 {http="<[smappeeCache:30000:REGEX(.*Phase 1.*?current=(.*?) A,.*)]"}
+Number smappee_ampere_phase2 {http="<[smappeeCache:30000:REGEX(.*Phase 2.*?current=(.*?) A,.*)]"}
+Number smappee_ampere_phase3 {http="<[smappeeCache:30000:REGEX(.*Phase 3.*?current=(.*?) A,.*)]"}
+Number smappee_ampere "Current [%.1f A]" <energy> 	(Smappee)
+
+Number smappee_cosfi_phase1 {http="<[smappeeCache:30000:REGEX(.*Phase 1.*?cosfi=(.*?),.*)]"}
+Number smappee_cosfi_phase2 {http="<[smappeeCache:30000:REGEX(.*Phase 2.*?cosfi=(.*?),.*)]"}
+Number smappee_cosfi_phase3 {http="<[smappeeCache:30000:REGEX(.*Phase 3.*?cosfi=(.*?),.*)]"}
+Number smappee_cosfi "Cosfi [%.1f]" <energy> 	(Smappee)
+
+Number smappee_peak_phase1 {http="<[smappeeCache:30000:REGEX(.*Phase 1.*?peak active power (.*?) W.*)]"}
+Number smappee_peak_phase2 {http="<[smappeeCache:30000:REGEX(.*Phase 2.*?peak active power (.*?) W.*)]"}
+Number smappee_peak_phase3 {http="<[smappeeCache:30000:REGEX(.*Phase 3.*?peak active power (.*?) W.*)]"}
+Number smappee_peak "Peak [%.1f W]" <energy> 	(Smappee)
+ 

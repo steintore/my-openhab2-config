@@ -1,0 +1,150 @@
+body {
+  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+    margin: 0 auto;
+    height: 99%;
+    display: block;
+}
+
+html {
+  color: #fff;
+}
+
+#main {
+    cursor: default;
+    -webkit-user-select: none;
+    width: 100%;
+    height: 99%;
+    margin: 0 auto;
+    transition: all 200ms ease-in-out;
+}
+.light-text {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.clearfix {
+  zoom: 1;
+}
+
+#time {
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown;
+  font-size: 7em;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#time span {
+  display: inline-block;
+  text-align: center;
+  -webkit-transition: none;
+  -webkit-transform: rotate3d(0, 0, 0, 0);
+}
+
+.title {
+  font-size: 1.3em;
+  text-align: center;
+  font-weight: normal;
+  margin: -10px 0;
+  font-family: 'Helvetica Neue', 'Open-Reg', sans-serif;
+  position: absolute;
+  width: 100%;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-animation: fadeIn 400ms ease-in-out 200ms 1 normal;
+  animation: fadeIn 400ms ease-in-out 200ms 1 normal;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+#date {
+  top: 30%;
+}
+
+#weather {
+    zoom: 1;
+    position: relative;
+    margin: 0 auto;
+    width: 98%;
+}
+
+#weather .now {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-name: bounceIn;
+    animation-name: bounceIn;
+    float: left;
+    width: 120px;
+    text-align: center;
+    margin-top: -20px;
+    margin-left: 4px;
+}
+
+#weather .now span {
+    font-size: 11.5em;
+    margin: 0 0 7px 10px;
+}
+
+#weather .now b {
+    font-size: 3em;
+    font-weight: bold;
+    font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
+}
+
+#weather .now .label {
+    font-size: 1.5em;
+    margin-top: 10px;
+    letter-spacing: 2px;
+}
+
+.condition {
+    font: 'Helvetica Neue', 'Open-Reg', sans-serif;
+    font-size: 1.1em;
+    letter-spacing: 0px;
+    margin-top: 0px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-weight: bold;
+    padding: 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+#weather ul {
+    margin-top: 0px;
+    /*float: right;*/
+}
+
+ol, ul {
+    list-style: none;
+}
+
+#weather li.weather-container {
+    position: relative;
+}
+#weather li {
+    -webkit-transform: rotate3d(0, 0, 0, 0);
+    margin-left: 17px;
+    float: left;
+    width: 135px;
+    text-align: center;
+}
+
+#weather li .day {
+    font-size: 19px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#weather li .temp {
+    font-size: 19px;
+    font-weight: bold;
+    width: 100px;
+    margin: 0 auto;
+}

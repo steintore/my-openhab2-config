@@ -1,0 +1,247 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import java.util.Map
+import org.joda.time.DateTime
+
+var Map stored_states = null
+var Map stored_heating_states = null
+var Timer night_timer = null
+
+rule "A change of mode"
+	when
+		Item mode received command
+	then
+	logInfo('org.openhab', 'mode received state:' + mode.state)
+	var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
+	switch (receivedCommand) {
+		case 0: { // HOME
+			logInfo('org.openhab', 'HOME MODE')
+			restoreStates(stored_states)
+			restoreStates(stored_heating_states)
+			// If we're coming home it is no longer a holiday..
+			if (holiday_mode.state == ON)
+				sendCommand(holiday_mode, OFF)
+			
+			if (tempOutdoor < 10 && ac_scene.state != 1) {
+				sendCommand(ac_scene, 1)
+			}
+			if (tempOutdoor < 0) {
+				sendCommand(gang_panelovn, ON)
+			}
+			
+			if (previous_mode.state == 2) {
+				var t = ""
+				if (garage_door_1.state == ON || garage_door_2.state == ON) {
+					if (garage_door_1.state == ON) t = "Leafs"
+					if (garage_door_2.state == ON) {
+						if (t.length() > 0)
+					  		t = t + " og " 
+						t = t + "Mondeos"
+					}	 
+					t = t + " garasjeport er ikke lukket. "
+				
+				t = "Velkommen hjem! Nå " + OutdoorTemperature.state.format("%.1f") + " °C ute, og " 
+					+ LivingRoomTemperature.state.format("%.1f") + " °C i stua. "
+					+ t
+				}
+				sendCommand(guest_home, ON)
+				if (dryer.state == ON) {
+					t = t + "Tørketrommelen ble startet igjen. "
+				}
+				if (t.length() > 0)
+					postUpdate(push_message_text, t)
+			}
+			sendCommand(screen_pi_screen, ON)
+			sendCommand(roombaDock, ON)
+			
+			if (motion_living_room.state == ON) 
+				sendCommand(scene_light_livingroom, 1)
+		}
+		
+		case 1: { // NIGHT
+			logInfo('org.openhab', 'NIGHT MODE')
+			stored_states = storeStates(night_group)
+			sendCommand(scene_light_livingroom, 0)
+			sendCommand(light_basement_power, OFF)
+			sendCommand(scene_light_hall, 2) // NIGHT
+		
+			if (dryer.state == ON && new Double(power_dryer.state.toString()) > 10) {
+				postUpdate(push_message_text, "Husk tørketrommelen før du legger deg")
+			}
+			if (tv_power.state == ON) {
+				sendCommand(tv_power, OFF)
+				sendCommand(ac_mode, 0)
+			}
+			if (ac_scene.state > 1)
+				sendCommand(ac_scene, 0)
+				
+			if (ac_mode.state == 1) // QUIET
+				sendCommand(ac_mode, 0) 
+				
+			sendCommand(kontor_panelovn, OFF)
+			sendCommand(gang_panelovn, OFF)
+			
+			sendCommand(screen_pi_screen, OFF)
+			sendCommand(justMorning, OFF)
+			sendCommand(roombaDock, OFF)
+			
+			var String json = executeCommandLine("nodejs@@./configurations/scripts/alarm.js", 2000)
+			var String alarmstate =  transform("JSONPATH", "$.status", json)
+			logInfo("org.openhab.rules", "JSON is {}, and alarmstate is then {}", json, alarmstate)
+			sendCommand(alarm_alarm, alarmstate)
+		}
+		
+		case 2: { //AWAY
+			logInfo('org.openhab', 'AWAY MODE')
+			var t = ""
+			stored_states = storeStates(away_group)
+			if (dryer.state == ON && new Double(power_dryer.state.toString()) > 10) {
+				t = " Tørketrommelen ble skrudd av."
+				sendCommand(dryer, OFF)
+			}
+			if (tv_power.state == ON) {
+				t = t + " TV-en ble skrudd av."
+				sendCommand(tv_power, OFF)
+			}
+			if (t.length() > 0) {
+				if (OutdoorTemperature.state instanceof DecimalType) {
+					t  = "Du dro kl: " + now.getHourOfDay + ":" + now.getMinuteOfHour + ", nå er det " + OutdoorTemperature.state.format("%.1f") + " °C ute." + t
+				}
+				postUpdate(push_message_text, t)
+			}
+			
+			sendCommand(guest_home, OFF)
+			sendCommand(light_basement_power, OFF)
+			sendCommand(kontor_panelovn, OFF)
+			sendCommand(gang_panelovn, OFF)
+			sendCommand(scene_light_livingroom, 0)
+			sendCommand(scene_light_hall, 0)
+			sendCommand(scene_light_basement, 0)
+			sendCommand(light_bathroom, OFF)
+			sendCommand(color_bedroom, OFF)
+			sendCommand(color_kid_room_1, OFF)
+			sendCommand(color_kid_room_2, OFF)
+			sendCommand(DenonPower, OFF)
+			sendCommand(scene_light_hall_gf, 2) // AUTO
+			sendCommand(gLight, OFF)
+			sendCommand(light_hall_ground_floor, OFF)
+			if (ac_scene.state > 1) {
+				sendCommand(ac_scene, 0)
+			}
+			sendCommand(screen_pi_screen, OFF)
+			sendCommand(justMorning, OFF)
+			
+			sendCommand(scene_roomba, 1) // Start vacuuming 
+		}
+		
+		case 3: { // EVENING MODE
+			logInfo('org.openhab', 'EVENING MODE')
+			stored_heating_states = storeStates(floorHeatingNight)
+			sendCommand(scene_light_hall, 2) // NIGHT
+			sendCommand(kontor_panelovn, OFF)
+			
+			if (floor_night_power_level.state != Uninitialized) {
+				
+				floorHeatingNight?.members.forEach [item |
+					if (floor_night_power_level.state == 0 && item.state > 0) 
+						sendCommand(item, 1)
+					else
+						sendCommand(item, floor_night_power_level.state as DecimalType)
+				]
+			}
+			sendCommand(justMorning, OFF)
+		}
+	}
+	postUpdate(previous_mode, mode.state.toString)
+end
+
+/*
+ * At 21 in the evening we'll go into evening mode, but only if someone is at home.
+ * Away mode overrules evening mode
+ */
+rule "Switch to evening mode in the evening"
+	when
+		Time cron "0 0 21 ? * *" 
+	then
+		if (mode.state == 0) {
+			sendCommand(mode, 3)
+		}
+end
+
+/*
+ * At 01:30 in the evening we'll go into night mode, but only if someone is at home.
+ * Away mode overrules night mode
+ */
+rule "Switch to night mode in the evening"
+	when
+		Time cron "0 30 1 ? * *" 
+	then
+		if (mode.state == 0 || mode.state == 3) {
+			if (tv_power.state == ON || denon_receiver.state == ON || appletv.state == ON || xbox.state == ON) {
+				// If TV/Receiver/AppleTV/XBox is still on or there's someone in the living room, we'll wait a bit before going into night mode
+				night_timer = createTimer(now.plusSeconds(360)) [|
+					if (tv_power.state == ON || denon_receiver.state == ON || appletv.state == ON || xbox.state == ON) {
+						night_timer.reschedule(now.plusSeconds(360))
+					} else {
+						if (mode.state == 0 || mode.state == 3) {
+							sendCommand(mode, 1)
+						}
+				
+						if(night_timer!=null) {
+							if(night_timer.running) {
+								night_timer.cancel()
+							}	
+							night_timer = null
+						}
+					}
+					]
+			} else {
+				sendCommand(mode, 1)
+			}
+		}
+end
+
+
+/*
+ * We'll return to day mode again, but only if we are at home.
+ */
+rule "Return to day mode during the week"
+	when
+		Time cron "0 0 5 ? * MON-FRI"
+	then
+		if (mode.state == 1) {
+			sendCommand(mode, 0)
+			sendCommand(justMorning, ON)
+		}
+end
+
+rule "Return to day mode during weekend"
+	when
+		Time cron "0 0 6 ? * SAT-SUN"
+	then
+		if (mode.state == 1) {
+			sendCommand(mode, 0)
+			sendCommand(justMorning, ON)
+		}
+end
+
+rule "Switch no night/day mode when button is pressed"
+	when
+		Item left_double_switch received command or
+		Item left_double_switch changed
+	then
+	
+		switch (left_double_switch.state as OnOffType) {
+			case ON: { // DAY MODE
+				if(mode.state != 0)
+					sendCommand(mode, 0)
+			}
+			case OFF: { // NIGHT MODE
+				if (mode.state != 1)
+					sendCommand(mode, 1)
+			}
+		}
+
+end
+

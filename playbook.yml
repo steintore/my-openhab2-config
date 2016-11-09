@@ -1,0 +1,5 @@
+- hosts: webservers
+  vars:
+    - rfxcom_tty: ttyUSB0
+  roles:
+    - openhab2

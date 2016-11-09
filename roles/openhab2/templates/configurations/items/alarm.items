@@ -1,0 +1,12 @@
+String alarm_climate "Alarm climate data" <w> (gAll) {exec="<[nodejs@@./configurations/scripts/alarm-climate.js:7200000:]"}
+Number alarm_temperature_kitchen "Kjøkken temp [%.1f°C]" <temperature> (gGF)
+Number alarm_temperature_laundry "Vaskerom temp [%.1f°C]" <temperature> (gBasement)
+Number alarm_temperature_hall_gf "Gang temp [%.1f°C]" <temperature> (gGF)
+Number alarm_temperature_hall_basement "Kjellergang temp [%.1f°C]" <temperature> (gBasement)
+Number alarm_temperature_hall_1st "Gang 2. temp [%.1f°C]" <temperature> (gFirstFloor)
+DateTime alarm_temperature_hall_1st_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
+Number alarm_humidity_laundry "Vaskerom luftfuktighet [%.1f %%]" <humidity> (gBasement)
+Number alarm_humidity_hall_gf "Gang luftfuktighet [%.1f %%]" <humidity> (gGF)
+Number alarm_humidity_hall_basement "Kjellergang luftfuktighet [%.1f %%]" <humidity> (gBasement)
+Number alarm_humidity_hall_1st "Gang 2. luftfuktighet [%.1f %%]" <humidity> (gFirstFloor)
+String alarm_alarm "Alarmstatus [MAP(alarm.map):%s]" <siren> (gGF) {exec="<[nodejs@@./configurations/scripts/alarm.js:1800000:JSONPATH($.status)]"}

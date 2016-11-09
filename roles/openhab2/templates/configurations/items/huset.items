@@ -1,0 +1,334 @@
+Group All
+Group gGF       	(All)
+Group gOutdoor 		(All)
+Group gBasement 	(All)
+Group gFirstFloor 	(All)
+Group Status    	(All)
+Group gBattery 		(All)
+Group gLight		(All)
+Group night_group	(All)
+Group away_group	(All)
+Group gTemperature  (All)
+Group gPower 		(All)
+
+/* NTP binding demo item */
+DateTime Date	"[%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
+
+
+Group:Number:MIN	BatteryLevel_10		"Batteri [(%d)]"	<battery>		(All)
+Group:Number:MIN	BatteryLevel_100	"Batteri [(%d)] %"	<battery>		(All)
+
+/* Heating */
+Group:Switch:OR(ON, OFF) 			Heating 		"All varme [(%d)]" 				<heating> 				(All)
+Switch kontor_panelovn  "Panelovn kontor"	<heating>   (gFirstFloor, Heating, away_group)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B37%%5D.Set(0)]"}
+Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, Heating, away_group)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.commandClasses%%5B37%%5D.Set(0)]"}
+
+/* Energy/Power measuring */
+Group:Number:SUM					Power			"Nå: [%.1f W]"			<energy>				(All, gPower)
+Group:Number:SUM					PowerHeating	"Varme: [%.1f W]"		<energy>				(All)
+Group:Number:SUM					Energy			"Totalt: [%.1f KWh]"	<energy>				(All)
+Number panelovn_kontor_energy 	"Panelovn totalforbruk: [%.2f KWh]"			<energy> (Energy) 				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
+Number power_panelovn_kontor  	"Strøm panelovn kontor	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
+Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.Meter.data%%5B2%%5D:20000:JS(getPowerValue.js)]"}
+Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (Energy) 				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.Meter.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
+
+Group Power_Chart (Power)
+Number Power_Chart_Period "Periode"
+
+/* Presence detection */
+Group:Switch:OR(ON, OFF)	Home 			"Is someone at home [(%d)]" (All)
+Switch stein_home    		"Stein @ Home"       		<present>	(Home){ mqttitude="broker:owntracks/stein/iphone:home" }
+Switch anette_home   		"Anette @ Home"       		<present>	(Home){ mqttitude="broker:owntracks/anette/iphone:home" }
+Switch guest_home 			"Guests @ Home" 			<present>	(Home)
+
+Group:Switch:OR(ON, OFF) proximity (All)
+Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity) {nh="{{stt_ip}}"}
+Switch Mobile_Anette_Wlan	"Anettes iPhone Wlan" 	<present> 		(proximity) {nh="{{anette_ip}}"}
+Switch time_capsule_lan 	"Time capsule"			<present>		(proximity) {nh="{{time_capsule_ip}}"}
+Switch home_away_lan		"Hjemme/borte"			<present>		(proximity) {nh="{{home_away_ip}}"}
+Switch router_wlan			"Router"				<present>		(proximity) {nh="{{router_ip}}"}
+Switch boss_lan				"Boss server"       	<present>       (proximity) {nh="{{boss_ip}}"}
+Switch nas_lan				"NAS"					<present>		(proximity) {nh="{{nas_ip}}"}
+Switch zwave_lan			"Z-Wave"				<present>		(proximity) {nh="{{zwave_ip}}"}
+Switch roomba_lan			"Roomba"				<present>		(proximity) {nh="{{roomba_ip}}"}
+Switch garage_pi			"GaragePi"				<present>		(proximity) {nh="{{garagepi_ip}}"}
+Switch xbox					"XBox"					<present>		(proximity) {nh="{{xbox_ip}}"}
+Switch appletv				"Apple Tv"				<present>		(proximity) {nh="{{appletv_ip}}"}
+Switch denon_receiver		"Denon receiver"		<present>		(proximity) {nh="{{denon_ip}}"}
+Switch screen_pi			"ScreenPi"				<present>		(proximity) {nh="{{screenpi_ip}}", exec="OFF:ssh@@pi@{{screenpi_ip}}@@sudo shutdown -h now"}
+
+Switch screen_pi_screen		"Monitor screenPi" 		(gGF) {exec="ON:ssh@@pi@192.168.1.162@@export DISPLAY=:0;xset dpms force on, OFF:ssh@@pi@192.168.1.162@@export DISPLAY=:0;xset dpms force off"}
+
+/* Temperature */
+Group Temperature_Chart (Weather)
+Number Temperature_Chart_Period 			"Periode"
+Number Temperature_Livingroom_Chart_Period  "Periode"
+Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart)
+Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart)
+Number Outdoor_Humidex						"Humidex [SCALE(humidex.scale):%s]"					(Weather)
+Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) { rfxcom="<26628:Temperature" }
+Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, Weather) { rfxcom="<26628:Humidity" }
+DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
+Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) { rfxcom="<58881:Temperature" }
+Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor) { rfxcom="<58881:Humidity" }
+DateTime OfficeTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
+Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) { rfxcom="<46082:Temperature" }
+Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement) { rfxcom="<46082:Humidity" }
+DateTime BasementTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
+Number Temperature_Basement_Chart_Period 	"Periode"
+Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) { rfxcom="<29954:Temperature"}
+Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF) { rfxcom="<29954:Humidity" }
+DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
+
+/* Home appliances */
+Group HomeAppliances (Appliance)
+Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
+Switch freezer		  	"Fryser"								<kitchen>   (gBasement, Control, HomeAppliances)					{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B37%%5D.Set(0)]"}
+Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(Energy, gBasement)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
+Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, Power, Power_Chart) 						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
+Switch dryer			"Tørketrommel"							<dryer>		(gBasement, HomeAppliances, night_group, away_group) 	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B37%%5D.Set(0)]"}
+Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(Energy, gBasement)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
+Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, Control, HomeAppliances)					{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B37%%5D.Set(0)]"}
+Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
+Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
+
+/* Garage */
+Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B7%%5D.commandClasses%%5B48%%5D.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
+Switch garage_door_2    		"Garasjedør MONDEO [MAP(no.map):%s]"    <garagedoor>  	(gOutdoor)						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B8%%5D.commandClasses%%5B48%%5D.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
+Switch message_received 		"Garasjedørmelding er mottatt"			<garagedoor>	(gOutdoor)
+Number garage_door_1_battery 	"Leaf [%s %%]"							<battery>		(gBattery, BatteryLevel_100)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B7%%5D.commandClasses%%5B128%%5D.data:20000:JS(getLastValue.js)]"}
+Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, BatteryLevel_100)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B8%%5D.commandClasses%%5B128%%5D.data:20000:JS(getLastValue.js)]"}
+Switch garage_door_1_relay 		"Releet Leaf" 																			{http=">[ON:POST:{{garagepi_leaf_url}}function/OUT] >[OFF:POST:{{garagepi_leaf_url}}function/IN]"}
+Switch garage_door_2_relay 		"Releet Mondeo" 																		{http=">[ON:POST:{{garagepi_mondeo_url}}function/OUT] >[OFF:POST:{{garagepi_mondeo_url}}function/IN]"}
+Switch garagepi_motion 			"Bevegelse GPI"
+Switch garagecam_motion 		"Bevegelse CAM"
+Number scene_garage_1			"LEAF"
+Number scene_garage_2			"MONDEO"
+
+/* Switch */
+Switch left_double_switch 	"Venstre knapp" <network> (gGF) { rfxcom="<11971074.11:Command" }
+Switch right_double_switch 	"Høyre knapp" 	<network> (gGF) { rfxcom="<11971074.12:Command" }
+
+/* Battery */
+Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, BatteryLevel_10) 	{rfxcom="<26628:BatteryLevel"}
+Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, BatteryLevel_10) 	{rfxcom="<46082:BatteryLevel"}
+Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, BatteryLevel_10) {rfxcom="<20481:BatteryLevel"}
+Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{rfxcom="<29954:BatteryLevel"}
+
+/* Text values */
+String push_message_text "Default message"
+String push_message_url ""
+
+/* Lighting */
+Group:Switch:OR(ON, OFF) 		Living_Room_Lights 		"Lys [(%d)]" <light>	
+Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, Living_Room_Lights) 	{rfxcom=">12339014.1:LIGHTING2.AC:Command"}
+Switch remote_light_living_room_corner 															{rfxcom="<12339014.1:Command"}
+Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_Room_Lights) 	{rfxcom=">12339014.2:LIGHTING2.AC:Command"}
+Switch remote_light_living_room_window 															{rfxcom="<12339014.2:Command"}
+Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, Living_Room_Lights)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(0)]"}
+Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, Living_Room_Lights)
+Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary.Set(0)]"}
+Switch light_dining_table			"Taklys" 		<light> (gGF, gLight, Living_Room_Lights) {http=">[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchMultilevel.Set(0)]"}
+Number light_dining_table_dimmer 	"Taklys [%s]"	<light> (gGF, gLight) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchMultilevel.data:20000:JS(getLevelValue.js)]"}
+
+Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 {rfxcom="<18220938.10:Command"}
+
+Switch light_basement_power 		"Av/På"						<light> (gBasement, gLight) 	{rfxcom=">12339014.0:LIGHTING2.AC:Command"}
+Switch remote_light_basement_power 																{rfxcom="<12339014.0:Command"}
+Dimmer light_basement_dimmer 		"Tak kjellerstue [%d %%]"			(gBasement, gLight) 	{rfxcom=">12339014.0:LIGHTING2.AC:DimmingLevel"}
+Switch light_basement_window 		"Av/På"						<light> (gBasement, gLight) 	{rfxcom=">12339014.1:LIGHTING2.AC:Command"}
+Switch remote_light_basement_window 															{rfxcom="<12339014.1:Command"}
+
+
+
+/* Philips HUE */
+Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
+Number scene_light_hall "Lys gang" 			<hue> 	(gLight, gHallLights, gFirstFloor)
+Switch light_hall_1_switch "Left bulb" 		<hue>	(gLight, gHallLights, gFirstFloor) {hue="5"}
+Switch light_hall_2_switch "Right bulb" 	<hue>	(gLight, gHallLights, gFirstFloor) {hue="6"}
+Switch light_hall_3_switch "Left bulb 2" 	<hue>	(gLight, gHallLights, gFirstFloor) {hue="3"}
+Switch light_hall_4_switch "Right bulb 2" 	<hue>	(gLight, gHallLights, gFirstFloor) {hue="4"}   
+
+Dimmer light_hall_1     "Left bulb [%d %%]"    {hue="5;brightness;30"}
+Dimmer light_hall_2     "Right bulb [%d %%]"   {hue="6;brightness;30"}
+Dimmer light_hall_3     "Left bulb2 [%d %%]"    {hue="3;brightness;30"}
+Dimmer light_hall_4     "Right bulb2 [%d %%]"   {hue="4;brightness;30"}
+
+Switch light_bedroom 	"Soverom" 			<hue> (gLight, gFirstFloor) {hue="13"}
+Color color_bedroom 	"Soverom" 			<hue> (gLight, gFirstFloor) {hue="13"} 
+Dimmer dimmer_bedroom 	"Soverom [%d %%]" 	<hue> (gLight, gFirstFloor) {hue="13;brightness;30"}
+Dimmer CT_dimm_bedroom	"Soverom"  			<hue> (gLight, gFirstFloor) {hue="13;colorTemperature;30"}
+
+Switch light_kid_room_2		"Maris rom" 			<hue> (gLight, gFirstFloor) {hue="12"}
+Color color_kid_room_2 		"Maris rom" 			<hue> (gLight, gFirstFloor) {hue="12"} 
+Dimmer dimmer_kid_room_2 	"Maris rom [%d %%]" 	<hue> (gLight, gFirstFloor) {hue="12;brightness;30"}
+Dimmer ct_kid_room_2   		"Maris rom"  			<hue> (gLight, gFirstFloor) {hue="12;colorTemperature;30"}
+
+Switch light_kid_room_1 	"Ivers rom"		 	<hue> (gLight, gFirstFloor) {hue="11"}
+Color  color_kid_room_1 	"Ivers rom" 		<hue> (gLight, gFirstFloor) {hue="11"} 
+Dimmer dimmer_kid_room_1	"Ivers rom [%d %%]"	<hue> (gLight, gFirstFloor) {hue="11;brightness;30"}
+Dimmer ct_kid_room_1 	  	"Ivers rom"		  	<hue> (gLight, gFirstFloor) {hue="11;colorTemperature;30"}
+
+/* Motion detector */
+Switch motion_detector_basement "Bevegelse gang nede" 	<switch> (gBasement, Motion) {rfxcom="<13734590.10:Command"}
+
+Group:Switch:AND(ON, OFF) 		gBasementLights	"Lys [(%d)]"	 <light>		
+Number scene_light_basement "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
+Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)  {hue="9;brightness;80"}
+Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {hue="10;brightness;80"}
+Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {hue="7;brightness;80"}
+Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {hue="8;brightness;80"}
+
+/* Config-values */
+String pushover_token_anette 	"Pushover Anette" 	{configadmin = "pushover:anetteToken"}
+String pushover_token_both 		"Pushover both" 	{configadmin = "pushover:bothToken"}
+String pushover_token_default 	"Pushover default" 	{configadmin = "pushover:defaultToken"}
+String stein_email				"STT e-mail"		{configadmin = "steintore:email"}
+
+/* Living room TV */
+Group TV <tv>
+Switch 		  tv_power 		"TV"		<power>	   		(TV, proximity){samsungtv="ON:Livingroom:KEY_POWERON, OFF:Livingroom:KEY_POWEROFF", nh="{{samsungtv_ip}}"}
+Rollershutter tv_channel 	"Kanal"     <channel>   	(TV){samsungtv="UP:Livingroom:KEY_CHUP, DOWN:Livingroom:KEY_CHDOWN"}
+Switch        tv_mute		"Lyd av/på" <volume>	    (TV){samsungtv="ON:Livingroom:KEY_MUTE, OFF:Livingroom:KEY_MUTE"}
+Rollershutter tv_volume     "Volum"		<volume>	    (TV){samsungtv="UP:Livingroom:KEY_VOLUP, DOWN:Livingroom:KEY_VOLDOWN"}
+Number 		  tv_pause_play "Pause/play"<video>			(TV){samsungtv="1:Livingroom:KEY_PLAY, 2:Livingroom:KEY_PAUSE"}
+
+/* Astro information */
+Group Astro
+DateTime Sunrise_Time  	"Soloppgang [%1$tH:%1$tM]" 						<sun> 	(Astro) {astro="planet=sun, type=rise, property=start"}
+DateTime Sunset_Time   	"Solnedgang [%1$tH:%1$tM]" 						<moon>	(Astro) {astro="planet=sun, type=set, property=end"}
+DateTime Moonrise_Time	"Måneoppgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) {astro="planet=moon, type=rise, property=start"}
+DateTime Moonset_Time   "Månenedgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) {astro="planet=moon, type=set, property=end"}
+DateTime Moon_Full      "Neste fullmåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"<moon>	(Astro) {astro="planet=moon, type=phase, property=full"}
+DateTime Moon_New     	"Neste nymåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"  <moon>	(Astro) {astro="planet=moon, type=phase, property=new"}
+
+
+/* Samsung AC */
+Group AC
+Number ac_scene "Varmepumpe"										(AC, night_group)
+Number ac_current_temp "Målt temperatur [%.1f °C]" 	<temperature> 	(AC) 							{samsungac="[Livingroom|AC_FUN_TEMPNOW]"}
+Switch ac_power "Varmepumpe"						<power> 		(AC) 							{samsungac="[Livingroom|AC_FUN_POWER]"}
+Number ac_mode "Convenient mode [%s]" 				<sofa> 			(AC)						 	{samsungac="[Livingroom|AC_FUN_COMODE]"}
+Number ac_mode_previous
+Number ac_op_mode "Operation mode [%s]" 			<sofa> 			(AC) 							{samsungac="[Livingroom|AC_FUN_OPMODE]"}
+Number ac_set_temp "Temperatur [%.1f°C]" 			<temperature> 	(AC)						 	{samsungac="[Livingroom|AC_FUN_TEMPSET]"}
+Number ac_night_temp "Natttemp [%.1f°C]"			<temperature> 	(AC)
+Number ac_heat_temp "Varmetemp [%.1f°C]"			<temperature> 	(AC)
+Number ac_cool_temp "Kjøletemp [%.1f°C]"			<temperature> 	(AC)
+Number ac_direction "Direction [%s]" 				<wind> 			(AC) 							{samsungac="[Livingroom|AC_FUN_DIRECTION]"}
+Number ac_windlevel "Windlevel [%s]" 				<wind> 			(AC) 							{samsungac="[Livingroom|AC_FUN_WINDLEVEL]"}
+String ac_error "Error [%s]"										(AC) 							{samsungac="[Livingroom|AC_FUN_ERROR]"}
+Number  AC_SG_VENDER01 "AC_SG_VENDER01 [%s]" 						(AC) 							{samsungac="[Livingroom|AC_SG_VENDER01]"}
+Number  AC_SG_VENDER02 "AC_SG_VENDER02 [%s]" 						(AC) 							{samsungac="[Livingroom|AC_SG_VENDER02]"}
+Number  AC_SG_VENDER03 "AC_SG_VENDER03 [%s]" 						(AC) 							{samsungac="[Livingroom|AC_SG_VENDER03]"}
+Number  AC_SG_MACHIGH "AC_SG_MACHIGH [%s]" 							(AC) 							{samsungac="[Livingroom|AC_SG_MACHIGH]"}
+Number  AC_ADD2_VERSION "AC_ADD2_VERSION [%s]"						(AC) 							{samsungac="[Livingroom|AC_ADD2_VERSION]"}
+String  AC_SG_INTERNET "AC_SG_INTERNET [%s]" 						(AC) 							{samsungac="[Livingroom|AC_SG_INTERNET]"}
+String  AC_SG_WIFI "AC_SG_WIFI [%s]" 								(AC) 							{samsungac="[Livingroom|AC_SG_WIFI]"}
+Switch  AC_ADD_SPI "AC_ADD_SPI [%s]" 								(AC) 							{samsungac="[Livingroom|AC_ADD_SPI]"}
+Number  AC_ADD_STARTWPS "AC_ADD_STARTWPS [%s]" 						(AC) 							{samsungac="[Livingroom|AC_ADD_STARTWPS]"}
+Number  AC_ADD_APMODE_END "AC_ADD_APMODE_END [%s]" 					(AC) 							{samsungac="[Livingroom|AC_ADD_APMODE_END]"}
+Switch  AC_ADD_AUTOCLEAN "AC_ADD_AUTOCLEAN [%s]" 					(AC) 							{samsungac="[Livingroom|AC_ADD_AUTOCLEAN]"}
+Number  AC_FUN_SUPPORTED "AC_FUN_SUPPORTED [%s]" 					(AC) 							{samsungac="[Livingroom|AC_FUN_SUPPORTED]"}
+DateTime ac_lastUpdate "Last update [%1$ta %1$tR]"	<clock>         (AC)
+Number AC_lower_temp_threshold "Temp terskel [%.1f°C]" 	(AC)
+Number AC_quiet_temp_threshold "Stille terskel [%.1f°C]" (AC)
+Number AC_additional_degrees   "Ekstra grader [%.1f°C]" 	(AC)
+
+
+Group Motion <office>
+Number hall_gf_temp 		"Temp gang [%.1f °C]" 			<temperature> 	(Motion, gGF) 							{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
+Number hall_gf_luminance 	"Lux gang [%.0f Lux]" 			<sun>			(Motion, gGF) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorMultilevel.data%%5B3%%5D:20000:JS(getValValue.js)]"}
+DateTime hall_gf_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gGF)
+Switch hall_gf_motion 		"Gang [MAP(motion.map):%s]" 	<present>		(Motion, gGF) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorBinary.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
+Number hall_gf_battery 		"Bev.sensor, gang [%s %%]"		<energy>		(Motion, gGF, gBattery, BatteryLevel_100)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.Battery.data:20000:JS(getLastValue.js)]"}
+Number hall_gf_lu 			"[%.0f]" 						<clock>		 	(gGF)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorBinary.data%%5B1%%5D.level:20000:JS(getLastUpdate.js)]"}
+DateTime hall_gf_update 	"Last update [%1$ta %1$tR]" 	<clock>			(Motion, gGF)
+
+/* Modes 0=HOME, 1=NIGHT, 2=AWAY */
+Number mode "Modus:" <present>
+Number previous_mode 
+Switch holiday_mode "Feriemodus [%s]"	<present>	
+
+/* Bathroom 1st floor */
+Switch light_bathroom		 "Taklys"						<light>			(gLight, gFirstFloor) 				{http=">[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B37%%5D.Set(255)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B38%%5D.Set(0)]"}
+Number light_bathroom_dimmer "Dimmer [%s]" 					<light> 		(gFirstFloor)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B38%%5D.data:20000:JS(getLevelValue.js)]"}
+Number bathroom_temp 		 "Temp [%.1f °C]" 				<temperature> 	(Motion, gFirstFloor) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
+Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>				(Motion, gFirstFloor) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.SensorMultilevel.data%%5B3%%5D:20000:JS(getValValue.js)]"}
+DateTime bathroom_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>				(gFirstFloor)
+Switch bathroom_motion 		 "Bad [MAP(motion.map):%s]" 	<present>		(Motion, gFirstFloor) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.SensorBinary.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
+Number bathroom_battery 	 "Bev.sensor, bad [%s %%]"		<battery>		(Motion, gBattery, BatteryLevel_100, gFirstFloor)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.Battery.data:20000:JS(getLastValue.js)]"}
+Switch light_bathroom_mirror "Speillys"						<light>			(gLight, gFirstFloor)					{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary.Set(0)]"}
+Number scene_bathroom_light
+
+Number scene_remote_livingroom //{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B17%%5D.commandClasses%%5B91%%5D.data:20000:JS(getCurrentScene.js)]"}
+
+Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary.Set(0)]"}
+Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)
+
+/* Smoke detector */
+String smoke_detector "Røykvarsler" {rfxcom="<16435200:Status"}
+
+/* Plex */
+Switch PlexXBoxPower      "Power"         <video>     {plex="{{plex_id_xbox}}#power"}
+String PlexXBoxStatus     "Status [%s]"   <video>     {plex="{{plex_id_xbox}}#state"}
+String PlexXBoxTitle      "Title [%s]"    <video>     {plex="{{plex_id_xbox}}#title"}
+String PlexXBoxType       "Type [%s]"     <video>     {plex="{{plex_id_xbox}}#type"}
+
+Dimmer PlexXBoxProgress   "Progress [%.1f%%]"    <video>    {plex="{{plex_id_xbox}}#playback/progress"}
+Dimmer PlexXBoxVolume     "Volume"        <video>     {plex="{{plex_id_xbox}}#playback/volume"}
+Switch PlexXBoxPause      "Pause"         <video>     {plex="{{plex_id_xbox}}#playback/pause"}
+Switch PlexXBoxPlay       "Play"          <video>     {plex="{{plex_id_xbox}}#playback/play"}
+Switch PlexXBoxStop       "Stop"          <video>     {plex="{{plex_id_xbox}}#playback/stop"}
+
+Switch PlexXBoxSelect     "Select"        <video>     {plex="{{plex_id_xbox}}#navigation/select"}
+Switch PlexXBoxBack       "Back"          <video>     {plex="{{plex_id_xbox}}#navigation/back"}
+Switch PlexXBoxUp         "Up"            <video>     {plex="{{plex_id_xbox}}#navigation/moveUp"}
+Switch PlexXBoxDown       "Down"          <video>     {plex="{{plex_id_xbox}}#navigation/moveDown"}
+Switch PlexXBoxLeft       "Left"          <video>     {plex="{{plex_id_xbox}}#navigation/moveLeft"}
+Switch PlexXBoxRight      "Right"         <video>     {plex="{{plex_id_xbox}}#navigation/moveRight"}
+
+Switch PlexXBoxForward    "Forward"       <video>     {plex="{{plex_id_xbox}}#playback/stepForward"}
+Switch PlexXBoxReverse    "Reverse"       <video>     {plex="{{plex_id_xbox}}#playback/stepBack"}
+
+Switch PlexTVPower      "Power"         <video>     {plex="{{plex_id_tv}}#power"}
+String PlexTVStatus     "Status [%s]"   <video>     {plex="{{plex_id_tv}}#state"}
+String PlexTVTitle      "Title [%s]"    <video>     {plex="{{plex_id_tv}}#title"}
+String PlexTVType       "Type [%s]"     <video>     {plex="{{plex_id_tv}}#type"}
+
+Dimmer PlexTVProgress   "Progress [%.1f%%]"    <video>    {plex="{{plex_id_tv}}#playback/progress"}
+Dimmer PlexTVVolume     "Volume"        <video>     {plex="{{plex_id_tv}}#playback/volume"}
+Switch PlexTVPause      "Pause"         <video>     {plex="{{plex_id_tv}}#playback/pause"}
+Switch PlexTVPlay       "Play"          <video>     {plex="{{plex_id_tv}}#playback/play"}
+Switch PlexTVStop       "Stop"          <video>     {plex="{{plex_id_tv}}#playback/stop"}
+
+Switch PlexTVSelect     "Select"        <video>     {plex="{{plex_id_tv}}#navigation/select"}
+Switch PlexTVBack       "Back"          <video>     {plex="{{plex_id_tv}}#navigation/back"}
+Switch PlexTVUp         "Up"            <video>     {plex="{{plex_id_tv}}#navigation/moveUp"}
+Switch PlexTVDown       "Down"          <video>     {plex="{{plex_id_tv}}#navigation/moveDown"}
+Switch PlexTVLeft       "Left"          <video>     {plex="{{plex_id_tv}}#navigation/moveLeft"}
+Switch PlexTVRight      "Right"         <video>     {plex="{{plex_id_tv}}#navigation/moveRight"}
+
+Switch PlexTVForward    "Forward"       <video>     {plex="{{plex_id_tv}}#playback/stepForward"}
+Switch PlexTVReverse    "Reverse"       <video>     {plex="{{plex_id_tv}}#playback/stepBack"}
+
+/* Denon Receiver */
+Switch DenonPower           "Power"                 {denon="denon#PW", nh="{{denon_ip}}"}
+Dimmer DenonVolume          "Volume [%.1f]"         {denon="denon#MV"}
+Switch DenonMute            "Mute"                  {denon="denon#MU"}
+String DenonSurroundMode    "Surround mode [%s]"    {denon="denon#SURROUNDMODE"}
+String DenonCommand         "Command"               {denon="denon#COMMAND", autoupdate="false"}
+
+String DenonInput           "Input [%s]"            {denon="denon#INPUT"}
+Switch DenonInputNet        "Input Network"         {denon="denon#SINET"}
+Switch DenonInputSpotify    "Input Spotify"         {denon="denon#SISPOTIFY"}
+Switch DenonInputDVD        "Input XBox One"             {denon="denon#SIDVD"}
+Switch DenonInputBluray     "Input XBox"          {denon="denon#SIBD"}
+Switch DenonInputSATCBL     "Input TV"         {denon="denon#SISAT/CBL"}
+Switch DenonInputMplay      "Input Apple TV"     {denon="denon#SIMPLAY"}
+Switch DenonInputAux1       "Input PC"            {denon="denon#SIAUX1"}
+
+/* Virtual switch to make us turn on the living room lights when we first come down in the morning */
+Switch justMorning
+
+String zWaveStatus "Z-Wave server: [%s]" {http="<[http://{{zwave_ip}}:8083/ZAutomation/api/v1/status:60000:JSONPATH($.message)]"}

@@ -1,0 +1,17 @@
+
+if (stein_home.state == ON) {
+	logError('Sending to STT','Sending to STT: ' + push_message_text)
+	if (push_message_url.state.toString.length > 0 && push_message_url.state != Uninitialized )
+		pushover(push_message_text.state.toString, 'stt_iphone', 0, push_message_url.state.toString)
+	else
+		pushover(push_message_text.state.toString)
+}
+if (anette_home.state == ON) {
+	logError('Sending to Anette','Sending to Anette: ' + push_message_text)
+	pushover(pushover_token_default.state.toString, pushover_token_anette.state.toString, push_message_text.state.toString)
+}
+
+if (Home.state != ON) {
+	logError('Sending to both', 'Sending to both: ' + push_message_text)
+	pushover(pushover_token_default.state.toString, pushover_token_both.state.toString, push_message_text.state.toString)
+}

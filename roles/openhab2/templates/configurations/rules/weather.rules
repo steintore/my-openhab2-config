@@ -1,0 +1,21 @@
+import org.openhab.core.library.types.*
+
+rule "Update max and min temperatures"
+when
+        Item Weather_Temperature changed or
+        Time cron "1 0 0 * * ?" or
+        System started
+then
+        val startOfDay = now.toDateMidnight
+        if(Weather_Temperature != null) {
+        postUpdate(Weather_Temp_Max, Weather_Temperature.maximumSince(startOfDay).state)
+        postUpdate(Weather_Temp_Min, Weather_Temperature.minimumSince(startOfDay).state)
+    }
+end
+
+rule "Records last weather update time"
+when
+  Item Weather_Temperature received update
+then
+  postUpdate(Weather_LastUpdate, new DateTimeType())
+end

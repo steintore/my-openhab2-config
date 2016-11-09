@@ -1,0 +1,88 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+var Timer timerSteinMobileWlan = null
+var Timer timerAnetteMobileWlan = null
+
+
+rule "Stein Mobile Wlan Proximity Enter"
+when
+	Item Mobile_Stein_Wlan changed from OFF to ON
+then
+	if(timerSteinMobileWlan!=null) {
+		logInfo("org.openhab.rules","steinwlan ON. stopping timer.")
+		timerSteinMobileWlan.cancel()
+		timerSteinMobileWlan = null
+	}
+	sendCommand(stein_home, ON)
+end
+
+rule "Anette Mobile Wlan Proximity Enter"
+when
+	Item Mobile_Anette_Wlan changed from OFF to ON
+then
+	if(timerAnetteMobileWlan!=null) {
+		timerAnetteMobileWlan.cancel()
+		timerAnetteMobileWlan = null
+	}
+	sendCommand(anette_home, ON)
+end
+
+rule "Stein Mobile Wlan Proximity Timer Leave"
+when
+	Item Mobile_Stein_Wlan changed from ON to OFF
+then
+	logInfo("org.openhab.rules","steinwlan off. starting timer.")
+	if( timerSteinMobileWlan==null ) {
+		timerSteinMobileWlan = createTimer(now.plusSeconds(2400)) [|
+			logInfo("org.openhab.rules", "Stein mobile timer has timed out. Executing proximity off")
+			sendCommand(stein_home, OFF)
+			if(timerSteinMobileWlan!=null) {
+				if(timerSteinMobileWlan.running) {
+					timerSteinMobileWlan.cancel()
+				}
+				timerSteinMobileWlan = null
+			}
+		]
+	} else {
+		timerSteinMobileWlan.reschedule(now.plusSeconds(1200))
+	}
+end
+
+rule "Anette Mobile Wlan Proximity Timer Leave"
+when
+	Item Mobile_Anette_Wlan changed from ON to OFF
+then
+	logInfo("org.openhab.rules","anettewlan off. starting timer.")
+	if( timerAnetteMobileWlan==null ) {
+		timerAnetteMobileWlan = createTimer(now.plusSeconds(2400)) [|
+			logInfo("org.openhab.rules", "Anette timer has timed out. Executing proximity off")
+			sendCommand(anette_home, OFF)
+			if(timerAnetteMobileWlan!=null) {
+				if(timerAnetteMobileWlan.running) {
+					timerAnetteMobileWlan.cancel()
+				}
+				timerAnetteMobileWlan = null
+			}
+		]
+	} else {
+		timerAnetteMobileWlan.reschedule(now.plusSeconds(1200))
+	}
+end
+
+rule "No one at home" 
+when
+	Item Home changed from ON to OFF
+then
+	sendCommand(screen_pi_screen, OFF)
+end
+
+rule "When someone comes home"
+when
+	Item Home changed from OFF to ON or
+	Item Mobile_Anette_Wlan changed from OFF to ON or
+	Item Mobile_Stein_Wlan changed from OFF to ON
+then
+	sendCommand(screen_pi_screen, ON)
+end

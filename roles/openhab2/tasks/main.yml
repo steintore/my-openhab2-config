@@ -1,0 +1,185 @@
+# Stop OpenHab2
+
+#- name: link bindings into runtime
+#  file: >
+#    state=link
+#    src={{ openhab_install_dir }}/addons/{{openhab_version}}/org.openhab.{{ item }}-{{openhab_version}}.jar
+#    dest={{ openhab_install_dir }}/runtime/{{openhab_version}}/addons/org.openhab.{{ item }}-{{openhab_version}}.jar
+#  with_items:
+#    - binding.http
+#    - binding.networkhealth
+#    - binding.ntp
+#    - binding.rfxcom
+#    - binding.samsungtv
+#    - binding.systeminfo
+#    - binding.plex
+#    - binding.denon
+#    - persistence.rrd4j
+#    - persistence.influxdb
+#    - action.pushover
+#    - binding.configadmin
+#    - binding.astro
+#    - binding.hue
+#    - binding.systeminfo
+#    - binding.samsungac
+#    - binding.weather
+#    - binding.exec
+
+- name: See if configurations is a directory (then we nuke it next)
+  shell: "[ -d {{ openhab_install_dir }}/runtime/{{openhab_version}}/configurations ] && echo 'Directory' || echo ''"
+  register: is_directory
+
+- name: delete example config directory
+  file: path={{ openhab_install_dir }}/runtime/{{openhab_version}}/configurations state=absent
+  when: (is_directory.stdout)
+
+- name: create openHAB configurations/items directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/items
+
+- name: create openHAB configurations/persistence directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/persistence
+
+- name: create openHAB configurations/transform directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/transform
+
+- name: create openHAB configurations/rules directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/rules
+
+- name: create openHAB configurations/scripts directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }/scripts
+
+- name: create openHAB configurations/sitemaps directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/sitemaps
+
+- name: create openHAB configurations/templates directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/templates
+
+- name: create openHAB services directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/services
+
+
+- name: sync setup into config
+  template: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
+  with_items:
+        - items/huset.items
+        - items/systeminfo.items
+        - items/power.items
+        - items/weather.items
+        - items/floorHeating.items
+        - items/roomba.items
+        - items/alarm.items
+        - items/speedtest.items
+        - persistence/rrd4j.persist
+        - persistence/influxdb.persist
+        - rules/garage.rules
+        - rules/heating.rules
+        - rules/lights.rules
+        - rules/proximity.rules
+        - rules/security.rules
+        - rules/status.rules
+        - rules/modes.rules
+        - rules/power.rules
+        - rules/plex.rules
+        - rules/weather.rules
+        - rules/roomba.rules
+        - rules/alarm.rules
+        - rules/speedtest.rules
+        - scripts/pushMessages.script
+        - scripts/alarm-climate.js
+        - scripts/alarm.js
+        - sitemaps/huset.sitemap
+        - sitemaps/panel.sitemap
+        - transform/en.map
+        - transform/getBasicOnOffState.js
+        - transform/getLastUpdate.js
+        - transform/getLastValue.js
+        - transform/getLevelValue.js
+        - transform/getPowerValue.js
+        - transform/getValValue.js
+        - transform/motion.map
+        - transform/no.map
+        - transform/floor.map
+        - transform/alarm.map
+        - transform/roomba.map
+        - transform/roombaStatus.map
+        - services/samsungac.cfg
+        - services/http.cfg
+        - services/pushover.cfg
+        - services/rrd4j.cfg
+        - services/samsungtv.cfg
+        - services/addons.cfg
+        - services/influxdb.cfg
+        - services/users.cfg
+        - services/plex.cfg
+        - services/rfxcom.cfg
+        - services/denon.cfg
+        - services/astro.cfg
+        - services/weather.cfg
+        - services/runtime.cfg
+        - services/hue.cfg
+        - services/addons.cfg
+
+- name: sync alarm-api script into configurations
+  copy: dest={{ openhab_configuration_dir }}/scripts/alarm-api.js src=../templates/configurations/scripts/alarm-api.js
+
+- name: create openHAB configurations/transform directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/transform
+
+- name: sync transform setup into config
+  copy: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
+  with_fileglob:
+        - transform/*
+
+- name: check current timezone
+  shell: cat /etc/timezone
+  register: current_zone
+
+- name: Set timezone variables
+  copy: content="Europe/Oslo"
+    dest=/etc/timezone
+    owner=root
+    group=root
+    mode=0644
+    backup=yes
+  sudo: yes
+
+- name: update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+  sudo: yes
+
+- name: Install required packages
+  apt: name={{item}} state=installed
+  with_items:
+    - nodejs
+    - npm
+    - python-setuptools
+  sudo: yes
+
+- easy_install: name=speedtest-cli state=latest
+
+- name: Install "request" node.js package.
+  npm: name=request path={{openhab_configuration_dir}}/scripts
+
+- name: Install "object-assign" node.js package.
+  npm: name=object-assign path={{openhab_configuration_dir}}/scripts
+
+- name: Install "es6-promise" node.js package.
+  npm: name=es6-promise path={{openhab_configuration_dir}}/scripts

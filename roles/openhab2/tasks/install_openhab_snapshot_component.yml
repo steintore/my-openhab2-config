@@ -1,0 +1,25 @@
+
+- name: check if openHAB component is installed - {{component}}
+  stat: path={{ openhab_install_dir }}/{{component}}/{{ openhab_snapshot_version }}
+  #ignore_errors: yes
+  register: openhab_ls
+
+- name: download openHAB {{component}}
+  get_url: >
+    url=https://openhab.ci.cloudbees.com/job/openHAB/lastSuccessfulBuild/artifact/distribution/target/distribution-{{openhab_snapshot_version}}-{{component}}.zip
+    dest={{ ansible_env.HOME }}/downloads/openhab-{{component}}-v{{openhab_snapshot_version}}.zip
+    validate_certs=no
+  when: openhab_ls.stat.exists == false
+
+- name: create openHAB {{component}} directory
+  file: >
+    state=directory
+    path={{ openhab_install_dir }}/{{component}}/{{openhab_snapshot_version}}
+  when: openhab_ls.stat.exists == false
+
+- name: unzip openHAB {{component}} download
+  unarchive: >
+    src={{ ansible_env.HOME }}/downloads/openhab-{{component}}-v{{openhab_snapshot_version}}.zip
+    dest={{ openhab_install_dir }}/{{component}}/{{openhab_snapshot_version}}/
+    copy=no
+  when: openhab_ls.stat.exists == false

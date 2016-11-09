@@ -1,0 +1,27 @@
+Group System
+Number loadAverage1min  "Load avg. 1min [%.1f]" (System) { systeminfo="LoadAverage1Min:5000" }
+Number loadAverage5min  "Load avg. 5min [%.1f]" (System) { systeminfo="LoadAverage5Min:5000" }
+Number loadAverage15min "Load avg. 15min [%.1f]" (System) { systeminfo="LoadAverage15Min:5000" }
+
+Number cpuCombined  "CPU combined [%.1f]"   (System) { systeminfo="CpuCombined:5000" }
+
+Number uptime   "Uptime [%.1f]" (System) { systeminfo="Uptime:5000" }
+
+Number memFreePercentPeriod "MemFree chart selected [%.1f]" (System)
+Number memFreePercent   	"Mem free [%.1f%%]" (System) { systeminfo="MemFreePercent:5000" }
+Number memUsed  			"Mem used [%.1f]"   (System) { systeminfo="MemUsed:5000" }
+Number memUsedPercent   	"Mem used [%.1f%%]" (System) { systeminfo="MemUsedPercent:5000" }
+Number memActualFree    	"Mem actual free [%.1f]"    (System) { systeminfo="MemActualFree:5000" }
+Number memActualUsed    	"Mem actual used [%.1f]"    (System) { systeminfo="MemActualUsed:5000" }
+Number memTotal 			"Mem total [%.1f]"  (System) { systeminfo="MemTotal:5000" }
+
+Number swapFree 			"Swap free [%.1f]"  (System) { systeminfo="SwapFree:5000" }
+Number swapTotal    		"Swap total [%.1f]" (System) { systeminfo="SwapTotal:5000" }
+Number swapUsed 			"Swap used [%.1f]"  (System) { systeminfo="SwapUsed:5000" }
+
+Number openhabRealMem   	"Real mem [%.1f]"   (System) { systeminfo="ProcessRealMem:5000:$$" }
+Number openhabVirtualMem    "Virtual mem [%.1f]"    (System) { systeminfo="ProcessVirtualMem:5000:$$" }
+Number openhabCpuPercent    "Cpu percent [%.1f%%]"  (System) { systeminfo="ProcessCpuPercent:5000:$$" }
+Number openhabCpuSystem 	"CPU system [%.1f]" (System) { systeminfo="ProcessCpuSystem:5000:$$" }
+Number openhabUptime    	"Uptime [%d]"   (System) { systeminfo="ProcessUptime:5000:$$" }
+String openhabUptimeFormatted "Uptime form. [%s]" (System) { systeminfo="ProcessUptimeFormatted:5000:$$" }
