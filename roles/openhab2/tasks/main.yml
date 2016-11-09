@@ -26,12 +26,8 @@
 #    - binding.exec
 
 - name: See if configurations is a directory (then we nuke it next)
-  shell: "[ -d {{ openhab_install_dir }}/runtime/{{openhab_version}}/configurations ] && echo 'Directory' || echo ''"
+  shell: "[ -d {{ openhab_configuration_dir  }}] && echo 'Directory' || echo ''"
   register: is_directory
-
-- name: delete example config directory
-  file: path={{ openhab_install_dir }}/runtime/{{openhab_version}}/configurations state=absent
-  when: (is_directory.stdout)
 
 - name: create openHAB configurations/items directory
   file: >
@@ -51,12 +47,12 @@
 - name: create openHAB configurations/rules directory
   file: >
     state=directory
-    path={{ openhab_configuration_dir }}/rules
+    path="{{ openhab_configuration_dir }}/rules"
 
 - name: create openHAB configurations/scripts directory
   file: >
     state=directory
-    path={{ openhab_configuration_dir }/scripts
+    path="{{ openhab_configuration_dir }}/scripts"
 
 - name: create openHAB configurations/sitemaps directory
   file: >
@@ -76,6 +72,8 @@
 
 - name: sync setup into config
   template: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
+  sudo: yes
+  sudo_user: openhab          
   with_items:
         - items/huset.items
         - items/systeminfo.items
@@ -121,11 +119,9 @@
         - services/samsungac.cfg
         - services/http.cfg
         - services/pushover.cfg
-        - services/rrd4j.cfg
         - services/samsungtv.cfg
         - services/addons.cfg
         - services/influxdb.cfg
-        - services/users.cfg
         - services/plex.cfg
         - services/rfxcom.cfg
         - services/denon.cfg
@@ -136,6 +132,8 @@
         - services/addons.cfg
 
 - name: sync alarm-api script into configurations
+  sudo: yes
+  sudo_user: openhab
   copy: dest={{ openhab_configuration_dir }}/scripts/alarm-api.js src=../templates/configurations/scripts/alarm-api.js
 
 - name: create openHAB configurations/transform directory
@@ -145,6 +143,8 @@
 
 - name: sync transform setup into config
   copy: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
+  sudo: yes
+  sudo_user: openhab
   with_fileglob:
         - transform/*
 
@@ -165,21 +165,27 @@
   command: dpkg-reconfigure --frontend noninteractive tzdata
   sudo: yes
 
-- name: Install required packages
-  apt: name={{item}} state=installed
-  with_items:
-    - nodejs
-    - npm
-    - python-setuptools
-  sudo: yes
+#- name: Install required packages
+#  apt: name={{item}} state=installed
+#  with_items:
+          #    - nodejs
+      #    - npm
+      #    - python-setuptools
+#  sudo: yes
 
-- easy_install: name=speedtest-cli state=latest
+#- easy_install: name=speedtest-cli state=latest
 
-- name: Install "request" node.js package.
-  npm: name=request path={{openhab_configuration_dir}}/scripts
+#- name: Install "request" node.js package.
+#  sudo: yes
+#  sudo_user: openhab
+#  npm: name=request path={{openhab_configuration_dir}}/scripts
 
-- name: Install "object-assign" node.js package.
-  npm: name=object-assign path={{openhab_configuration_dir}}/scripts
+#- name: Install "object-assign" node.js package.
+#  sudo: yes
+#  sudo_user: openhab
+#  npm: name=object-assign path={{openhab_configuration_dir}}/scripts
 
-- name: Install "es6-promise" node.js package.
-  npm: name=es6-promise path={{openhab_configuration_dir}}/scripts
+#- name: Install "es6-promise" node.js package.
+#  sudo: yes
+#  sudo_user: openhab
+#  npm: name=es6-promise path={{openhab_configuration_dir}}/scripts
