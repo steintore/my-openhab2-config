@@ -101,8 +101,7 @@
         - scripts/pushMessages.script
         - scripts/alarm-climate.js
         - scripts/alarm.js
-        - sitemaps/huset.sitemap
-        - sitemaps/panel.sitemap
+        - sitemaps/default.sitemap
         - transform/en.map
         - transform/getBasicOnOffState.js
         - transform/getLastUpdate.js
