@@ -1,30 +1,5 @@
 # Stop OpenHab2
 
-#- name: link bindings into runtime
-#  file: >
-#    state=link
-#    src={{ openhab_install_dir }}/addons/{{openhab_version}}/org.openhab.{{ item }}-{{openhab_version}}.jar
-#    dest={{ openhab_install_dir }}/runtime/{{openhab_version}}/addons/org.openhab.{{ item }}-{{openhab_version}}.jar
-#  with_items:
-#    - binding.http
-#    - binding.networkhealth
-#    - binding.ntp
-#    - binding.rfxcom
-#    - binding.samsungtv
-#    - binding.systeminfo
-#    - binding.plex
-#    - binding.denon
-#    - persistence.rrd4j
-#    - persistence.influxdb
-#    - action.pushover
-#    - binding.configadmin
-#    - binding.astro
-#    - binding.hue
-#    - binding.systeminfo
-#    - binding.samsungac
-#    - binding.weather
-#    - binding.exec
-
 - name: See if configurations is a directory (then we nuke it next)
   shell: "[ -d {{ openhab_configuration_dir  }}] && echo 'Directory' || echo ''"
   register: is_directory
@@ -167,12 +142,11 @@
 - name: Install required packages
   apt: name={{item}} state=installed
   with_items:
-          #    - nodejs
-      #    - npm
       - python-setuptools
   sudo: yes
 
-  #- easy_install: name=speedtest-cli state=latest
+- easy_install: name=speedtest-cli
+  sudo: yes
 
 - name: Check if my_package is installed
   command: dpkg-query -W node
