@@ -1,4 +1,4 @@
-sitemap huset label="Huset"
+sitemap default label="Huset"
 {
 	Frame label="Quick" {
 		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
