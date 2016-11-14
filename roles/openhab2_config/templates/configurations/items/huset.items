@@ -144,40 +144,40 @@ Switch remote_light_basement_window 															{rfxcom="<12339014.1:Command"
 /* Philips HUE */
 Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
 Number scene_light_hall "Lys gang" 			<hue> 	(gLight, gHallLights, gFirstFloor)
-Switch light_hall_1_switch "Left bulb" 		<hue>	(gLight, gHallLights, gFirstFloor) {hue="5"}
-Switch light_hall_2_switch "Right bulb" 	<hue>	(gLight, gHallLights, gFirstFloor) {hue="6"}
-Switch light_hall_3_switch "Left bulb 2" 	<hue>	(gLight, gHallLights, gFirstFloor) {hue="3"}
-Switch light_hall_4_switch "Right bulb 2" 	<hue>	(gLight, gHallLights, gFirstFloor) {hue="4"}   
+Switch light_hall_1_switch "Left bulb"          <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:{{hue_serial}}:5:color"}
+Switch light_hall_2_switch "Right bulb"         <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:{{hue_serial}}:6:color"}
+Switch light_hall_3_switch "Left bulb 2"        <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:{{hue_serial}}:3:color"}
+Switch light_hall_4_switch "Right bulb 2"       <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:{{hue_serial}}:4:color"}
 
-Dimmer light_hall_1     "Left bulb [%d %%]"    {hue="5;brightness;30"}
-Dimmer light_hall_2     "Right bulb [%d %%]"   {hue="6;brightness;30"}
-Dimmer light_hall_3     "Left bulb2 [%d %%]"    {hue="3;brightness;30"}
-Dimmer light_hall_4     "Right bulb2 [%d %%]"   {hue="4;brightness;30"}
+Dimmer light_hall_1     "Left bulb [%d %%]"    {channel="hue:0100:{{hue_serial}}:5:color"}
+Dimmer light_hall_2     "Right bulb [%d %%]"   {channel="hue:0100:{{hue_serial}}:6:color"}
+Dimmer light_hall_3     "Left bulb2 [%d %%]"    {channel="hue:0220:{{hue_serial}}:3:color"}
+Dimmer light_hall_4     "Right bulb2 [%d %%]"   {channel="hue:0220:{{hue_serial}}:4:color"}
 
-Switch light_bedroom 	"Soverom" 			<hue> (gLight, gFirstFloor) {hue="13"}
-Color color_bedroom 	"Soverom" 			<hue> (gLight, gFirstFloor) {hue="13"} 
-Dimmer dimmer_bedroom 	"Soverom [%d %%]" 	<hue> (gLight, gFirstFloor) {hue="13;brightness;30"}
-Dimmer CT_dimm_bedroom	"Soverom"  			<hue> (gLight, gFirstFloor) {hue="13;colorTemperature;30"}
+Switch light_bedroom    "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:13:color"}
+Color color_bedroom     "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:13:color"}
+Dimmer dimmer_bedroom   "Soverom [%d %%]"       <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:13:color"}
+Dimmer CT_dimm_bedroom  "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:13:color"}
 
-Switch light_kid_room_2		"Maris rom" 			<hue> (gLight, gFirstFloor) {hue="12"}
-Color color_kid_room_2 		"Maris rom" 			<hue> (gLight, gFirstFloor) {hue="12"} 
-Dimmer dimmer_kid_room_2 	"Maris rom [%d %%]" 	<hue> (gLight, gFirstFloor) {hue="12;brightness;30"}
-Dimmer ct_kid_room_2   		"Maris rom"  			<hue> (gLight, gFirstFloor) {hue="12;colorTemperature;30"}
+Switch light_kid_room_2         "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:12:color"}
+Color color_kid_room_2          "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:12:color"}
+Dimmer dimmer_kid_room_2        "Maris rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:12:color"}
+Dimmer ct_kid_room_2            "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:12:color_temperature"}
 
-Switch light_kid_room_1 	"Ivers rom"		 	<hue> (gLight, gFirstFloor) {hue="11"}
-Color  color_kid_room_1 	"Ivers rom" 		<hue> (gLight, gFirstFloor) {hue="11"} 
-Dimmer dimmer_kid_room_1	"Ivers rom [%d %%]"	<hue> (gLight, gFirstFloor) {hue="11;brightness;30"}
-Dimmer ct_kid_room_1 	  	"Ivers rom"		  	<hue> (gLight, gFirstFloor) {hue="11;colorTemperature;30"}
+Switch light_kid_room_1         "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:11:color"}
+Color  color_kid_room_1         "Ivers rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:11:color"}
+Dimmer dimmer_kid_room_1        "Ivers rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:11:color"}
+Dimmer ct_kid_room_1            "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:11:color_temperature"}
 
 /* Motion detector */
-Switch motion_detector_basement "Bevegelse gang nede" 	<switch> (gBasement, Motion) {rfxcom="<13734590.10:Command"}
+Switch motion_detector_basement "Bevegelse gang nede"   <switch> (gBasement, Motion) {rfxcom="<13734590.10:Command"}
 
-Group:Switch:AND(ON, OFF) 		gBasementLights	"Lys [(%d)]"	 <light>		
+Group:Switch:AND(ON, OFF)               gBasementLights "Lys [(%d)]"     <light>
 Number scene_light_basement "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
-Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)  {hue="9;brightness;80"}
-Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {hue="10;brightness;80"}
-Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {hue="7;brightness;80"}
-Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {hue="8;brightness;80"}
+Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)  {channel="hue:0100:{{hue_serial}}:9:color"}
+Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:{{hue_serial}}:10:color"}
+Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:{{hue_serial}}:7:color"}
+Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:{{hue_serial}}:8:color"}
 
 /* Config-values */
 String pushover_token_anette 	"Pushover Anette" 	{configadmin = "pushover:anetteToken"}

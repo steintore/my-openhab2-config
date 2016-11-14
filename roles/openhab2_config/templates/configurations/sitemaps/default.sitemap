@@ -294,48 +294,25 @@ sitemap default label="Huset"
 				Text item=loadAverage15min
 			}
 			Frame label="Minnebruk" {
-				Text item=memFreePercent  {
-					Frame {
-						Switch item=memFreePercentPeriod label="Periode" mappings=[0="Time", 1="Dag", 2="Uke"]
-						Chart item=memFreePercent period=h refresh=30000 visibility=[memFreePercentPeriod==0, memFreePercentPeriod=="Uninitialized"]
-						Chart item=memFreePercent period=D refresh=30000 visibility=[memFreePercentPeriod==1]
-						Chart item=memFreePercent period=W refresh=30000 visibility=[memFreePercentPeriod==2]
-					}
-				}
 				Text item=memUsed 
 				Text item=memUsedPercent
 				Text item=memActualFree 
 				Text item=memActualUsed 
 				Text item=memTotal 
 			}
-			
-			Frame label="Swap" {
-				Text item=swapFree 
-				Text item=swapTotal
-				Text item=swapUsed 
-			}
-			
-			Frame label="Openhab" {
-				Text item=openhabRealMem
-				Text item=openhabVirtualMem
-				Text item=openhabCpuPercent
-				Text item=openhabCpuSystem
-				Text item=openhabUptime
-				Text item=openhabUptimeFormatted
-				
-			}
 			Frame label="Resultater" {
-    			Text item=SpeedtestResultDown
-    			Text item=SpeedtestResultUp
-    			Text item=SpeedtestResultPing
+	    			Text item=SpeedtestResultDown
+    				Text item=SpeedtestResultUp
+    				Text item=SpeedtestResultPing
   			}
   			Frame label="Kontroll" {
-    			Text item=SpeedtestResultDate
-    			Text item=SpeedtestRunning label="Speedtest [%s]" visibility=[SpeedtestRunning != "-"]
-    			Switch item=SpeedtestRerun mappings=[ON="Start"]
+    				Text item=SpeedtestResultDate
+    				Text item=SpeedtestRunning label="Speedtest [%s]" visibility=[SpeedtestRunning != "-"]
+    				Switch item=SpeedtestRerun mappings=[ON="Start"]
   			}
-  			Frame label="Statistikk" {
-    			Text label="..." icon="analytics-8-icon"
+			Frame label="Statistikk" {
+    				Image refresh=120000 url="{{grafana_base_url}}?to=now&theme=light&width=700&height=350&panelId=6&from=now-48h"
+	    			Image refresh=120000 url="{{grafana_base_url}}?to=now&theme=light&width=700&height=350&panelId=7&from=now-48h"
   			}
 		}
 	}

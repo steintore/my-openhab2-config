@@ -104,11 +104,11 @@
         - services/denon.cfg
         - services/weather.cfg
         - services/runtime.cfg
-        - services/hue.cfg
         - services/addons.cfg
         - things/astro.things
         - things/systeminfo.things
         - things/samsungtv.things
+        - things/hue.things
 
 - name: sync alarm-api script into configurations
   sudo: yes
