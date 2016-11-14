@@ -2,6 +2,6 @@
   vars:
     - rfxcom_tty: ttyUSB0
     - openhab_install_dir: "/usr/share/openhab2"
-	- openhab_configuration_dir: "/etc/openhab2"
+    - openhab_configuration_dir: "/etc/openhab2"
   roles:
-  	- openhab2_config
+    - openhab2_config
