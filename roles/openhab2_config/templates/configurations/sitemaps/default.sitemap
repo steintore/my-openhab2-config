@@ -4,7 +4,6 @@ sitemap default label="Huset"
 		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
 		Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
 		Switch item=holiday_mode visibility=[mode==2]
-		Switch item=scene_light_livingroom mappings=[0="Av", 1="På"]
 		Switch item=ac_scene mappings=[0="Av", 1="Varm", 2="Kjøl", 3="Luft"]
 		Setpoint item=ac_set_temp minValue=16 maxValue=28 step=1 icon="temperature" visibility=[ac_power==ON]
 		Switch item=ac_mode mappings=[0="Off", 1="Quiet", 5="TurboMode"] visibility=[tv_power==ON, ac_power==ON]
