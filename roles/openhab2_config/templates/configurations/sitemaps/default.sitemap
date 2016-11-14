@@ -17,7 +17,7 @@ sitemap default label="Huset"
 	}
 	
     Frame label="Huset" {
-    	Text item=LivingRoomTemperature label="Første etasje [%.1f °C]" icon="groundfloor" valuecolor=[LivingRoomTemperature_LastUpdate=="Uninitialized"="lightgray",LivingRoomTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    	Text item=LivingRoomTemperature label="Første etasje [%.1f °C]" icon="groundfloor" valuecolor=[LivingRoomTemperature_LastUpdate=="NULL"="lightgray",LivingRoomTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
     		Frame {	
     			Text item=LivingRoomTemperature
     			Text item=LivingRoomHumidity
@@ -32,7 +32,7 @@ sitemap default label="Huset"
 				Switch item=ac_scene mappings=[0="Av", 1="Varm", 2="Kjøl", 3="Luft"]
 				Setpoint item=ac_set_temp minValue=16 maxValue=28 step=1 icon="temperature" visibility=[ac_power==ON]
 				Text label="Avansert" icon="office" visibility=[ac_power==ON] {
-					Switch item=ac_power icon="heating" valuecolor=[ac_lastUpdate=="Uninitialized"="lightgray", ac_lastUpdate>240="orange", ac_lastUpdate<240="green"]
+					Switch item=ac_power icon="heating" valuecolor=[ac_lastUpdate=="NULL"="lightgray", ac_lastUpdate>240="orange", ac_lastUpdate<240="green"]
 					Text item=ac_current_temp visibility=[ac_power==ON]
 					Selection item=ac_mode mappings=[0="Off", 1="Quiet", 2="Sleep", 3="Smart", 4="SoftCool", 5="TurboMode", 6="WindMode1", 7="WindMode2", 8="WindMode3"] visibility=[ac_power==ON]
 					Selection item=ac_op_mode mappings=[0="Auto", 1="Cool", 2="Dry", 3="Wind", 4="Heat"] visibility=[ac_power==ON]
@@ -86,7 +86,7 @@ sitemap default label="Huset"
 			}
 		
     	}
-    	Text item=alarm_temperature_hall_1st label="Andre etasje [%.1f °C]" icon="firstfloor" valuecolor=[alarm_temperature_hall_1st_LastUpdate=="Uninitialized"="lightgray",alarm_temperature_hall_1st_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    	Text item=alarm_temperature_hall_1st label="Andre etasje [%.1f °C]" icon="firstfloor" valuecolor=[alarm_temperature_hall_1st_LastUpdate=="NULL"="lightgray",alarm_temperature_hall_1st_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
     		Frame label="Gang" {
     			Text item=alarm_temperature_hall_1st
     			Text item=alarm_humidity_hall_1st
@@ -111,7 +111,7 @@ sitemap default label="Huset"
     			Group item=gFirstFloor
     		}
     	}
-    	Text item=BasementTemperature label="Kjeller [%.1f °C]" icon="cellar" valuecolor=[BasementTemperature_LastUpdate=="Uninitialized"="lightgray",BasementTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    	Text item=BasementTemperature label="Kjeller [%.1f °C]" icon="cellar" valuecolor=[BasementTemperature_LastUpdate=="NULL"="lightgray",BasementTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
     		Frame {
     			Text item=BasementTemperature
     			Text item=BasementHumidity
@@ -174,14 +174,14 @@ sitemap default label="Huset"
 			}
 			Frame label="Tempdetaljer" {
 				Switch item=Temperature_Basement_Chart_Period label="Periode" mappings=[0="Timer", 1="Dag", 2="Uke", 3="2 uker"]
-                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=12h" refresh=90000 visibility=[Temperature_Basement_Chart_Period==0, Temperature_Basement_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=12h" refresh=90000 visibility=[Temperature_Basement_Chart_Period==0, Temperature_Basement_Chart_Period=="NULL"]
                 Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=D" refresh=90000 visibility=[Temperature_Basement_Chart_Period==1]
                 Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==2]
                 Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=2W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==3]
 			}
 			
     	}
-    	Text item=OutdoorTemperature label="Ute [%.1f °C]" icon="garden" valuecolor=[OutdoorTemperature_LastUpdate=="Uninitialized"="lightgray",OutdoorTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
+    	Text item=OutdoorTemperature label="Ute [%.1f °C]" icon="garden" valuecolor=[OutdoorTemperature_LastUpdate=="NULL"="lightgray",OutdoorTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
     		Frame {
     			Text item=OutdoorTemperature
 				Text item=OutdoorHumidity
@@ -214,14 +214,14 @@ sitemap default label="Huset"
     	Text item=Condition icon="sun" {
         Frame {
             Text item=Weather_LastUpdate visibility=[Weather_LastUpdate>30] valuecolor=[Weather_LastUpdate>120="orange", Weather_LastUpdate>300="red"]
-            Text item=Weather_Temperature valuecolor=[Weather_LastUpdate=="Uninitialized"="lightgray",Weather_LastUpdate>90="lightgray",>77="orange",>60="green",>40="aqua",<=40="blue"]{
+            Text item=Weather_Temperature valuecolor=[Weather_LastUpdate=="NULL"="lightgray",Weather_LastUpdate>90="lightgray",>77="orange",>60="green",>40="aqua",<=40="blue"]{
             Frame {
                 Text item=Weather_Temp_Max valuecolor=[>30="orange",>25="green",>10="aqua",<=0="blue"]
                 Text item=Weather_Temp_Min valuecolor=[>30="orange",>25="green",>10="aqua]",<=0="blue"]
             }
             Frame {
                 Switch item=Weather_Chart_Period label="Periode" mappings=[0="Time", 1="Dag", 2="Uke"]
-                Image url="http://localhost:8080/rrdchart.png?items=Weather_Temperature,Weather_Temp_Max,Weather_Temp_Min&period=h" refresh=30000 visibility=[Weather_Chart_Period==0, Weather_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Temperature,Weather_Temp_Max,Weather_Temp_Min&period=h" refresh=30000 visibility=[Weather_Chart_Period==0, Weather_Chart_Period=="NULL"]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Temperature,Weather_Temp_Max,Weather_Temp_Min&period=D" refresh=30000 visibility=[Weather_Chart_Period==1]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Temperature,Weather_Temp_Max,Weather_Temp_Min&period=W" refresh=30000 visibility=[Weather_Chart_Period==2]
               }
@@ -229,7 +229,7 @@ sitemap default label="Huset"
         Text item=Weather_Humidity {
             Frame {
                 Switch item=Weather_Humidity_Chart_Period label="Periode" mappings=[0="Time", 1="Dag", 2="Uke", 3="2 uker"]
-                Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=h" refresh=30000 visibility=[Weather_Humidity_Chart_Period==0, Weather_Humidity_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=h" refresh=30000 visibility=[Weather_Humidity_Chart_Period==0, Weather_Humidity_Chart_Period=="NULL"]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=D" refresh=30000 visibility=[Weather_Humidity_Chart_Period==1]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=W" refresh=30000 visibility=[Weather_Humidity_Chart_Period==2]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Humidity&period=2W" refresh=30000 visibility=[Weather_Humidity_Chart_Period==3]
@@ -238,7 +238,7 @@ sitemap default label="Huset"
         Text item=Weather_Pressure {
             Frame {
                 Switch item=Weather_Pressure_Chart_Period label="Periode" mappings=[0="Time", 1="Dag", 2="Uke", 3="2 uker"]
-                Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=h" refresh=30000 visibility=[Weather_Pressure_Chart_Period==0, Weather_Pressure_Chart_Period=="Uninitialized"]
+                Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=h" refresh=30000 visibility=[Weather_Pressure_Chart_Period==0, Weather_Pressure_Chart_Period=="NULL"]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=D" refresh=30000 visibility=[Weather_Pressure_Chart_Period==1]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=W" refresh=30000 visibility=[Weather_Pressure_Chart_Period==2]
                 Image url="http://localhost:8080/rrdchart.png?items=Weather_Pressure&period=2W" refresh=30000 visibility=[Weather_Pressure_Chart_Period==3]

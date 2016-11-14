@@ -102,12 +102,12 @@ then
 				else if (tempOutdoor <= lowerTempThreshold )
 					sendCommand(ac_set_temp, (new Double(ac_heat_temp.state.toString) + additionalDegrees).toString())	
 			} else if (mode.state == 1) { //NIGHT
-				if (ac_night_temp.state != Uninitialized && ac_night_temp.state != ac_heat_temp.state) 
+				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_heat_temp.state) 
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 				if (tempOutdoor <= lowerTempThreshold)
 					sendCommand(ac_set_temp, (new Double(ac_night_temp.state.toString) + additionalDegrees).toString())
 			} else { //AWAY
-				if (ac_night_temp.state != Uninitialized && ac_night_temp.state != ac_heat_temp.state)
+				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_heat_temp.state)
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 					else if (tempOutdoor <= lowerTempThreshold)
 					sendCommand(ac_set_temp, (new Double(ac_night_temp.state.toString) + additionalDegrees).toString())
@@ -298,7 +298,7 @@ then
 			if (bathroom_gf_floor_power_level.state > 0 && bathroom_gf_floor_power_level.state != floor_holiday_power_level.state)
 				sendCommand(bathroom_gf_floor_power_level, floor_holiday_power_level.state.toString)
 			if (ac_scene.state == 1) {
-				if (ac_night_temp.state != Uninitialized && ac_night_temp.state != ac_set_temp.state) 
+				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_set_temp.state) 
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 			} else if(ac_scene.state != 0) { // switch of air conditioner if not heating
 				sendCommand(ac_scene, 0)
@@ -320,7 +320,7 @@ then
 			if (bathroom_1st_floor_mode.state == 11)
 				sendCommand(bathroom_1st_floor_mode, 1) //HEATING MODE
 			if (ac_scene.state == 1) {
-				if (ac_heat_temp.state != Uninitialized && ac_heat_temp.state != ac_set_temp.state) 
+				if (ac_heat_temp.state != NULL && ac_heat_temp.state != ac_set_temp.state) 
 					sendCommand(ac_set_temp, ac_heat_temp.state.toString)
 			}
 			if (screen_pi.state == ON) 

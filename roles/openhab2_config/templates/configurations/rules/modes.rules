@@ -141,7 +141,7 @@ rule "A change of mode"
 			sendCommand(scene_light_hall, 2) // NIGHT
 			sendCommand(kontor_panelovn, OFF)
 			
-			if (floor_night_power_level.state != Uninitialized) {
+			if (floor_night_power_level.state != NULL) {
 				
 				floorHeatingNight?.members.forEach [item |
 					if (floor_night_power_level.state == 0 && item.state > 0) 

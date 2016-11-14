@@ -13,71 +13,71 @@ rule "Startup"
 	then
 	
 	createTimer(now.plusSeconds(120)) [|
-		if (ac_night_temp.state == Uninitialized) {
+		if (ac_night_temp.state == NULL) {
 			sendCommand(ac_night_temp, 17)
 		}
-		if (ac_heat_temp.state == Uninitialized) {
+		if (ac_heat_temp.state == NULL) {
 			sendCommand(ac_heat_temp, 22)
 		}
-		if (ac_cool_temp.state == Uninitialized) {
+		if (ac_cool_temp.state == NULL) {
 			sendCommand(ac_cool_temp, 20)
 		}
-		if (mode.state == Uninitialized || mode.state < 0 || mode.state > 2) {
+		if (mode.state == NULL || mode.state < 0 || mode.state > 2) {
 			sendCommand(mode, 0)
 		}
-		if (previous_mode.state == Uninitialized) {
+		if (previous_mode.state == NULL) {
 			sendCommand(previous_mode, 0)
 		}
-		if (scene_garage_2.state == Uninitialized) {
+		if (scene_garage_2.state == NULL) {
 			postUpdate(scene_garage_2, 0)
 		}
-		if (scene_garage_1.state == Uninitialized) {
+		if (scene_garage_1.state == NULL) {
 			postUpdate(scene_garage_1, 0)
 		}
-		if (AC_lower_temp_threshold.state == Uninitialized)
+		if (AC_lower_temp_threshold.state == NULL)
 			postUpdate(AC_lower_temp_threshold, -5)
 			
-		if (AC_quiet_temp_threshold.state == Uninitialized)
+		if (AC_quiet_temp_threshold.state == NULL)
 			postUpdate(AC_quiet_temp_threshold, -5)
 			
-		if (AC_additional_degrees.state == Uninitialized)
+		if (AC_additional_degrees.state == NULL)
 			postUpdate(AC_additional_degrees, 1)
 		
 		postUpdate(scene_light_hall_gf, 2) // SET TO AUTO
 		
-		if (floor_holiday_power_level.state == Uninitialized) {
+		if (floor_holiday_power_level.state == NULL) {
 			postUpdate(floor_holiday_power_level, 2)	
 		}
 		
-		if (floor_day_power_level.state == Uninitialized) {
+		if (floor_day_power_level.state == NULL) {
 			postUpdate(floor_day_power_level, 4)	
 		}
 		
-		if (floor_night_power_level.state == Uninitialized) {
+		if (floor_night_power_level.state == NULL) {
 			postUpdate(floor_night_power_level, 2)
 		}
 		
-		if (basementFloorWeekdaysON.state == Uninitialized) {
+		if (basementFloorWeekdaysON.state == NULL) {
 			postUpdate(basementFloorWeekdaysON, 14)	
 		}
 		
-		if (basementFloorWeekdaysOFF.state == Uninitialized) {
+		if (basementFloorWeekdaysOFF.state == NULL) {
 			postUpdate(basementFloorWeekdaysOFF, 21)	
 		}
 		
-		if (basementFloorWeekendON.state == Uninitialized) {
+		if (basementFloorWeekendON.state == NULL) {
 			postUpdate(basementFloorWeekendON, 8)	
 		}
 		
-		if (basementFloorWeekendOFF == Uninitialized) {
+		if (basementFloorWeekendOFF == NULL) {
 			postUpdate(basementFloorWeekendOFF, 22)	
 		}
 		
-		if (floor_holiday_mode.state == Uninitialized) {
+		if (floor_holiday_mode.state == NULL) {
 			postUpdate(floor_holiday_mode, 2)	
 		}
 			
-		if (SpeedtestSummary.state == Uninitialized || SpeedtestSummary.state == "") { 
+		if (SpeedtestSummary.state == NULL || SpeedtestSummary.state == "") { 
 			SpeedtestSummary.postUpdate("⁉ (ukjent)")
 		}
 		postUpdate(holiday_mode, OFF)	
@@ -216,7 +216,7 @@ rule "If we manually change to quiet mode when the tv is on"
 when 	
 	Item ac_mode changed
 then
-	if (tv_power.state == ON && (ac_mode_previous.state == Uninitialized || ac_mode_previous.state.toString == '99')) {
+	if (tv_power.state == ON && (ac_mode_previous.state == NULL || ac_mode_previous.state.toString == '99')) {
 		ac_mode_previous.sendCommand(ac_mode.previousState(true).state.toString())
 	}
 end

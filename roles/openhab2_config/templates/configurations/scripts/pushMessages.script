@@ -1,7 +1,7 @@
 
 if (stein_home.state == ON) {
 	logError('Sending to STT','Sending to STT: ' + push_message_text)
-	if (push_message_url.state.toString.length > 0 && push_message_url.state != Uninitialized )
+	if (push_message_url.state.toString.length > 0 && push_message_url.state != NULL )
 		pushover(push_message_text.state.toString, 'stt_iphone', 0, push_message_url.state.toString)
 	else
 		pushover(push_message_text.state.toString)
