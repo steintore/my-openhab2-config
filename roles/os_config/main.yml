@@ -1,0 +1,16 @@
+- name: check current timezone
+  shell: cat /etc/timezone
+  register: current_zone
+
+- name: Set timezone variables
+  copy: content="Europe/Oslo"
+    dest=/etc/timezone
+    owner=root
+    group=root
+    mode=0644
+    backup=yes
+  sudo: yes
+
+- name: update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+  sudo: yes
