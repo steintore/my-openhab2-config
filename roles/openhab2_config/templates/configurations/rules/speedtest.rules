@@ -5,7 +5,7 @@ rule "Speedtest"
 when
     //Time cron "0 0 5 * * ?" or
     //Time cron "0 0 13 * * ?"
-    Time cron "0 0 * * * ?" or
+    Time cron "0 0 30 * * ?" or
     Item SpeedtestRerun received command ON
 then {
     logInfo("RULE", "--> speedtest executed...")

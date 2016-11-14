@@ -56,7 +56,6 @@ sitemap default label="Huset"
 			}
 			Frame label="TV" visibility=[tv_power==ON] {
 				Group item=TV icon="television"
-				Selection item=tv_pause_play mappings=[1="Pause", 2="Play"]
 			}
 			Frame label="Plex TV" visibility=[PlexTVPower==ON] {
         		Switch item=PlexTVPower
