@@ -295,9 +295,7 @@ sitemap default label="Huset"
 			}
 			Frame label="Minnebruk" {
 				Text item=memUsed 
-				Text item=memUsedPercent
 				Text item=memActualFree 
-				Text item=memActualUsed 
 				Text item=memTotal 
 			}
 			Frame label="Resultater" {
