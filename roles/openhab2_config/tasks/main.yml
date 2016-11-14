@@ -1,3 +1,5 @@
+- include_vars: main.yml
+
 - name: See if configurations is a directory (then we nuke it next)
   shell: "[ -d {{ openhab_configuration_dir  }}] && echo 'Directory' || echo ''"
   register: is_directory
@@ -42,6 +44,10 @@
     state=directory
     path={{ openhab_configuration_dir }}/services
 
+- name: create openHAB things directory
+  file: >
+    state=directory
+    path={{ openhab_configuration_dir }}/things
 
 - name: sync setup into config
   template: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
@@ -91,17 +97,18 @@
         - services/samsungac.cfg
         - services/http.cfg
         - services/pushover.cfg
-        - services/samsungtv.cfg
         - services/addons.cfg
         - services/influxdb.cfg
         - services/plex.cfg
         - services/rfxcom.cfg
         - services/denon.cfg
-        - services/astro.cfg
         - services/weather.cfg
         - services/runtime.cfg
         - services/hue.cfg
         - services/addons.cfg
+        - things/astro.things
+        - things/systeminfo.things
+        - things/samsungtv.things
 
 - name: sync alarm-api script into configurations
   sudo: yes

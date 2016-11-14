@@ -1,0 +1,3 @@
+astro:sun:home [ geolocation="{{astro_latitude}},{{astro_longitude}}", interval=360]
+astro:moon:home [ geolocation="{{astro_latitude}},{{astro_longitude}}", interval=360]
+

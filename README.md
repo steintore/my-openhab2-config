@@ -13,11 +13,14 @@ containing a setup for [OpenHAB2](http://www.openhab.org)
    ```git clone https://github.com/steintore/my-openhab2-config.git```
 3. `cd my-openhab2-config` into your cloned repo.
 4. From the command line run: 
-    `ansible-playbook playbook.yml -i hosts --ask-vault-pass -vvvv --ask-sudo-pass` to install OpenHAB. 
-    Note! The repository contains file(s) encrypted using `ansible-vault` - in such files there are secrets - like binding keys etc. Without the passphrase to the encrypted files you cannot start the system - in other words you need to replace the files with your own encrypted files with your secrets - or remove the functionality.
+    To install everything:
+	`ansible-playbook playbook.yml -i hosts --ask-vault-pass -vvvv --ask-sudo-pass`. 
+    To update the OpenHAB2 configurations:
+	`ansible-playbook updateOpenhab.yml -i hosts --ask-vault-pass -v --ask-sudo-pass`
+
+Note! The repository contains file(s) encrypted using `ansible-vault` - in such files there are secrets - like binding keys etc. Without the passphrase to the encrypted files you cannot start the system - in other words you need to replace the files with your own encrypted files with your secrets - or remove the functionality.
 
 After you are up and running, open a browser and point it to [openHAB2 http://localhost:8080](http://localhost:8080).
-
 
 ## Operations
 

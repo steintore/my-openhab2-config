@@ -187,20 +187,20 @@ String stein_email				"STT e-mail"		{configadmin = "steintore:email"}
 
 /* Living room TV */
 Group TV <tv>
-Switch 		  tv_power 		"TV"		<power>	   		(TV, proximity){samsungtv="ON:Livingroom:KEY_POWERON, OFF:Livingroom:KEY_POWEROFF", nh="{{samsungtv_ip}}"}
-Rollershutter tv_channel 	"Kanal"     <channel>   	(TV){samsungtv="UP:Livingroom:KEY_CHUP, DOWN:Livingroom:KEY_CHDOWN"}
-Switch        tv_mute		"Lyd av/på" <volume>	    (TV){samsungtv="ON:Livingroom:KEY_MUTE, OFF:Livingroom:KEY_MUTE"}
-Rollershutter tv_volume     "Volum"		<volume>	    (TV){samsungtv="UP:Livingroom:KEY_VOLUP, DOWN:Livingroom:KEY_VOLDOWN"}
-Number 		  tv_pause_play "Pause/play"<video>			(TV){samsungtv="1:Livingroom:KEY_PLAY, 2:Livingroom:KEY_PAUSE"}
+Switch 		tv_power 	"TV"		<power>		(TV, proximity)	{channel="samsungtv:tv:Livingroom:power", nh="{{samsungtv_ip}}"}
+Switch        	tv_mute		"Lyd av/på" 	<volume>	(TV)		{channel="samsungtv:tv:Livingroom:mute"}
+Dimmer		tv_volume     	"Volum"		<volume>	(TV)		{channel="samsungtv:tv:Livingroom:volume"}
 
 /* Astro information */
 Group Astro
-DateTime Sunrise_Time  	"Soloppgang [%1$tH:%1$tM]" 						<sun> 	(Astro) {astro="planet=sun, type=rise, property=start"}
-DateTime Sunset_Time   	"Solnedgang [%1$tH:%1$tM]" 						<moon>	(Astro) {astro="planet=sun, type=set, property=end"}
-DateTime Moonrise_Time	"Måneoppgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) {astro="planet=moon, type=rise, property=start"}
-DateTime Moonset_Time   "Månenedgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) {astro="planet=moon, type=set, property=end"}
-DateTime Moon_Full      "Neste fullmåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"<moon>	(Astro) {astro="planet=moon, type=phase, property=full"}
-DateTime Moon_New     	"Neste nymåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"  <moon>	(Astro) {astro="planet=moon, type=phase, property=new"}
+DateTime Sunrise_Time  	"Soloppgang [%1$tH:%1$tM]" 						<sun> 	(Astro) { channel="astro:sun:home:rise#start" }
+DateTime Sunset_Time   	"Solnedgang [%1$tH:%1$tM]" 						<moon>	(Astro) { channel="astro:sun:home:set#start" }
+DateTime Moonrise_Time	"Måneoppgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) { channel="astro:moon:home:rise#start" }
+DateTime Moonset_Time   "Månenedgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) { channel="astro:moon:home:set#start" }
+DateTime Moon_Full      "Neste fullmåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"<moon>	(Astro) { channel="astro:moon:home:phase#full" }
+DateTime Moon_New     	"Neste nymåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"  <moon>	(Astro) { channel="astro:moon:home:phase#new" }
+String Moon_Phase	"Månefase"					<moon>  (Astro) { channel="astro:moon:home:phase#name" }
+String Season		"Sesong"						(Astro) { channel="astro:sun:home:seasin#name" }
 
 
 /* Samsung AC */
