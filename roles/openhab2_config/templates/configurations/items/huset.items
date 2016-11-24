@@ -66,18 +66,18 @@ Number Temperature_Livingroom_Chart_Period  "Periode"
 Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Humidex						"Humidex [SCALE(humidex.scale):%s]"					(Weather)
-Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) { rfxcom="<26628:Temperature" }
-Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, Weather) { rfxcom="<26628:Humidity" }
+Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) {channel="rfxcom:lighting2:usbrfxcom:outdoor_temperature:temperature" }
+Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, Weather) {channel="rfxcom:lighting2:usbrfxcom:outdoor_temperature:humidity" }
 DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) { rfxcom="<58881:Temperature" }
-Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor) { rfxcom="<58881:Humidity" }
+Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:temperature" }
+Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:humidity" }
 DateTime OfficeTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) { rfxcom="<46082:Temperature" }
-Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement) { rfxcom="<46082:Humidity" }
+Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) {channel="rfxcom:lighting2:usbrfxcom:basement_temperature:temperature" }
+Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:humidity" }
 DateTime BasementTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
 Number Temperature_Basement_Chart_Period 	"Periode"
-Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) { rfxcom="<29954:Temperature"}
-Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF) { rfxcom="<29954:Humidity" }
+Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) {channel="rfxcom:lighting2:usbrfxcom:living_room_temperature:temperature" }
+Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF) {channel="rfxcom:lighting2:usbrfxcom:living_room_temperature:humidity" }
 DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
 
 /* Home appliances */
@@ -106,14 +106,14 @@ Number scene_garage_1			"LEAF"
 Number scene_garage_2			"MONDEO"
 
 /* Switch */
-Switch left_double_switch 	"Venstre knapp" <network> (gGF) { rfxcom="<11971074.11:Command" }
-Switch right_double_switch 	"Høyre knapp" 	<network> (gGF) { rfxcom="<11971074.12:Command" }
+Switch left_double_switch 	"Venstre knapp" <network> (gGF) {channel="rfxcom:lighting2:usbrfxcom:bedroom_switch_left:command" }
+Switch right_double_switch 	"Høyre knapp" 	<network> (gGF) {channel="rfxcom:lighting2:usbrfxcom:bedroom_switch_right:command" }
 
 /* Battery */
-Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, BatteryLevel_10) 	{rfxcom="<26628:BatteryLevel"}
-Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, BatteryLevel_10) 	{rfxcom="<46082:BatteryLevel"}
-Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, BatteryLevel_10) {rfxcom="<20481:BatteryLevel"}
-Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{rfxcom="<29954:BatteryLevel"}
+Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, BatteryLevel_10) 	{channel="rfxcom:lighting2:usbrfxcom:outdoor_temperature:batteryLevel" }
+Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, BatteryLevel_10) 	{channel="rfxcom:lighting2:usbrfxcom:basement_temperature:batteryLevel" }
+Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, BatteryLevel_10) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:batteryLevel" }
+Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{channel="rfxcom:lighting2:usbrfxcom:living_room_temperature:batteryLevel" }
 
 /* Text values */
 String push_message_text "Default message"
@@ -121,23 +121,23 @@ String push_message_url ""
 
 /* Lighting */
 Group:Switch:OR(ON, OFF) 		Living_Room_Lights 		"Lys [(%d)]" <light>	
-Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, Living_Room_Lights) 	{rfxcom=">12339014.1:LIGHTING2.AC:Command"}
-Switch remote_light_living_room_corner 															{rfxcom="<12339014.1:Command"}
-Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_Room_Lights) 	{rfxcom=">12339014.2:LIGHTING2.AC:Command"}
-Switch remote_light_living_room_window 															{rfxcom="<12339014.2:Command"}
+Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, Living_Room_Lights) 	{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
+Switch remote_light_living_room_corner 															{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
+Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_Room_Lights) 	{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
+Switch remote_light_living_room_window 															{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
 Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, Living_Room_Lights)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(0)]"}
 Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, Living_Room_Lights)
 Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary.Set(0)]"}
 Switch light_dining_table			"Taklys" 		<light> (gGF, gLight, Living_Room_Lights) {http=">[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchMultilevel.Set(0)]"}
 Number light_dining_table_dimmer 	"Taklys [%s]"	<light> (gGF, gLight) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchMultilevel.data:20000:JS(getLevelValue.js)]"}
 
-Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 {rfxcom="<18220938.10:Command"}
+Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 {channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
 
-Switch light_basement_power 		"Av/På"						<light> (gBasement, gLight) 	{rfxcom=">12339014.0:LIGHTING2.AC:Command"}
-Switch remote_light_basement_power 																{rfxcom="<12339014.0:Command"}
-Dimmer light_basement_dimmer 		"Tak kjellerstue [%d %%]"			(gBasement, gLight) 	{rfxcom=">12339014.0:LIGHTING2.AC:DimmingLevel"}
-Switch light_basement_window 		"Av/På"						<light> (gBasement, gLight) 	{rfxcom=">12339014.1:LIGHTING2.AC:Command"}
-Switch remote_light_basement_window 															{rfxcom="<12339014.1:Command"}
+Switch light_basement_power 		"Av/På"						<light> (gBasement, gLight) 	{channel="rfxcom:lighting2:usbrfxcom:basement_roof:command" }
+Switch remote_light_basement_power 																{channel="rfxcom:lighting2:usbrfxcom:basement_roof:command" }
+Dimmer light_basement_dimmer 		"Tak kjellerstue [%d %%]"			(gBasement, gLight) 	{channel="rfxcom:lighting2:usbrfxcom:basement_roof:dimmerLevel" }
+Switch light_basement_window 		"Av/På"						<light> (gBasement, gLight) 	{channel="rfxcom:lighting2:usbrfxcom:basement_window:command" }
+Switch remote_light_basement_window 															{channel="rfxcom:lighting2:usbrfxcom:basement_window:command" }
 
 
 
@@ -170,7 +170,7 @@ Dimmer dimmer_kid_room_1        "Ivers rom [%d %%]"     <hue> (gLight, gFirstFlo
 Dimmer ct_kid_room_1            "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:{{hue_serial}}:11:color_temperature"}
 
 /* Motion detector */
-Switch motion_detector_basement "Bevegelse gang nede"   <switch> (gBasement, Motion) {rfxcom="<13734590.10:Command"}
+Switch motion_detector_basement "Bevegelse gang nede"   <switch> (gBasement, Motion) {channel="rfxcom:lighting2:usbrfxcom:basement_motion:command" }
 
 Group:Switch:AND(ON, OFF)               gBasementLights "Lys [(%d)]"     <light>
 Number scene_light_basement "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
@@ -267,7 +267,7 @@ Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF) {http="<[http://
 Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)
 
 /* Smoke detector */
-String smoke_detector "Røykvarsler" {rfxcom="<16435200:Status"}
+String smoke_detector "Røykvarsler" {channel="rfxcom:lighting2:usbrfxcom:smoke_detector:status" }
 
 /* Plex */
 Switch PlexXBoxPower      "Power"         <video>     {plex="{{plex_id_xbox}}#power"}
