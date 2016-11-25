@@ -1,20 +1,20 @@
 Bridge rfxcom:bridge:usbrfxcom [ serialPort="/dev/ttyRFXCOM" ] {
-	Thing lighting2				basement_window				[deviceId="12339014.1", subType="AC"]
-	Thing lighting2				basemment_roof	 			[deviceId="12339014.0", subType="AC"] 
+	Thing lighting2				basement_window				[deviceId="{{rfxcom_basement_window}}", subType="AC"]
+	Thing lighting2				basemment_roof	 			[deviceId="{{rfxcom_basement_roof}}", subType="AC"] 
 	
-	Thing lighting2				living_room_floor 			[deviceId="12339014.1", subType="AC"]
-	Thing lighting2				living_room_window 			[deviceId="12339014.2", subType="AC"]
+	Thing lighting2				living_room_floor 			[deviceId="{{rfxcom_living_room_floor}}", subType="AC"]
+	Thing lighting2				living_room_window 			[deviceId="{{rfxcom_living_room_window}}", subType="AC"]
 	
-	Thing temperaturehumidity   outdoor_temperature			[deviceId="26628", subType="TH1"]
-	Thing temperaturehumidity   office_temperature			[deviceId="26628", subType="TH1"]
-	Thing temperaturehumidity   living_room_temperature		[deviceId="26628", subType="TH1"]
-	Thing temperaturehumidity   basement_temperature		[deviceId="26628", subType="TH1"]
+	Thing temperaturehumidity   outdoor_temperature			[deviceId="{{rfxcom_outdoor}}", subType="TH1"]
+	Thing temperaturehumidity   office_temperature			[deviceId="{{rfxcom_office}}", subType="TH1"]
+	Thing temperaturehumidity   living_room_temperature		[deviceId="{{rfxcom_living_room}}", subType="TH1"]
+	Thing temperaturehumidity   basement_temperature		[deviceId="{{rfxcom_basement}}", subType="TH1"]
 	
-	Thing lighting2				beedroom_switch_left		[deviceId="11971074.11", subType="AC"]
-	Thing lighting2				beedroom_switch_right		[deviceId="11971074.12", subType="AC"]
+	Thing lighting2				beedroom_switch_left		[deviceId="{{rfxcom_bedroom_switch_left}}", subType="AC"]
+	Thing lighting2				beedroom_switch_right		[deviceId="{{rfxcom_bedroom_switch_right}}", subType="AC"]
 	
-	Thing lighting2 			basement_motion				[deviceId="18220938.10", subType="AC"]
-	Thing lighting2 			living_room_motion			[deviceId="13734590.10", subType="AC"]
+	Thing lighting2 			basement_motion				[deviceId="{{rfxcom_basement_motion}}", subType="AC"]
+	Thing lighting2 			living_room_motion			[deviceId="{{rfxcom_living_room_motion}}", subType="AC"]
 	
-	Thing security1             smoke_detector             [deviceId="16435200", subType="KD101"]
+	Thing security1             smoke_detector             [deviceId="{{rfxcom_smoke_detector}}", subType="KD101"]
 }
