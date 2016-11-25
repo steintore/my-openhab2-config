@@ -12,20 +12,20 @@
 
 - name: Install node
   apt: deb="~/downloads/node_latest_armhf.deb"
-  sudo: yes
+  become: yes
   when: node_check_deb.rc == 1
 
 - name: Install "request" node.js package.
-  sudo: yes
-  sudo_user: openhab
+  become: yes
+  become_user: openhab
   npm: name=request path={{openhab_configuration_dir}}/scripts
 
 - name: Install "object-assign" node.js package.
-  sudo: yes
-  sudo_user: openhab
+  become: yes
+  become_user: openhab
   npm: name=object-assign path={{openhab_configuration_dir}}/scripts
 
 - name: Install "es6-promise" node.js package.
-  sudo: yes
-  sudo_user: openhab
+  become: yes
+  become_user: openhab
   npm: name=es6-promise path={{openhab_configuration_dir}}/scripts

@@ -1,11 +1,7 @@
+---
 - hosts: webservers
-  vars:
-    - rfxcom_tty: ttyUSB0
-    - openhab_install_dir: "/usr/share/openhab2"
-    - openhab_configuration_dir: "/etc/openhab2"
   roles:
     - os_config
     - node
     - speedtest
-    #- openhab2
     - openhab2_config

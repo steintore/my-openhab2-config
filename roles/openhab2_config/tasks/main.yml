@@ -6,7 +6,7 @@
 
 - name: create openHAB configrations directories
   file: path={{ openhab_configuration_dir}}/{{ item }} state=directory
-  become: yes
+  become: true
   become_user: openhab
   with_items:
     - items
@@ -70,7 +70,6 @@
         - services/addons.cfg
         - services/influxdb.cfg
         - services/plex.cfg
-        - services/rfxcom.cfg
         - services/denon.cfg
         - services/weather.cfg
         - services/runtime.cfg
@@ -86,14 +85,13 @@
   become_user: openhab
   copy: dest={{ openhab_configuration_dir }}/scripts/alarm-api.js src=../templates/configurations/scripts/alarm-api.js
 
-- name: create openHAB configurations/transform directory
-  file: >
-    state=directory
-    path={{ openhab_configuration_dir }}/transform
-
 - name: sync transform setup into config
   copy: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
   become: yes
   become_user: openhab
   with_fileglob:
         - transform/*
+
+- name: sync openhab java opts
+  become: yes
+  template: dest="/etc/default/openhab2" src="../templates/openhab2"

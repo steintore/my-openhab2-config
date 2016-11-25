@@ -9,8 +9,8 @@
     group=root
     mode=0644
     backup=yes
-  sudo: yes
+  become: yes
 
 - name: update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata
-  sudo: yes
+  become: yes
