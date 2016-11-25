@@ -1,11 +1,6 @@
-import org.openhab.core.library.types.DateTimeType
-
-
 rule "Speedtest"
 when
-    //Time cron "0 0 5 * * ?" or
-    //Time cron "0 0 13 * * ?"
-    Time cron "0 0 30 * * ?" or
+    Time cron "0 0/30 * * * ?" or
     Item SpeedtestRerun received command ON
 then {
     logInfo("RULE", "--> speedtest executed...")
@@ -16,10 +11,6 @@ then {
 
     // execute the script, you may have to change the path depending on your system
     var String speedtestCliOutput = executeCommandLine("/usr/local/bin/speedtest-cli@@--simple", 120*1000)
-
-    // for debugging:
-    //var String speedtestCliOutput = "Ping: 43.32 ms\nDownload: 21.64 Mbit/s\nUpload: 4.27 Mbit/s"
-    //logInfo("RULE", "--> speedtest output:\n" + speedtestCliOutput + "\n\n")
 
     SpeedtestRunning.postUpdate("Dataevaluering...")
 

@@ -6,7 +6,7 @@ Bridge hue:bridge:hue1 [ ipAddress="{{hue_ip}}", userName="{{hue_secret}}"] {
     0100 7 [ lightId="7" ]
     0100 8 [ lightId="8" ]
     0100 9 [ lightId="9" ]
-    0100 10 [ lightId="10 ]
+    0100 10 [ lightId="10" ]
     0210 11 [ lightId="11" ]
     0210 12 [ lightId="12" ]
     0210 13 [ lightId="13" ] 

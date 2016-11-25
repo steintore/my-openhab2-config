@@ -1,48 +1,45 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
-import java.util.Map
 import org.joda.time.DateTime
 
 rule "Set alarm climate items"
-when Item alarm_climate received update
+	when Item alarm_climate received update
 then
-
-	var String temp_string = transform("JSONPATH", "$.[?(@.location=='KJØKKEN')][0].temperature", alarm_climate.state.toString())
-	var String[] temperature = temp_string.split('&')
-	postUpdate(alarm_temperature_kitchen, temperature.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')][0].temperature", alarm_climate.state.toString())
-	temperature = temp_string.split('&')
-	postUpdate(alarm_temperature_hall_gf, temperature.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')][0].temperature", alarm_climate.state.toString())
-	temperature = temp_string.split('&')
-	postUpdate(alarm_temperature_hall_basement, temperature.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')][0].temperature", alarm_climate.state.toString())
-	temperature = temp_string.split('&')
-	postUpdate(alarm_temperature_hall_1st, temperature.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')][0].temperature", alarm_climate.state.toString())
-	temperature = temp_string.split('&')
-	postUpdate(alarm_temperature_laundry, temperature.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')][0].humidity", alarm_climate.state.toString())
-	var String[] humidity = temp_string.split('%')
-	postUpdate(alarm_humidity_hall_gf, humidity.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')][0].humidity", alarm_climate.state.toString())
-	humidity = temp_string.split('%')
-	postUpdate(alarm_humidity_hall_basement, humidity.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')][0].humidity", alarm_climate.state.toString())
-	humidity = temp_string.split('%')
-	postUpdate(alarm_humidity_hall_1st, humidity.get(0).replace(',', '.'))
-
-	temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')][0].humidity", alarm_climate.state.toString())
-	humidity = temp_string.split('%')
-	postUpdate(alarm_humidity_laundry, humidity.get(0).replace(',', '.'))
+	if (alarm_climate != null) {
+		var String temp_string = transform("JSONPATH", "$.[?(@.location=='KJØKKEN')][0].temperature", alarm_climate.state.toString())
+		var String[] temperature = temp_string.split('&')
+		postUpdate(alarm_temperature_kitchen, temperature.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')][0].temperature", alarm_climate.state.toString())
+		temperature = temp_string.split('&')
+		postUpdate(alarm_temperature_hall_gf, temperature.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')][0].temperature", alarm_climate.state.toString())
+		temperature = temp_string.split('&')
+		postUpdate(alarm_temperature_hall_basement, temperature.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')][0].temperature", alarm_climate.state.toString())
+		temperature = temp_string.split('&')
+		postUpdate(alarm_temperature_hall_1st, temperature.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')][0].temperature", alarm_climate.state.toString())
+		temperature = temp_string.split('&')
+		postUpdate(alarm_temperature_laundry, temperature.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')][0].humidity", alarm_climate.state.toString())
+		var String[] humidity = temp_string.split('%')
+		postUpdate(alarm_humidity_hall_gf, humidity.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')][0].humidity", alarm_climate.state.toString())
+		humidity = temp_string.split('%')
+		postUpdate(alarm_humidity_hall_basement, humidity.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')][0].humidity", alarm_climate.state.toString())
+		humidity = temp_string.split('%')
+		postUpdate(alarm_humidity_hall_1st, humidity.get(0).replace(',', '.'))
+	
+		temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')][0].humidity", alarm_climate.state.toString())
+		humidity = temp_string.split('%')
+		postUpdate(alarm_humidity_laundry, humidity.get(0).replace(',', '.'))
+	}
 end
 
 rule "Arming, disarming alarm"
