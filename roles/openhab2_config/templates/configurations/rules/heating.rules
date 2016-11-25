@@ -68,7 +68,7 @@ end
 
 rule "AC scenes"
 	when
-		Item ac_scene  received command
+		Item ac_scene received command
 then
 	logInfo('org.openhab', 'AC received state:' + ac_scene.state)
 	switch (receivedCommand) {

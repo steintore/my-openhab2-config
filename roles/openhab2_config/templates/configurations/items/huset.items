@@ -66,18 +66,18 @@ Number Temperature_Livingroom_Chart_Period  "Periode"
 Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Humidex						"Humidex [SCALE(humidex.scale):%s]"					(Weather)
-Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) {channel="rfxcom:lighting2:usbrfxcom:outdoor_temperature:temperature" }
-Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, Weather) {channel="rfxcom:lighting2:usbrfxcom:outdoor_temperature:humidity" }
+Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
+Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, Weather) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
 DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:temperature" }
-Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:humidity" }
+Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:temperature" }
+Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime OfficeTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) {channel="rfxcom:lighting2:usbrfxcom:basement_temperature:temperature" }
-Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:humidity" }
+Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
+Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime BasementTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
 Number Temperature_Basement_Chart_Period 	"Periode"
-Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) {channel="rfxcom:lighting2:usbrfxcom:living_room_temperature:temperature" }
-Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF) {channel="rfxcom:lighting2:usbrfxcom:living_room_temperature:humidity" }
+Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
+Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:humidity" }
 DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
 
 /* Home appliances */
@@ -110,10 +110,10 @@ Switch left_double_switch 	"Venstre knapp" <network> (gGF) {channel="rfxcom:ligh
 Switch right_double_switch 	"Høyre knapp" 	<network> (gGF) {channel="rfxcom:lighting2:usbrfxcom:bedroom_switch_right:command" }
 
 /* Battery */
-Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, BatteryLevel_10) 	{channel="rfxcom:lighting2:usbrfxcom:outdoor_temperature:batteryLevel" }
-Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, BatteryLevel_10) 	{channel="rfxcom:lighting2:usbrfxcom:basement_temperature:batteryLevel" }
-Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, BatteryLevel_10) {channel="rfxcom:lighting2:usbrfxcom:office_temperature:batteryLevel" }
-Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{channel="rfxcom:lighting2:usbrfxcom:living_room_temperature:batteryLevel" }
+Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, BatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:batteryLevel" }
+Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, BatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:batteryLevel" }
+Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, BatteryLevel_10) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:batteryLevel" }
+Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:batteryLevel" }
 
 /* Text values */
 String push_message_text "Default message"
@@ -267,7 +267,8 @@ Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF) {http="<[http://
 Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)
 
 /* Smoke detector */
-String smoke_detector "Røykvarsler" {channel="rfxcom:lighting2:usbrfxcom:smoke_detector:status" }
+String smoke_detector "Røykvarsler" {channel="rfxcom:security1:usbrfxcom:smoke_detector:status" }
+Number smoke_detector_battery	"Røyvarsler [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{channel="rfxcom:security1:usbrfxcom:smoke_detector:batteryLevel" }
 
 /* Plex */
 Switch PlexXBoxPower      "Power"         <video>     {plex="{{plex_id_xbox}}#power"}
