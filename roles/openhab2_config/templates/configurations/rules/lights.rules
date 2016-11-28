@@ -426,6 +426,7 @@ rule "Sunset"
 	when
 		Item Sunset_Time changed
  	then
+ 		logInfo("org.openhab.rules","Sunset_Time changed to " + Sunset_Time.state.toString())
  		var DateTime sunset = new DateTime((Sunset_Time.state as DateTimeType).calendar.timeInMillis)
  		if (sunset.beforeNow) sunset = sunset.plusDays(1)
  		

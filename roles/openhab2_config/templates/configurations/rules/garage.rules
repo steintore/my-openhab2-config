@@ -100,11 +100,11 @@ rule "Send a message after 7 minutes if garage door is open and nobody is home"
 				postUpdate(push_message_text, "Tydeligvis ingen hjemme, men garasjeporten er ÅPEN")
 			}
 		}
-		if (garage_door_1.state == Undefined || garage_door_1.state == NULL) {
+		if (garage_door_1.state == null || garage_door_1.state == NULL) {
         	sendCommand(garage_door_1, OFF)
         	postUpdate(scene_garage_1, 0)
         }
-        if (garage_door_2.state == Undefined || garage_door_2.state == NULL) {
+        if (garage_door_2.state == null || garage_door_2.state == NULL) {
         	sendCommand(garage_door_2, OFF)
         	postUpdate(scene_garage_2, 0)
         }	
