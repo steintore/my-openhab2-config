@@ -3,6 +3,7 @@ import org.joda.time.DateTime
 rule "Set alarm climate items"
 	when Item alarm_climate received update
 then
+	logInfo("org.openhab.rules","Alarm climate has changed to: " + alarm_climate.state.toString())
 	if (alarm_climate != null) {
 		var String temp_string = transform("JSONPATH", "$.[?(@.location=='KJØKKEN')][0].temperature", alarm_climate.state.toString())
 		var String[] temperature = temp_string.split('&')

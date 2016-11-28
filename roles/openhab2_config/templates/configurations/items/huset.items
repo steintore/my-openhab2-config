@@ -9,6 +9,7 @@ Group gLight		(All)
 Group night_group	(All)
 Group away_group	(All)
 Group gTemperature  (All)
+Group gHumidity		(All)
 Group gPower 		(All)
 
 /* NTP binding demo item */
@@ -67,17 +68,17 @@ Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperatur
 Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Humidex						"Humidex [SCALE(humidex.scale):%s]"					(Weather)
 Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
-Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, Weather) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
+Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, gHumidity, Weather) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
 DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
 Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:temperature" }
-Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
+Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime OfficeTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
 Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
-Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
+Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime BasementTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
 Number Temperature_Basement_Chart_Period 	"Periode"
 Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
-Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:humidity" }
+Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:humidity" }
 DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
 
 /* Home appliances */

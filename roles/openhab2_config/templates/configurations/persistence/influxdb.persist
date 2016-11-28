@@ -4,5 +4,5 @@ Strategies {
 
 Items {
     // persist all items once a day and on every change and restore them from the db at startup
-    * : strategy = everyChange, everyMinute
+    gTemperature, gPower, Power, gHumidity, Smappee, gWeather, System, gSpeedtest, gHeatingFloor : strategy = everyChange, everyMinute
 }

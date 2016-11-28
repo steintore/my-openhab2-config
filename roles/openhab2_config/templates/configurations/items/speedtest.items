@@ -1,3 +1,4 @@
+Group gSpeedtest (All)
 String   SpeedtestSummary    "Speedtest [%s]"                <"network-icon">
 Number   SpeedtestResultPing "Ping [%.3f ms]"                <"next-5-icon">
 Number   SpeedtestResultDown "Downlink [%.2f Mbit/s]"        <"download-icon">
