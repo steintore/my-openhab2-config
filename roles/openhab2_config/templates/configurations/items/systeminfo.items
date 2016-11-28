@@ -1,27 +1,43 @@
 Group System
 Number loadAverage1min  "Load avg. 1min [%.1f]" (System) {channel="systeminfo:computer:home:cpu#load1"} 
-Number loadAverage5min  "Load avg. 5min [%.1f]" (System) { systeminfo="LoadAverage5Min:5000" }
-Number loadAverage15min "Load avg. 15min [%.1f]" (System) { systeminfo="LoadAverage15Min:5000" }
+Number loadAverage5min  "Load avg. 5min [%.1f]" (System) {channel="systeminfo:computer:home:cpu#load5"}
+Number loadAverage15min "Load avg. 15min [%.1f]" (System) {channel="systeminfo:computer:home:cpu#load15"}
 
-Number cpuCombined  "CPU combined [%.1f]"   (System) { systeminfo="CpuCombined:5000" }
-
-Number uptime   "Uptime [%.1f]" (System) { systeminfo="Uptime:5000" }
+Number uptime   "Uptime [%.1f]" (System) {channel="systeminfo:computer:home:cpu#uptime"}
 
 Number memFreePercentPeriod "MemFree chart selected [%.1f]" (System)
-Number memFreePercent   	"Mem free [%.1f%%]" (System) { systeminfo="MemFreePercent:5000" }
-Number memUsed  			"Mem used [%.1f]"   (System) { systeminfo="MemUsed:5000" }
-Number memUsedPercent   	"Mem used [%.1f%%]" (System) { systeminfo="MemUsedPercent:5000" }
+Number memFreePercent   	"Mem free [%.1f%%]" 	(System) { systeminfo="MemFreePercent:5000" }
+Number memUsed  			"Mem used [%.1f]"   	(System) { systeminfo="MemUsed:5000" }
+Number memUsedPercent   	"Mem used [%.1f%%]" 	(System) { systeminfo="MemUsedPercent:5000" }
 Number memActualFree    	"Mem actual free [%.1f]"    (System) { systeminfo="MemActualFree:5000" }
 Number memActualUsed    	"Mem actual used [%.1f]"    (System) { systeminfo="MemActualUsed:5000" }
-Number memTotal 			"Mem total [%.1f]"  (System) { systeminfo="MemTotal:5000" }
+Number memTotal 			"Mem total [%.1f]"  	(System) { systeminfo="MemTotal:5000" }
 
-Number swapFree 			"Swap free [%.1f]"  (System) { systeminfo="SwapFree:5000" }
-Number swapTotal    		"Swap total [%.1f]" (System) { systeminfo="SwapTotal:5000" }
-Number swapUsed 			"Swap used [%.1f]"  (System) { systeminfo="SwapUsed:5000" }
+Number swapFree 			"Swap free [%.1f]"  	(System) { channel="systeminfo:computer:work:swap#availablePercent" }
+Number swapTotal    		"Swap total [%.1f]" 	(System) { channel="systeminfo:computer:work:swap#total" }
+Number swapUsed 			"Swap used [%.1f]"  	(System) { channel="systeminfo:computer:work:swap#used" }
 
-Number openhabRealMem   	"Real mem [%.1f]"   (System) { systeminfo="ProcessRealMem:5000:$$" }
-Number openhabVirtualMem    "Virtual mem [%.1f]"    (System) { systeminfo="ProcessVirtualMem:5000:$$" }
-Number openhabCpuPercent    "Cpu percent [%.1f%%]"  (System) { systeminfo="ProcessCpuPercent:5000:$$" }
-Number openhabCpuSystem 	"CPU system [%.1f]" (System) { systeminfo="ProcessCpuSystem:5000:$$" }
-Number openhabUptime    	"Uptime [%d]"   (System) { systeminfo="ProcessUptime:5000:$$" }
-String openhabUptimeFormatted "Uptime form. [%s]" (System) { systeminfo="ProcessUptimeFormatted:5000:$$" }
+/* Memory information*/
+Number Memory_Available              				(System) { channel="systeminfo:computer:work:memory#available" }
+Number Memory_Used                   				(System) { channel="systeminfo:computer:work:memory#used" }
+Number Memory_Total                  				(System) { channel="systeminfo:computer:work:memory#total" }
+Number Memory_Available_Percent      				(System) { channel="systeminfo:computer:work:memory#availablePercent" }
+
+/* Sensors information*/
+Number Sensor_CPUTemp            					(System)    { channel="systeminfo:computer:work:sensors#cpuTemp" }
+Number Sensor_CPUVoltage         					(System)    { channel="systeminfo:computer:work:sensors#cpuVoltage" }
+Number Sensor_FanSpeed           					(System)    { channel="systeminfo:computer:work:sensors#fanSpeed" }
+
+/* Drive information*/
+String Drive_Name                    				(System) { channel="systeminfo:computer:work:drive#name" }
+String Drive_Model                   				(System) { channel="systeminfo:computer:work:drive#model" }
+String Drive_Serial                  				(System) { channel="systeminfo:computer:work:drive#serial" }
+
+/* Storage information*/
+String Storage_Name                  				(System) { channel="systeminfo:computer:work:storage#name" }
+String Storage_Type                  				(System) { channel="systeminfo:computer:work:storage#type" }
+String Storage_Description           				(System) { channel="systeminfo:computer:work:storage#description" }
+Number Storage_Available             				(System) { channel="systeminfo:computer:work:storage#available" }
+Number Storage_Used                  				(System) { channel="systeminfo:computer:work:storage#used" }
+Number Storage_Total                 				(System) { channel="systeminfo:computer:work:storage#total" }
+Number Storage_Available_Percent     				(System) { channel="systeminfo:computer:work:storage#availablePercent" }
