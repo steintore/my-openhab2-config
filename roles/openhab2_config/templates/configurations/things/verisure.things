@@ -1,0 +1,1 @@
+Bridge verisure:bridge:myverisure "Verisure Bridge" [authstring="{{alarm_authString}}", refresh="3600"]

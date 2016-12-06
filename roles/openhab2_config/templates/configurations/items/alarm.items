@@ -10,3 +10,9 @@ Number alarm_humidity_hall_gf "Gang luftfuktighet [%.1f %%]" <humidity> (gGF,gHu
 Number alarm_humidity_hall_basement "Kjellergang luftfuktighet [%.1f %%]" <humidity> (gBasement, gHumidity)
 Number alarm_humidity_hall_1st "Gang 2. luftfuktighet [%.1f %%]" <humidity> (gFirstFloor,gHumidity)
 String alarm_alarm "Alarmstatus [MAP(alarm.map):%s]" <siren> (gGF) {exec="<[node@@{{openhab_configuration_dir}}/scripts/alarm.js:1800000:JSONPATH($.status)]"}
+
+String alarm_current_status {channel="verisure:bridge:myverisure:status"}
+Number alarm_current_status_number {channel="verisure:bridge:myverisure:statusnumeric"}
+String alarm_current_status_no {channel="verisure:bridge:myverisure:alarmstatuslocalized"}
+String alarm_changed_by {channel="verisure:bridge:myverisure:changername"}
+DateTime alarm_time_changed {channel="verisure:bridge:myverisure:timestamp"}

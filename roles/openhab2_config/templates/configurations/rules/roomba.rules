@@ -41,7 +41,7 @@ rule "Changing state from Roomba"
 	postUpdate(roombaLastUpdate, new DateTimeType())
 	
 	var String json = (roombaRaw.state as StringType).toString
-
+	logInfo("org.openhab.rules", "Roomba raw data is {}", roombaRaw)
 	var String charge = transform("JSONPATH", "$.response.r18.value", json)
 	var String capacity = transform("JSONPATH", "$.response.r19.value", json)
 	postUpdate(roombaBatteryPercentage, ((new Double(charge) / new Double(capacity))*100))

@@ -66,7 +66,7 @@ Number Temperature_Chart_Period 			"Periode"
 Number Temperature_Livingroom_Chart_Period  "Periode"
 Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart)
-Number Outdoor_Humidex						"Humidex [SCALE(humidex.scale):%s]"					(Weather)
+Number Outdoor_Humidex						"Humidex [%.1f]"					(Weather)
 Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
 Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, gHumidity, Weather) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
 DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
@@ -128,9 +128,11 @@ Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_R
 Switch remote_light_living_room_window 															{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
 Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, Living_Room_Lights)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(0)]"}
 Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, Living_Room_Lights)
-Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B21%%5D.SwitchBinary.Set(0)]"}
-Switch light_dining_table			"Taklys" 		<light> (gGF, gLight, Living_Room_Lights) {http=">[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchMultilevel.Set(0)]"}
-Number light_dining_table_dimmer 	"Taklys [%s]"	<light> (gGF, gLight) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B22%%5D.SwitchMultilevel.data:20000:JS(getLevelValue.js)]"}
+
+Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights)   {channel="zway:zwayDevice:11fb7777:21:switchPowerOutlet-ZWayVDev_zway_21-0-37"}
+
+Switch light_dining_table           "Taklys"        <light> (gGF, gLight, Living_Room_Lights)  	{channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
+Number light_dining_table_dimmer	"Taklys [%s]"   <light> (gGF, gLight) 						{channel="zway:zwayDevice:11fb7777:22:switchMultilevel-ZWayVDev_zway_22-0-38"}
 
 Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 {channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
 
@@ -238,13 +240,11 @@ Number AC_additional_degrees   "Ekstra grader [%.1f°C]" 	(AC)
 
 
 Group Motion <office>
-Number hall_gf_temp 		"Temp gang [%.1f °C]" 			<temperature> 	(Motion, gGF) 							{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
-Number hall_gf_luminance 	"Lux gang [%.0f Lux]" 			<sun>			(Motion, gGF) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorMultilevel.data%%5B3%%5D:20000:JS(getValValue.js)]"}
+Number hall_gf_temp 		"Temp gang [%.1f °C]" 			<temperature> 	(Motion, gGF) 								{channel="zway:zwayDevice:11fb7777:16:sensorTemperature-ZWayVDev_zway_16-0-49-1"}
+Number hall_gf_luminance 	"Lux gang [%.0f Lux]" 			<sun>			(Motion, gGF) 								{channel="zway:zwayDevice:11fb7777:16:sensorLuminosity-ZWayVDev_zway_16-0-49-3"}
 DateTime hall_gf_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gGF)
-Switch hall_gf_motion 		"Gang [MAP(motion.map):%s]" 	<present>		(Motion, gGF) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorBinary.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
-Number hall_gf_battery 		"Bev.sensor, gang [%s %%]"		<energy>		(Motion, gGF, gBattery, BatteryLevel_100)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.Battery.data:20000:JS(getLastValue.js)]"}
-Number hall_gf_lu 			"[%.0f]" 						<clock>		 	(gGF)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B16%%5D.SensorBinary.data%%5B1%%5D.level:20000:JS(getLastUpdate.js)]"}
-DateTime hall_gf_update 	"Last update [%1$ta %1$tR]" 	<clock>			(Motion, gGF)
+Switch hall_gf_motion 		"Gang [MAP(motion.map):%s]" 	<present>		(Motion, gGF) 								{channel="zway:zwayDevice:11fb7777:16:sensorMotion-ZWayVDev_zway_16-0-48-1"}
+Number hall_gf_battery 		"Bev.sensor, gang [%s %%]"		<energy>		(Motion, gGF, gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:16:battery-ZWayVDev_zway_16-0-128"}
 
 /* Modes 0=HOME, 1=NIGHT, 2=AWAY */
 Number mode "Modus:" <present>
@@ -252,17 +252,17 @@ Number previous_mode
 Switch holiday_mode "Feriemodus [%s]"	<present>	
 
 /* Bathroom 1st floor */
-Switch light_bathroom		 "Taklys"						<light>			(gLight, gFirstFloor) 				{http=">[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B37%%5D.Set(255)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B38%%5D.Set(0)]"}
+Switch light_bathroom		 "Taklys"						<light>			(gLight, gFirstFloor) 								{http=">[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B37%%5D.Set(255)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B38%%5D.Set(0)]"}
 Number light_bathroom_dimmer "Dimmer [%s]" 					<light> 		(gFirstFloor)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B14%%5D.commandClasses%%5B38%%5D.data:20000:JS(getLevelValue.js)]"}
 Number bathroom_temp 		 "Temp [%.1f °C]" 				<temperature> 	(Motion, gFirstFloor) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
-Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>				(Motion, gFirstFloor) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.SensorMultilevel.data%%5B3%%5D:20000:JS(getValValue.js)]"}
-DateTime bathroom_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>				(gFirstFloor)
+Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>			(Motion, gFirstFloor) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.SensorMultilevel.data%%5B3%%5D:20000:JS(getValValue.js)]"}
+DateTime bathroom_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gFirstFloor)
 Switch bathroom_motion 		 "Bad [MAP(motion.map):%s]" 	<present>		(Motion, gFirstFloor) 								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.SensorBinary.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
 Number bathroom_battery 	 "Bev.sensor, bad [%s %%]"		<battery>		(Motion, gBattery, BatteryLevel_100, gFirstFloor)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B15%%5D.Battery.data:20000:JS(getLastValue.js)]"}
-Switch light_bathroom_mirror "Speillys"						<light>			(gLight, gFirstFloor)					{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary.Set(0)]"}
+Switch light_bathroom_mirror "Speillys"						<light>			(gLight, gFirstFloor)								{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B19%%5D.SwitchBinary.Set(0)]"}
 Number scene_bathroom_light
 
-Number scene_remote_livingroom //{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B17%%5D.commandClasses%%5B91%%5D.data:20000:JS(getCurrentScene.js)]"}
+Number scene_remote_livingroom
 
 Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary.Set(0)]"}
 Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)

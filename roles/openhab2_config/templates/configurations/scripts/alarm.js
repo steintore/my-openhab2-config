@@ -9,6 +9,6 @@ var verisureApi = require('./alarm-api').setup( config );
 verisureApi.on( 'alarmChange', log );
 
 function log ( data ) {
-console.log( data );
+console.log( JSON.stringify(data));
 process.exit(1);
 }
