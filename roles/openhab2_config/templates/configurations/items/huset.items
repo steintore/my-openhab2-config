@@ -21,17 +21,17 @@ Group:Number:MIN	BatteryLevel_100	"Batteri [(%d)] %"	<battery>		(All)
 
 /* Heating */
 Group:Switch:OR(ON, OFF) 			Heating 		"All varme [(%d)]" 				<heating> 				(All)
-Switch kontor_panelovn  "Panelovn kontor"	<heating>   (gFirstFloor, Heating, away_group)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B37%%5D.Set(0)]"}
-Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, Heating, away_group)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.commandClasses%%5B37%%5D.Set(0)]"}
+Switch kontor_panelovn  "Panelovn kontor"	<heating>   (gFirstFloor, Heating, away_group)	{channel="zway:zwayDevice:11fb7777:5:switchPowerOutlet-ZWayVDev_zway_5-0-37"}
+Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, Heating, away_group)	{channel="zway:zwayDevice:11fb7777:10:switchPowerOutlet-ZWayVDev_zway_10-0-37"}
 
 /* Energy/Power measuring */
 Group:Number:SUM					Power			"Nå: [%.1f W]"			<energy>				(All, gPower)
 Group:Number:SUM					PowerHeating	"Varme: [%.1f W]"		<energy>				(All)
 Group:Number:SUM					Energy			"Totalt: [%.1f KWh]"	<energy>				(All)
-Number panelovn_kontor_energy 	"Panelovn totalforbruk: [%.2f KWh]"			<energy> (Energy) 				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
-Number power_panelovn_kontor  	"Strøm panelovn kontor	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B5%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
-Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.Meter.data%%5B2%%5D:20000:JS(getPowerValue.js)]"}
-Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (Energy) 				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B10%%5D.Meter.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
+Number panelovn_kontor_energy 	"Panelovn totalforbruk: [%.2f KWh]"			<energy> (Energy) 										{channel="zway:zwayDevice:11fb7777:5:sensorMultilevel-ZWayVDev_zway_5-0-50-0"}
+Number power_panelovn_kontor  	"Strøm panelovn kontor	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{channel="zway:zwayDevice:11fb7777:5:sensorEnergy-ZWayVDev_zway_5-0-49-4"}
+Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{channel="zway:zwayDevice:11fb7777:10:sensorMeterW-ZWayVDev_zway_10-0-50-2"}
+Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (Energy) 										{channel="zway:zwayDevice:11fb7777:10:sensorMultilevel-ZWayVDev_zway_10-0-50-0"}
 
 Group Power_Chart (Power)
 Number Power_Chart_Period "Periode"
@@ -83,22 +83,22 @@ DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
 
 /* Home appliances */
 Group HomeAppliances (Appliance)
-Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
-Switch freezer		  	"Fryser"								<kitchen>   (gBasement, Control, HomeAppliances)					{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B37%%5D.Set(0)]"}
-Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(Energy, gBasement)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B6%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
-Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, Power, Power_Chart) 						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
-Switch dryer			"Tørketrommel"							<dryer>		(gBasement, HomeAppliances, night_group, away_group) 	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B37%%5D.Set(0)]"}
-Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(Energy, gBasement)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B4%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
-Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, Control, HomeAppliances)					{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B37%%5D:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B37%%5D.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B37%%5D.Set(0)]"}
-Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B49%%5D.data%%5B4%%5D:20000:JS(getPowerValue.js)]"}
-Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement)										{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B2%%5D.commandClasses%%5B50%%5D.data%%5B0%%5D:20000:JS(getPowerValue.js)]"}
+Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{channel="zway:zwayDevice:11fb7777:6:sensorEnergy-ZWayVDev_zway_6-0-49-4"}
+Switch freezer		  	"Fryser"								<kitchen>   (gBasement, Control, HomeAppliances)					{channel="zway:zwayDevice:11fb7777:6:switchPowerOutlet-ZWayVDev_zway_6-0-37"}
+Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(Energy, gBasement)										{channel="zway:zwayDevice:11fb7777:6:sensorMultilevel-ZWayVDev_zway_6-0-50-0"}
+Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, Power, Power_Chart) 						{channel="zway:zwayDevice:11fb7777:4:sensorEnergy-ZWayVDev_zway_4-0-49-4"}
+Switch dryer			"Tørketrommel"							<dryer>		(gBasement, HomeAppliances, night_group, away_group) 	{channel="zway:zwayDevice:11fb7777:4:switchPowerOutlet-ZWayVDev_zway_4-0-37"}
+Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(Energy, gBasement)										{channel="zway:zwayDevice:11fb7777:4:sensorMultilevel-ZWayVDev_zway_4-0-50-0"}
+Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, Control, HomeAppliances)						{channel="zway:zwayDevice:11fb7777:2:switchPowerOutlet-ZWayVDev_zway_2-0-37"}
+Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{channel="zway:zwayDevice:11fb7777:2:sensorEnergy-ZWayVDev_zway_2-0-49-4"}
+Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement)										{channel="zway:zwayDevice:11fb7777:2:sensorMultilevel-ZWayVDev_zway_2-0-50-0"}
 
 /* Garage */
-Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B7%%5D.commandClasses%%5B48%%5D.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
-Switch garage_door_2    		"Garasjedør MONDEO [MAP(no.map):%s]"    <garagedoor>  	(gOutdoor)						{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B8%%5D.commandClasses%%5B48%%5D.data%%5B1%%5D:20000:JS(getLevelValue.js)]"}
+Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:7:switchControl-ZWayVDev_zway_Remote_7-0-0-B"}
+Switch garage_door_2    		"Garasjedør MONDEO [MAP(no.map):%s]"    <garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:8:switchControl-ZWayVDev_zway_Remote_8-0-0-B"}
 Switch message_received 		"Garasjedørmelding er mottatt"			<garagedoor>	(gOutdoor)
-Number garage_door_1_battery 	"Leaf [%s %%]"							<battery>		(gBattery, BatteryLevel_100)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B7%%5D.commandClasses%%5B128%%5D.data:20000:JS(getLastValue.js)]"}
-Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, BatteryLevel_100)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B8%%5D.commandClasses%%5B128%%5D.data:20000:JS(getLastValue.js)]"}
+Number garage_door_1_battery 	"Leaf [%s %%]"							<battery>		(gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:7:battery-ZWayVDev_zway_7-0-128"}
+Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:8:battery-ZWayVDev_zway_8-0-128"}
 Switch garage_door_1_relay 		"Releet Leaf" 																			{http=">[ON:POST:{{garagepi_leaf_url}}function/OUT] >[OFF:POST:{{garagepi_leaf_url}}function/IN]"}
 Switch garage_door_2_relay 		"Releet Mondeo" 																		{http=">[ON:POST:{{garagepi_mondeo_url}}function/OUT] >[OFF:POST:{{garagepi_mondeo_url}}function/IN]"}
 Switch garagepi_motion 			"Bevegelse GPI"
@@ -126,7 +126,7 @@ Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, Living_Roo
 Switch remote_light_living_room_corner 															{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
 Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_Room_Lights) 	{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
 Switch remote_light_living_room_window 															{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
-Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, Living_Room_Lights)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B13%%5D.SwitchBinary.Set(0)]"}
+Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, Living_Room_Lights)  	{channel="zway:zwayDevice:11fb7777:13:switchPowerOutlet-ZWayVDev_zway_13-0-37"}
 Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, Living_Room_Lights)
 
 Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights)   {channel="zway:zwayDevice:11fb7777:21:switchPowerOutlet-ZWayVDev_zway_21-0-37"}
@@ -134,7 +134,7 @@ Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_L
 Switch light_dining_table           "Taklys"        <light> (gGF, gLight, Living_Room_Lights)  	{channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
 Number light_dining_table_dimmer	"Taklys [%s]"   <light> (gGF, gLight) 						{channel="zway:zwayDevice:11fb7777:22:switchMultilevel-ZWayVDev_zway_22-0-38"}
 
-Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 {channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
+Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 			{channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
 
 Switch light_basement_power 		"Av/På"						<light> (gBasement, gLight) 	{channel="rfxcom:lighting2:usbrfxcom:basement_roof:command" }
 Switch remote_light_basement_power 																{channel="rfxcom:lighting2:usbrfxcom:basement_roof:command" }
@@ -264,7 +264,7 @@ Number scene_bathroom_light
 
 Number scene_remote_livingroom
 
-Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF) {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary:10000:JS(getBasicOnOffState.js)] >[ON:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary.Set(1)] >[OFF:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B20%%5D.SwitchBinary.Set(0)]"}
+Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF) {channel="zway:zwayDevice:11fb7777:20:switchPowerOutlet-ZWayVDev_zway_20-0-37"}
 Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)
 
 /* Smoke detector */
