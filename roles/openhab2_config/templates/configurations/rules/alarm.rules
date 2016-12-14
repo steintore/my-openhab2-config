@@ -1,5 +1,7 @@
 import org.joda.time.DateTime
 
+var Timer timerRouterLAN = null
+
 rule "Set alarm climate items"
 	when Item alarm_climate received update
 then
@@ -50,11 +52,13 @@ then
 end
 
 rule "Arming, disarming alarm"
-when Item alarm_alarm changed
+when 	Item alarm_alarm changed or
+		Item alarm_alarm received command
 then
-	logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString() + " - current state from binding: + " + alarm_current_status.state.toString())
+	logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString() + " - current state from binding: " + alarm_current_status.state.toString())
 	if (alarm_alarm.state == null && alarm_current_status.state != null) {
 		postUpdate(alarm_alarm, alarm_current_status.state)
+		logInfo("org.openhab.rules.alarm", "Alarm status is null, so trying to update it to: " + alarm_current_status.state)
 	} else {
 		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
 		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome") // HOME 
@@ -85,4 +89,53 @@ when
   Item alarm_temperature_hall_1st received update
 then
   postUpdate(alarm_temperature_hall_1st_LastUpdate, new DateTimeType())
+end
+
+rule "Leaving home, we think"
+when
+	Item home_away_lan changed from ON to OFF
+then
+	logInfo("org.openhab.rules","Arduino disconnected, started timer.")
+	if( timerRouterLAN == null ) {
+		timerRouterLAN = createTimer(now.plusSeconds(10)) [|
+			logInfo("org.openhab.rules", "Timer has timed out. Checking status from Alarm")
+            var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
+			var String alarmstate =  transform("JSONPATH", "$.status", json)
+			logInfo("org.openhab.rules", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
+			
+			if (alarmstate == null) {
+				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds...")
+				timerRouterLAN.reschedule(now.plusSeconds(30))
+			} else {
+				sendCommand(alarm_alarm, alarmstate)
+				if(timerRouterLAN!=null) {
+					if(timerRouterLAN.running) {
+						timerRouterLAN.cancel()
+					}
+					timerRouterLAN= null
+				}
+			
+			}
+		]
+	} else {
+		timerRouterLAN.reschedule(now.plusSeconds(30))
+	}
+end
+
+rule "Alarm is being disarmed"
+	when
+		Item home_away_lan changed from OFF to ON
+	then
+		if(timerRouterLAN != null) {
+			timerRouterLAN.cancel()
+			timerRouterLAN = null
+		}
+		logInfo("org.openhab.rules", "Arduino is online. Checking status from Alarm")
+        var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
+		var String alarmstate =  transform("JSONPATH", "$.status", json)
+		logInfo("org.openhab.rules", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
+			
+		if (alarmstate != null) {
+			sendCommand(alarm_alarm, alarmstate)
+		}
 end
