@@ -1,7 +1,7 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
-import org.joda.time.*
+import org.eclipse.smarthome.core.library.types.DateTimeType
+import org.eclipse.smarthome.core.library.types.OnOffType
+import org.eclipse.smarthome.model.script.actions.Timer
+import org.joda.time.DateTime
 
 var Timer timerBasement = null
 var Timer timerBathroom = null
@@ -70,6 +70,7 @@ when
 then
 	switch (hall_gf_motion.state as OnOffType) {
 		case ON: {
+			sendCommand(light_hall_ground_floor, ON)
 			if (justMorning.state == ON) {
 				sendCommand(scene_light_livingroom, 1)
 				sendCommand(justMorning, OFF)
@@ -78,7 +79,6 @@ then
 				}
 			}
 			sendCommand(screen_pi_screen, ON)
-			sendCommand(light_hall_ground_floor, ON)
 			if (mode.state == 2) {
 				// Checking if the alarm has been switched off now.
 				var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 2000)
@@ -100,31 +100,12 @@ then
 	switch (receivedCommand) {
 		case 0: { // OFF
 			sendCommand(Living_Room_Lights, OFF)
-			postUpdate(light_dining_table_dimmer, 0)
+			//postUpdate(light_dining_table_dimmer, 0)
 			
 		}
 		case 1: { // ON
 			sendCommand(Living_Room_Lights, ON)
 			sendCommand(light_dining_table_dimmer, 100)
-		}
-		case 2: { // ++ More light please
-			var Number percent = 0
-			if(light_dining_table_dimmer.state instanceof DecimalType) percent = light_dining_table_dimmer.state as DecimalType
-			if (percent < 90)
-				sendCommand(light_dining_table_dimmer, percent + 10)
-			else 	
-				sendCommand(light_dining_table_dimmer, 99)
-		}
-		case 3: { // -- Less light please
-			var Number percent = 0
-			if(light_dining_table_dimmer.state instanceof DecimalType) percent = light_dining_table_dimmer.state as DecimalType
-			
-			if (percent < 10) {
-				sendCommand(light_dining_table, OFF)
-				postUpdate(light_dining_table_dimmer, 0)
-			} else {
-				sendCommand(light_dining_table_dimmer, percent - 10)
-			}
 		}
 	}	
 	logInfo('org.openhab', 'scene_light_livingroom update to: ' + scene_light_livingroom.state)
@@ -158,60 +139,17 @@ rule "light bathroom 1st floor"
 		case 0: {// OFF
 			sendCommand(light_bathroom_mirror, OFF)
 			sendCommand(light_bathroom, OFF)
-			postUpdate(light_bathroom_dimmer, 0)
 		}
 		case 1: {//NIGHT
 			sendCommand(light_bathroom_dimmer, 10)
 		}
 		case 2: {//DAY
 			sendCommand(light_bathroom_dimmer, 80)
-		
 		}
 		case 3: {//FULL
 			sendCommand(light_bathroom_dimmer, 100)
-			sendCommand(light_bathroom_mirror, ON)
 		}
 	}
-end
-
-rule "light dimmer bathroom received an update"
-	when
-		Item light_bathroom_dimmer received update
-	then
-		var Number percent = 0
-		if(light_bathroom_dimmer.state instanceof DecimalType) percent = light_bathroom_dimmer.state as DecimalType
-		logInfo('org.openhab',"Bathroom dimmer received UPDATE: '" + light_basement_dimmer.state + "' converted it to percentages: '" + percent + "'")
-end
- 
-rule "light dimmer bathroom changed"
-	when
-		Item light_bathroom_dimmer received command
-	then
-		var Number percent = 0
-		if(light_bathroom_dimmer.state instanceof DecimalType) percent = light_bathroom_dimmer.state as DecimalType
-		
-		logInfo('org.openhab',"Bathroom dimmer received command: '" + light_bathroom_dimmer.state + "' converted it to percentages: '" + percent + "'")
-		
-		if (percent > 100) percent = 100
-		if (percent < 0) percent = 0
-		
-		if(percent == 0 && light_bathroom.state == ON) {
-			postUpdate(light_bathroom, OFF)
-			postUpdate(scene_bathroom_light, 0)
-		}
-		else if (percent > 0 && light_bathroom.state == OFF) {
-			postUpdate(light_bathroom, ON)
-			if (percent < 30)
-				postUpdate(scene_bathroom_light, 1) //NIGHT
-			else
-				postUpdate(scene_bathroom_light, 2) //DAY						
-		}
-		
-		//logInfo('org.openhab', 'Dimming from OpenHab, changed to ' + light_bathroom_dimmer.state)
-		var String htp = "http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%5B14%5D.SwitchMultilevel.Set(" + percent.toString + ")"
-		
-		sendHttpGetRequest(htp)
-		logInfo('org.openhab', 'Bathroom dimmer sent request: ' + htp)
 end
 
 rule "light in hall 1st floor"

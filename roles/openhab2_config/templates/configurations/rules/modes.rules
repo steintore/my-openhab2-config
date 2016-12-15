@@ -1,8 +1,7 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
 import java.util.Map
-import org.joda.time.DateTime
+import org.eclipse.smarthome.core.library.types.DecimalType
+import org.eclipse.smarthome.core.library.types.OnOffType
+import org.eclipse.smarthome.model.script.actions.Timer
 
 var Map stored_states = null
 var Map stored_heating_states = null
@@ -91,6 +90,8 @@ rule "A change of mode"
 			logInfo("org.openhab.rules", "JSON is {}, and alarmstate is then {}, switched to night mode", json, alarmstate)
 			if (alarmstate != null)
 				sendCommand(alarm_alarm, alarmstate)
+				
+			// TODO Check that door is locked and alarm is in night mode
 		}
 		
 		case 2: { //AWAY

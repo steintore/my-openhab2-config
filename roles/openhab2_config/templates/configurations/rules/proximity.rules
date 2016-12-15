@@ -1,6 +1,4 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
+import org.eclipse.smarthome.model.script.actions.Timer
 
 var Timer timerSteinMobileWlan = null
 var Timer timerAnetteMobileWlan = null

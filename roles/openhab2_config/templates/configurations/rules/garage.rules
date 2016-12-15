@@ -1,6 +1,4 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
+import org.eclipse.smarthome.model.script.actions.Timer
 
 var Timer garageDoorOpenLeaf = null
 var Timer garageDoorOpenMondeo = null
@@ -96,7 +94,6 @@ rule "Send a message after 7 minutes if garage door is open and nobody is home"
 	then
 		if (mode.state == 2 && (garage_door_1.state == ON || garage_door_2.state == ON)) {
 			if (message_received.state == OFF && !garage_door_1.changedSince(now.minusMinutes(8)) && !garage_door_2.changedSince(now.minusMinutes(8))) {
-				//postUpdate(push_message_url, "{{garagepi_screenshot_url}}")
 				postUpdate(push_message_text, "Tydeligvis ingen hjemme, men garasjeporten er ÅPEN")
 			}
 		}

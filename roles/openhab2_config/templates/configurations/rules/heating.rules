@@ -1,7 +1,5 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
-import java.util.Map
+import org.eclipse.smarthome.core.library.types.DecimalType
+import org.eclipse.smarthome.model.script.actions.Timer
 import org.joda.time.DateTime
 
 var Timer timerBFWeekdaysOn = null

@@ -1,8 +1,3 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
-
-  
 rule "FireAlarm"
 when
 	Item smoke_detector received update

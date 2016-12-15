@@ -1,8 +1,6 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
-import java.util.Map
-import org.joda.time.DateTime
+import org.eclipse.smarthome.core.library.types.DateTimeType
+import org.eclipse.smarthome.core.library.types.DecimalType
+import org.eclipse.smarthome.model.script.actions.Timer
 
 var Timer timerDryer = null
 
@@ -10,10 +8,11 @@ rule "When text is changed, send a push message"
 	when
 		Item push_message_text received update
 	then
-		logInfo('org.openhab', 'message text is: ' + push_message_text.state + ' , with url: ' + push_message_url.state)
+		logInfo('org.openhab.rules.status', 'message text is: ' + push_message_text.state + ' , with url: ' + push_message_url.state)
 		try {
 			callScript('pushMessages')
-		} catch (org.openhab.core.scriptengine.ScriptExecutionException e) {
+		} catch (Exception e) {
+			logError("org.openhab.rules.status", "Exception was thrown when trying to send pushMessage : " + e.message)
 			pushover('Could not send push message: ' + push_message_text.state.toString)
 		}
 end
@@ -80,7 +79,7 @@ then
 	postUpdate(ac_lastUpdate, new DateTimeType())
 end
 
-rule "Set Samsung TV to same state as LAN-checking, and set Air Conditioner to QUIET-mode if TV is being switched on"
+rule "Set TV to same state as LAN-checking, and set Air Conditioner to QUIET-mode if TV is being switched on"
 when
 	Item tv_power changed
 then
@@ -164,10 +163,10 @@ rule "Send a status message at 22 if anything is NOT ok"
 			pushover('Boss is not responding, and has been off for 12 hours (' + boss_lan.lastUpdate.toString + ')')
 		}
 		if (nas_lan.state == OFF && !nas_lan.changedSince(now.minusHours(12))) {
-			pushover('NAS is not responding, and has been off for 12 hours(' + nas_lan.lastUpdate.toString + ')')
+			pushover('NAS is not responding, and has been off for too long(' + nas_lan.lastUpdate.toString + ')')
 		} 	
 		if (mode.state != 0 && mode.state != 3 && tv_power.state == ON) {
-			pushover('TV står på, men du har enten lagt deg eller er borte..')
+			pushover('TV-en står på, men du har enten lagt deg eller er borte..')
 		} 	
 		
 		if (!zWaveStatus.state.toString().equalsIgnoreCase("200 OK")) {
