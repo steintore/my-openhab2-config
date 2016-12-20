@@ -329,7 +329,7 @@ rule "Sunset"
 	when
 		Item Sunset_Time changed
  	then
- 		logInfo("org.openhab.rules","Sunset_Time changed to " + Sunset_Time.state.toString())
+ 		logInfo("org.openhab.rules.lights","Sunset_Time changed to " + Sunset_Time.state.toString())
  		var DateTime sunset = new DateTime((Sunset_Time.state as DateTimeType).calendar.timeInMillis)
  		if (sunset.beforeNow) sunset = sunset.plusDays(1)
  		
@@ -337,7 +337,7 @@ rule "Sunset"
  			sunsetTimer.cancel()
  			sunsetTimer = null
  		}
- 		logInfo("org.openhab", 'Creating timer to turn on living room lights at: ' + sunset.minusMinutes(20).toString);
+ 		logInfo("org.openhab.rules.lights", 'Creating timer to turn on living room lights at: ' + sunset.minusMinutes(20).toString);
  		sunsetTimer = createTimer(sunset.minusMinutes(20)) [|
  			if (mode.state == 1) { // IF HOME
  				sendCommand(scene_light_livingroom, 1)

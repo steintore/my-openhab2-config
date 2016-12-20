@@ -1,4 +1,4 @@
-String alarm_climate "Alarm climate data" <w> (gAll) {exec="<[node@@{{openhab_configuration_dir}}/scripts/alarm-climate.js:7200000:]"}
+String alarm_climate "Alarm climate data" <w> (gAll)
 Number alarm_temperature_kitchen "Kjøkken temp [%.1f°C]" <temperature> (gGF, gTemperature)
 Number alarm_temperature_laundry "Vaskerom temp [%.1f°C]" <temperature> (gBasement, gTemperature)
 Number alarm_temperature_hall_gf "Gang temp [%.1f°C]" <temperature> (gGF, gTemperature)

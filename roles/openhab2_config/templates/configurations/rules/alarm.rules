@@ -3,52 +3,56 @@ import org.joda.time.DateTime
 var Timer timerRouterLAN = null
 
 rule "Set alarm climate items"
-	when Item alarm_climate received update
+	when 
+		Time cron "0 0 0/2 1/1 * *"
+		or 
+		Item alarm_climate received update
 then
-	logInfo("org.openhab.rules","Alarm climate has changed to: " + alarm_climate.state.toString())
-	if (alarm_climate != null) {
-		
-		logInfo("org.openhab.rules.alarm", "Test parse: {}", transform("JSONPATH", "$.[?(@.location=='GANG')].temperature", alarm_climate.state.toString).split('&').get(0).replace(',','.'))
-		
-		var String temp_string = ''
-		var String[] temperature
-		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')][0].temperature", alarm_climate.state.toString())
-		temperature = temp_string.split('&')
-		postUpdate(alarm_temperature_hall_gf, temperature.get(0).replace(',', '.'))
+		var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm-climate.js", 5000)
+        if (json != null) {
+        		try {
+        			var String climate = json.replace('&#176;', '')
+	                logInfo("org.openhab.rules.alarm", "Test parse: {}", transform("JSONPATH", "$.[?(@.location=='GANG')].temperature", climate).replace(',','.'))
 	
-		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')][0].temperature", alarm_climate.state.toString())
-		temperature = temp_string.split('&')
-		postUpdate(alarm_temperature_hall_basement, temperature.get(0).replace(',', '.'))
+					// TEMPERATURE
+	                var String temp_string = ''
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                postUpdate(alarm_temperature_hall_gf, temp_string)
 	
-		temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')][0].temperature", alarm_climate.state.toString())
-		temperature = temp_string.split('&')
-		postUpdate(alarm_temperature_hall_1st, temperature.get(0).replace(',', '.'))
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                postUpdate(alarm_temperature_hall_basement, temp_string)
 	
-		temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')][0].temperature", alarm_climate.state.toString())
-		temperature = temp_string.split('&')
-		postUpdate(alarm_temperature_laundry, temperature.get(0).replace(',', '.'))
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                postUpdate(alarm_temperature_hall_1st, temp_string)
 	
-		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')][0].humidity", alarm_climate.state.toString())
-		var String[] humidity = temp_string.split('%')
-		postUpdate(alarm_humidity_hall_gf, humidity.get(0).replace(',', '.'))
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                postUpdate(alarm_temperature_laundry, temp_string)
 	
-		temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')][0].humidity", alarm_climate.state.toString())
-		humidity = temp_string.split('%')
-		postUpdate(alarm_humidity_hall_basement, humidity.get(0).replace(',', '.'))
+					temp_string = transform("JSONPATH", "$.[?(@.location=='KJØKKEN')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+                	postUpdate(alarm_temperature_kitchen, temp_string)
 	
-		temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')][0].humidity", alarm_climate.state.toString())
-		humidity = temp_string.split('%')
-		postUpdate(alarm_humidity_hall_1st, humidity.get(0).replace(',', '.'))
+	                // HUMIDITY
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                var String[] humidity = temp_string.split('%')
+	                postUpdate(alarm_humidity_hall_gf, humidity.get(0).replace(',', '.'))
 	
-		temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')][0].humidity", alarm_climate.state.toString())
-		humidity = temp_string.split('%')
-		postUpdate(alarm_humidity_laundry, humidity.get(0).replace(',', '.'))
-		
-		temp_string = transform("JSONPATH", "$.[?(@.location=='KJØKKEN')][0].temperature", alarm_climate.state.toString())
-		temperature = temp_string.split('&')
-		postUpdate(alarm_temperature_kitchen, temperature.get(0).replace(',', '.'))
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                humidity = temp_string.split('%')
+	                postUpdate(alarm_humidity_hall_basement, humidity.get(0).replace(',', '.'))
 	
-	}
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                humidity = temp_string.split('%')
+	                postUpdate(alarm_humidity_hall_1st, humidity.get(0).replace(',', '.'))
+
+	                temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
+	                humidity = temp_string.split('%')
+	                postUpdate(alarm_humidity_laundry, humidity.get(0).replace(',', '.'))
+                } catch (Exception e) {
+                	logError("org.openhab.rules.alarm", "Something went wrong when trying to parse json {}, exception is: {}", json, e)
+                }
+        } else {
+                logInfo("org.openhab.rules.alarm", "Tried to fetch climate-data, but only got null..")
+        }
 end
 
 rule "Arming, disarming alarm"
@@ -64,7 +68,7 @@ then
 		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome") // HOME 
 		{
 			var DateTime eveningTime = now.withTime(21, 0, 0, 0)
-			var DateTime nightTime = now.withTime(2,0,0,0)
+			var DateTime nightTime = now.withTime(1,0,0,0)
 			var DateTime dayTime = now.withTime(5,0,0,0)
 			
 			if(nightTime.afterNow && dayTime.beforeNow) {
@@ -72,7 +76,8 @@ then
 			} else if (nightTime.beforeNow && dayTime.afterNow) {
 				sendCommand(mode, 1) // NIGHT
 			} else if (nightTime.afterNow || eveningTime.beforeNow) {
-				sendCommand(mode, 3) // EVENING 
+				if (mode.state != 1)
+					sendCommand(mode, 3) // EVENING 
 			} else {
 				sendCommand(mode, 0) // HOME
 			}

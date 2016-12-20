@@ -353,7 +353,7 @@ when
 	Item bathroom_1st_floor_mode received command
 then
 	var String htp = "http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%5B24%5D.ThermostatMode.Set("+ receivedCommand.toString + ")"
-	logInfo("FloorHeating", "Sending request to set thermostat to : " + receivedCommand.toString + " , like this: [" + htp + "]")
+	logInfo("org.openhab.rules.heating.floorheating", "Sending request to set thermostat to : " + receivedCommand.toString + " , like this: [" + htp + "]")
 	sendHttpGetRequest(htp)
 end 
 
