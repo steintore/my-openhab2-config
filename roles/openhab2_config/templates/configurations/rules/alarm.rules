@@ -4,7 +4,7 @@ var Timer timerRouterLAN = null
 
 rule "Set alarm climate items"
 	when 
-		Time cron "0 0 0/2 1/1 * *"
+		Time cron "0 0 0/2 1/1 * ? *"
 		or 
 		Item alarm_climate received update
 then
