@@ -1,4 +1,4 @@
-- include_vars: main.yml
+- include_vars: vault.yml
 
 - name: See if configurations is a directory (then we nuke it next)
   shell: "[ -d {{ openhab_configuration_dir  }}] && echo 'Directory' || echo ''"

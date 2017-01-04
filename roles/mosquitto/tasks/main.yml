@@ -1,31 +1,35 @@
+- include_vars: vault.yml
+
 - name: Install required mosquitto packages
   apt: name={{item}} state=installed
   become: yes
   with_items:
       - mosquitto
-  become: yes
 
 - name: mosquitto config file
   template: dest=/etc/mosquitto/mosquitto.conf src=../templates/mosquitto.conf
+  become: yes
 
   # Password set manually like this:
   # sudo mosquitto_passwd -c /etc/mosquitto/passwd mosquitto
 
 - name: Install required PIP-packages
-  become: yes
   pip: name={{item}}
   with_items:
     - schedule
     - datetime
     - paho-mqtt
-    - time
-    - git+https://github.com/jdhorne/pycarwings2.git
+
+#- name: PyCarwings
+#  pip: name=git+https://github.com/jdhorne/pycarwings2.git
+#  become: yes
 
 - name: Clone github repo
-  repo: git://github.com/glynhudson/leaf-python-mqtt.git
+  git:
+    repo: git://github.com/glynhudson/leaf-python-mqtt.git
+    clone: yes
+    dest: /etc/leaf-python-mqtt
   become: yes
-  clone: yes
-  dest: /etc/leaf-python-mqtt
 
 - name: leaf-python config file
   template: dest=/etc/leaf-python-mqtt/config.ini src=../templates/config.ini
