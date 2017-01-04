@@ -67,17 +67,17 @@ Number Temperature_Livingroom_Chart_Period  "Periode"
 Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart)
 Number Outdoor_Humidex						"Humidex [%.1f]"					(Weather)
-Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
+Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
 Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, gHumidity, Weather) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
 DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:temperature" }
+Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:temperature" }
 Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime OfficeTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
+Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
 Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime BasementTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
 Number Temperature_Basement_Chart_Period 	"Periode"
-Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
+Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
 Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:humidity" }
 DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
 
@@ -122,16 +122,16 @@ String push_message_url ""
 
 /* Lighting */
 Group:Switch:OR(ON, OFF) 		Living_Room_Lights 		"Lys [(%d)]" <light>	
-Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, Living_Room_Lights) 	{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
+Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, Living_Room_Lights) [ "Lighting" ]	{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
 Switch remote_light_living_room_corner 															{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
-Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_Room_Lights) 	{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
+Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_Room_Lights) [ "Lighting" ]	{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
 Switch remote_light_living_room_window 															{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
 Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, Living_Room_Lights)  	{channel="zway:zwayDevice:11fb7777:13:switchPowerOutlet-ZWayVDev_zway_13-0-37"}
 Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, Living_Room_Lights)
 
-Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights)   {channel="zway:zwayDevice:11fb7777:21:switchPowerOutlet-ZWayVDev_zway_21-0-37"}
+Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights)  [ "Lighting" ] {channel="zway:zwayDevice:11fb7777:21:switchPowerOutlet-ZWayVDev_zway_21-0-37"}
 
-Switch light_dining_table           "Taklys"        <light> (gGF, gLight, Living_Room_Lights)  	{channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
+Switch light_dining_table           "Taklys"        <light> (gGF, gLight, Living_Room_Lights)  [ "Lighting" ]	{channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
 Number light_dining_table_dimmer	"Taklys [%s]"   <light> (gGF, gLight) 						{channel="zway:zwayDevice:11fb7777:22:switchMultilevel-ZWayVDev_zway_22-0-38"}
 
 Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 			{channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }

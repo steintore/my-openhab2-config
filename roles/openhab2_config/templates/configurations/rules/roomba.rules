@@ -1,6 +1,5 @@
-import org.openhab.core.library.types.*
-import org.openhab.core.persistence.*
-import org.openhab.model.script.actions.*
+import org.eclipse.smarthome.core.library.types.DateTimeType
+import org.eclipse.smarthome.core.library.types.StringType
 
 /* http://www.robotappstore.com/files/KB/Roomba/Roomba_SCI_Spec_Manual.pdf */
 rule "Got command to send to Roomba"
@@ -41,7 +40,7 @@ rule "Changing state from Roomba"
 	postUpdate(roombaLastUpdate, new DateTimeType())
 	
 	var String json = (roombaRaw.state as StringType).toString
-	logInfo("org.openhab.rules", "Roomba raw data is {}", roombaRaw)
+	//logInfo("org.openhab.rules.roomba", "Roomba raw data is {}", roombaRaw)
 	var String charge = transform("JSONPATH", "$.response.r18.value", json)
 	var String capacity = transform("JSONPATH", "$.response.r19.value", json)
 	postUpdate(roombaBatteryPercentage, ((new Double(charge) / new Double(capacity))*100))

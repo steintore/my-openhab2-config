@@ -12,7 +12,6 @@ then
         if (json != null) {
         		try {
         			var String climate = json.replace('&#176;', '')
-	                logInfo("org.openhab.rules.alarm", "Test parse: {}", transform("JSONPATH", "$.[?(@.location=='GANG')].temperature", climate).replace(',','.'))
 	
 					// TEMPERATURE
 	                var String temp_string = ''
@@ -47,6 +46,7 @@ then
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                humidity = temp_string.split('%')
 	                postUpdate(alarm_humidity_laundry, humidity.get(0).replace(',', '.'))
+	                logDebug("org.openhab.rules.alarm", "Has updated climate-data from json")
                 } catch (Exception e) {
                 	logError("org.openhab.rules.alarm", "Something went wrong when trying to parse json {}, exception is: {}", json, e)
                 }

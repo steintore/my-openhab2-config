@@ -22,7 +22,7 @@ rule "motion detected in the bathroom"
 				}	
 				if (timerBathroom == null) {
 					timerBathroom = createTimer(now.plusSeconds(240)) [|
-						logInfo("org.openhab", "Bathroom dimmer timer timed out, state for motion: '" + bathroom_motion.state)
+						logInfo("org.openhab", "Bathroom dimmer timer timed out, state for motion: " + bathroom_motion.state)
 						if (bathroom_motion.state == ON) {
 							timerBathroom.reschedule(now.plusSeconds(240))
 						} else {
@@ -100,7 +100,7 @@ then
 	switch (receivedCommand) {
 		case 0: { // OFF
 			sendCommand(Living_Room_Lights, OFF)
-			//postUpdate(light_dining_table_dimmer, 0)
+			sendCommand(light_dining_table_dimmer, 0)
 			
 		}
 		case 1: { // ON
@@ -139,6 +139,7 @@ rule "light bathroom 1st floor"
 		case 0: {// OFF
 			sendCommand(light_bathroom_mirror, OFF)
 			sendCommand(light_bathroom, OFF)
+			sendCommand(light_bathroom_dimmer, 0)
 		}
 		case 1: {//NIGHT
 			sendCommand(light_bathroom_dimmer, 10)

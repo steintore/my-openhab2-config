@@ -17,12 +17,12 @@
     - sitemaps
     - templates
     - services
-    - things    
+    - things
 
 - name: sync setup into config
   template: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
   become: yes
-  become_user: openhab          
+  become_user: openhab
   with_items:
         - items/huset.items
         - items/systeminfo.items
@@ -74,6 +74,7 @@
         - services/weather.cfg
         - services/runtime.cfg
         - services/addons.cfg
+        - services/homekit.cfg
         - things/astro.things
         - things/systeminfo.things
         - things/samsungtv.things

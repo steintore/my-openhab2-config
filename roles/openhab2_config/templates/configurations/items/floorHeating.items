@@ -2,30 +2,30 @@ Group floorHeatingNight (All)
 Group gHeatingFloor (All)
 
 /* Floor heating in house */
-Number hall_gf_floor_temp 			"Gulv gang [%.1f °C]" 		<temperature> 	(gGF, gHeatingFloor, gTemperature) 	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B23%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
-Number hall_gf_floor_power_level 	"Reg gang [%d]" 				<energy> 		(gGF, gHeatingFloor,floorHeatingNight)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B23%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B23%%5D.Configuration.Set(12,%2$s)]"}
-Number hall_gf_floor_mode 			"Modus gang [MAP(floor.map):%s]"	<heating>		(gGF, gHeatingFloor)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B23%%5D.ThermostatMode.data.mode.value:20000:REGEX((.*?))]"}
+Number hall_gf_floor_temp 			"Gulv gang [%.1f °C]" 							<temperature> 	(gGF, gHeatingFloor, gTemperature) 			{channel="zway:zwayDevice:11fb7777:23:sensorTemperature-ZWayVDev_zway_23-0-49-1"}
+Number hall_gf_floor_power_level 	"Reg gang [%d]" 								<energy> 		(gGF, gHeatingFloor,floorHeatingNight)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B23%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B23%%5D.Configuration.Set(12,%2$s)]"}
+String hall_gf_floor_mode 			"Modus gang [MAP(floor.map):%s]"				<heating>		(gGF, gHeatingFloor)						{channel="zway:zwayDevice:11fb7777:23:thermostatMode-ZWayVDev_zway_23-0-64"}
 
-Number bathroom_gf_floor_temp 			"Gulv bad 1. [%.1f °C]" 		<temperature> 	(gGF, gHeatingFloor, gTemperature)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B25%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
-Number bathroom_gf_floor_power_level 	"Reg bad 1. [%d]" 				<energy> 		(gGF, gHeatingFloor, floorHeatingNight)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B25%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B25%%5D.Configuration.Set(12,%2$s)]"}
-Number bathroom_gf_floor_mode 			"Modus bad 1. [MAP(floor.map):%s]"	<heating>		(gGF, gHeatingFloor)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B25%%5D.ThermostatMode.data.mode.value:20000:REGEX((.*?))]"}
+Number bathroom_gf_floor_temp 			"Gulv bad 1. [%.1f °C]" 					<temperature> 	(gGF, gHeatingFloor, gTemperature)			{channel="zway:zwayDevice:11fb7777:25:sensorTemperature-ZWayVDev_zway_25-0-49-1"}
+Number bathroom_gf_floor_power_level 	"Reg bad 1. [%d]" 							<energy> 		(gGF, gHeatingFloor, floorHeatingNight)  	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B25%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B25%%5D.Configuration.Set(12,%2$s)]"}
+String bathroom_gf_floor_mode 			"Modus bad 1. [MAP(floor.map):%s]"			<heating>		(gGF, gHeatingFloor)						{channel="zway:zwayDevice:11fb7777:25:thermostatMode-ZWayVDev_zway_25-0-64"}
 
-Number laundry_basement_floor_temp 			"Gulv vaskerom [%.1f °C]" 		<temperature> 	(gBasement, gHeatingFloor, gTemperature)	{channel="zway:zwayDevice:11fb7777:28:sensorTemperature-ZWayVDev_zway_28-0-49-1"}
-Number laundry_basement_floor_power_level 	"Reg vaskerom [%d]" 				<energy> 		(gBasement, gHeatingFloor)  {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B28%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B28%%5D.Configuration.Set(12,%2$s)]"}
-Number laundry_basement_floor_mode 			"Modus vaskerom [MAP(floor.map):%s]"	<heating>		(gBasement, gHeatingFloor)	{channel="zway:zwayDevice:11fb7777:28:thermostatMode-ZWayVDev_zway_28-0-64"}
+Number laundry_basement_floor_temp 			"Gulv vaskerom [%.1f °C]" 				<temperature> 	(gBasement, gHeatingFloor, gTemperature)	{channel="zway:zwayDevice:11fb7777:28:sensorTemperature-ZWayVDev_zway_28-0-49-1"}
+Number laundry_basement_floor_power_level 	"Reg vaskerom [%d]" 					<energy> 		(gBasement, gHeatingFloor)  				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B28%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B28%%5D.Configuration.Set(12,%2$s)]"}
+String laundry_basement_floor_mode 			"Modus vaskerom [MAP(floor.map):%s]"	<heating>		(gBasement, gHeatingFloor)					{channel="zway:zwayDevice:11fb7777:28:thermostatMode-ZWayVDev_zway_28-0-64"}
 
-Number hall_basement_floor_temp 			"Gulv gang kjeller [%.1f °C]" 		<temperature> 	(gBasement, gHeatingFloor, gTemperature)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B26%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
-Number hall_basement_floor_power_level 		"Reg gang kjeller [%d]" 				<energy> 		(gBasement, gHeatingFloor)  {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B26%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B26%%5D.Configuration.Set(12,%2$s)]"}
-Number hall_basement_floor_mode 			"Modus gang kjeller [MAP(floor.map):%s]"	<heating>		(gBasement, gHeatingFloor)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B26%%5D.ThermostatMode.data.mode.value:20000:REGEX((.*?))]"}
+Number hall_basement_floor_temp 			"Gulv gang kjeller [%.1f °C]" 			<temperature> 	(gBasement, gHeatingFloor, gTemperature)	{channel="zway:zwayDevice:11fb7777:26:sensorTemperature-ZWayVDev_zway_26-0-49-1"}
+Number hall_basement_floor_power_level 		"Reg gang kjeller [%d]" 				<energy> 		(gBasement, gHeatingFloor)  				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B26%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B26%%5D.Configuration.Set(12,%2$s)]"}
+String hall_basement_floor_mode 			"Mod.gang kjeller [MAP(floor.map):%s]"	<heating>		(gBasement, gHeatingFloor)					{channel="zway:zwayDevice:11fb7777:26:thermostatMode-ZWayVDev_zway_26-0-64"}
 
-Number tv_room_basement_floor_temp 			"Gulv kjellerstue [%.1f °C]" 		<temperature> 	(gBasement, gHeatingFloor, gTemperature)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B27%%5D.SensorMultilevel.data%%5B1%%5D:20000:JS(getValValue.js)]"}
-Number tv_room_basement_floor_power_level 	"Reg kjellerstue [%d]" 				<energy> 		(gBasement, gHeatingFloor)  {http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B27%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B27%%5D.Configuration.Set(12,%2$s)]"}
-Number tv_room_basement_floor_mode 			"Modus kjellerstue [MAP(floor.map):%s]"	<heating>		(gBasement, gHeatingFloor)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B27%%5D.ThermostatMode.data.mode.value:20000:REGEX((.*?))]"}
+Number tv_room_basement_floor_temp 			"Gulv kjellerstue [%.1f °C]" 			<temperature> 	(gBasement, gHeatingFloor, gTemperature)	{channel="zway:zwayDevice:11fb7777:27:sensorTemperature-ZWayVDev_zway_27-0-49-1"}
+Number tv_room_basement_floor_power_level 	"Reg kjellerstue [%d]" 					<energy> 		(gBasement, gHeatingFloor)  				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B27%%5D.Configuration.data%%5B12%%5D:20000:JS(getValValue.js)] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B27%%5D.Configuration.Set(12,%2$s)]"}
+String tv_room_basement_floor_mode 			"Modus kjellerstue [MAP(floor.map):%s]"	<heating>		(gBasement, gHeatingFloor)					{channel="zway:zwayDevice:11fb7777:27:thermostatMode-ZWayVDev_zway_27-0-64"}
 
-Number bathroom_1st_floor_temp 			"Målt gulvtemp bad [%.1f °C]" 		<temperature> 	(gFirstFloor, gHeatingFloor, gTemperature)		{channel="zway:zwayDevice:11fb7777:24:sensorTemperature-ZWayVDev_zway_24-0-49-1"}
-Number bathroom_1st_floor_mode 			"Gulvmodus bad [MAP(floor.map):%s]"	<heating>		(gFirstFloor, gHeatingFloor)					{channel="zway:zwayDevice:11fb7777:24:thermostatMode-ZWayVDev_zway_24-0-64"}
-Number bathroom_1st_floor_set_temp_heating 	"Varme gulvtemp [%.1f °C]" 		<temperature> 	(gFirstFloor, gHeatingFloor)					{channel="zway:zwayDevice:11fb7777:24:thermostatSetPoint-ZWayVDev_zway_24-0-67-1"}
-Number bathroom_1st_floor_set_temp_eco 			"Eco gulvtemp [%.1f °C]" 	<temperature> 	(gFirstFloor, gHeatingFloor)	{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B24%%5D.ThermostatSetPoint.data%%5B11%%5D.val.value:20000:REGEX((.*?))] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B24%%5D.ThermostatSetPoint.Set(11,%2$s)]"}
+Number bathroom_1st_floor_temp 				"Målt gulvtemp bad [%.1f °C]" 			<temperature> 	(gFirstFloor, gHeatingFloor, gTemperature)	{channel="zway:zwayDevice:11fb7777:24:sensorTemperature-ZWayVDev_zway_24-0-49-1"}
+String bathroom_1st_floor_mode 				"Gulvmodus bad [MAP(floor.map):%s]"		<heating>		(gFirstFloor, gHeatingFloor)				{channel="zway:zwayDevice:11fb7777:24:thermostatMode-ZWayVDev_zway_24-0-64"}
+Number bathroom_1st_floor_set_temp_heating 	"Varme gulvtemp [%.1f °C]" 				<temperature> 	(gFirstFloor, gHeatingFloor)				{channel="zway:zwayDevice:11fb7777:24:thermostatSetPoint-ZWayVDev_zway_24-0-67-1"}
+Number bathroom_1st_floor_set_temp_eco 		"Eco gulvtemp [%.1f °C]" 				<temperature> 	(gFirstFloor, gHeatingFloor)				{http="<[http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B24%%5D.ThermostatSetPoint.data%%5B11%%5D.val.value:20000:REGEX((.*?))] >[*:GET:http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%%5B24%%5D.ThermostatSetPoint.Set(11,%2$s)]"}
 
 Number floor_day_power_level 			"Dagregulator [%d]" 		<energy> (gHeatingFloor)
 Number floor_night_power_level 			"Nattregulator [%d]" 		<energy> (gHeatingFloor)
