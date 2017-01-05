@@ -28,9 +28,23 @@
   git:
     repo: git://github.com/glynhudson/leaf-python-mqtt.git
     clone: yes
-    dest: /etc/leaf-python-mqtt
+    dest: {{leaf_mqtt_install_dir}}
   become: yes
 
 - name: leaf-python config file
-  template: dest=/etc/leaf-python-mqtt/config.ini src=../templates/config.ini
+  template: dest={{leaf_mqtt_install_dir}}/config.ini src=../templates/config.ini
   become: yes
+
+- name: copy service file for leaf-python
+  template: dest=/etc/systemd/system/leaf-python-mqtt.service src=../templates/leaf-python-mqtt.service mode=664
+  become: yes
+
+- name: register the service
+  shell: systemctl status leaf-python-mqtt.service
+  become: yes
+
+- name: enable the service
+  service:
+    name: leaf-python-mqtt.service
+    enabled: yes
+    status: started
