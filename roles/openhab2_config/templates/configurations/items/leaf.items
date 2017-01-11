@@ -1,0 +1,6 @@
+Number leaf_battery "Batteri [%.0f %%]"         <battery>   {mqtt="<[broker:leaf/status/battery_percent:state:default]"}
+String leaf_charging_status "Lader? [%s]"       <shield>    {mqtt="<[broker:leaf/status/charging_status:state:default]"}
+String leaf_connected "Tilkoblet? [%s]"         <shield>    {mqtt="<[broker:leaf/status/connected:state:default]"}
+String leaf_last_updated "Sist oppdatert [%s]"  <shield>    {mqtt="<[broker:leaf/status/last_updated:state:default]"}
+Switch leaf_request_update "Få oppdatering"     <settings>  {mqtt=">[broker:leaf/control/update:command:ON:1],>[broker:leaf/control/update:command:OFF:0]"}
+Switch  leaf_heating "Klimakontroll"            <fire>      {mqtt=">[broker:leaf/control/climate:command:ON:1],>[broker:leaf/control/climate:command:OFF:0]"}
