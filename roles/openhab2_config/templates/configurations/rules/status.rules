@@ -13,7 +13,7 @@ rule "When text is changed, send a push message"
 			callScript('pushMessages')
 		} catch (Exception e) {
 			logError("org.openhab.rules.status", "Exception was thrown when trying to send pushMessage : " + e.message)
-			pushover('Could not send push message: ' + push_message_text.state.toString)
+			sendNotification("{{stein_email}}",'Could not send push message: ' + push_message_text.state.toString)
 		}
 end
 
@@ -148,7 +148,7 @@ then
 	var double w = new Double(power_freezer.state.toString())
 	var double maxLastHour = new Double(power_freezer.maximumSince(now.minusHours(1)).state.toString())
 	if (w < 5 || (w < 70 && maxLastHour < 70 )) {
-		pushover("Fryseren drar plutselig mindre strøm enn vanlig, nå kun: " + w + " watt og maks siste time er: " + maxLastHour)
+		sendNotification("{{stein_email}}","Fryseren drar plutselig mindre strøm enn vanlig, nå kun: " + w + " watt og maks siste time er: " + maxLastHour)
 	}
 end
 
@@ -160,17 +160,17 @@ rule "Send a status message at 22 if anything is NOT ok"
 			postUpdate(push_message_text, "Venstre: " + garage_door_1.state.toString() + ", Høyre:" + garage_door_2.state.toString())
 		}
 		if (boss_lan.state == OFF && !boss_lan.changedSince(now.minusHours(12))) {
-			pushover('Boss is not responding, and has been off for 12 hours (' + boss_lan.lastUpdate.toString + ')')
+			sendNotification("{{stein_email}}",'Boss is not responding, and has been off for 12 hours (' + boss_lan.lastUpdate.toString + ')')
 		}
 		if (nas_lan.state == OFF && !nas_lan.changedSince(now.minusHours(12))) {
-			pushover('NAS is not responding, and has been off for too long(' + nas_lan.lastUpdate.toString + ')')
+			sendNotification("{{stein_email}}",'NAS is not responding, and has been off for too long(' + nas_lan.lastUpdate.toString + ')')
 		} 	
 		if (mode.state != 0 && mode.state != 3 && tv_power.state == ON) {
-			pushover('TV-en står på, men du har enten lagt deg eller er borte..')
+			sendNotification("{{stein_email}}",'TV-en står på, men du har enten lagt deg eller er borte..')
 		} 	
 		
 		if (!zWaveStatus.state.toString().equalsIgnoreCase("200 OK")) {
-			pushover('Z-Wave status er: ' + zWaveStatus.state.toString())
+			sendNotification("{{stein_email}}",'Z-Wave status er: ' + zWaveStatus.state.toString())
 		}
 end
 
@@ -183,14 +183,14 @@ then
 		BatteryLevel_10?.members.forEach [item | 
 			if (item.state <= 2) {
 				logInfo('battery', item.name + " : " + item.state)
-				pushover('' + item.name + ' har lavt batterinivå: ' + item.state.toString)
+				sendNotification("{{stein_email}}",'' + item.name + ' har lavt batterinivå: ' + item.state.toString)
 			}
 		]
 	}
 	if (BatteryLevel_100.state <= 20) {
 		BatteryLevel_100?.members.forEach [item | 
 			if (item.state <= 20) {
-				pushover(''+ item.name + ' har lavt batterinivå: ' + item.state.toString + '%')
+				sendNotification("{{stein_email}}",''+ item.name + ' har lavt batterinivå: ' + item.state.toString + '%')
 			}
 		]	
 	} 

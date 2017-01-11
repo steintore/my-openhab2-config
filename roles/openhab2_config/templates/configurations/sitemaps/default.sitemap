@@ -14,10 +14,10 @@ sitemap default label="Huset"
 		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
 		Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
 	}
-	
+
     Frame label="Huset" {
     	Text item=LivingRoomTemperature label="Første etasje [%.1f °C]" icon="groundfloor" valuecolor=[LivingRoomTemperature_LastUpdate=="NULL"="lightgray",LivingRoomTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
-    		Frame {	
+    		Frame {
     			Text item=LivingRoomTemperature
     			Text item=LivingRoomHumidity
 				Text item=LivingRoomTemperature_LastUpdate visibility=[LivingRoomTemperature_LastUpdate>1800] valuecolor=[LivingRoomTemperature_LastUpdate>120="orange", LivingRoomTemperature_LastUpdate>300="red"]
@@ -60,7 +60,7 @@ sitemap default label="Huset"
 			Frame label="Plex TV" visibility=[PlexTVPower==ON] {
         		Switch item=PlexTVPower
         		Text item=PlexTVStatus
-        		Slider item=PlexTVProgress visibility=[PlexTVStatus!="Stopped"] 
+        		Slider item=PlexTVProgress visibility=[PlexTVStatus!="Stopped"]
         		Setpoint item=PlexTVProgress visibility=[PlexTVStatus!="Stopped"] minValue=0 maxValue=100 step=1
         		Text item=PlexTVTitle visibility=[PlexTVStatus!="Stopped"]
         		Text item=PlexTVType visibility=[PlexTVStatus!="Stopped"]
@@ -82,7 +82,7 @@ sitemap default label="Huset"
 			Frame label="Alt"   {
 				Group item=gGF
 			}
-		
+
     	}
     	Text item=alarm_temperature_hall_1st label="Andre etasje [%.1f °C]" icon="firstfloor" valuecolor=[alarm_temperature_hall_1st_LastUpdate=="NULL"="lightgray",alarm_temperature_hall_1st_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
     		Frame label="Gang" {
@@ -123,7 +123,7 @@ sitemap default label="Huset"
     			Text label="Plex" {
     				Switch item=PlexXBoxPower
     				Text item=PlexXBoxStatus
-    				Slider item=PlexXBoxProgress visibility=[PlexTVStatus!="Stopped"] 
+    				Slider item=PlexXBoxProgress visibility=[PlexTVStatus!="Stopped"]
     				Setpoint item=PlexXBoxProgress visibility=[PlexTVStatus!="Stopped"] minValue=0 maxValue=100 step=1
     				Text item=PlexXBoxTitle visibility=[PlexTVStatus!="Stopped"]
     				Text item=PlexXBoxType visibility=[PlexTVStatus!="Stopped"]
@@ -158,14 +158,14 @@ sitemap default label="Huset"
 					}
 				}
     		}
-    		
+
     		Frame label="Diverse" {
     			Text item=alarm_temperature_laundry
     			Text item=alarm_humidity_laundry
 				Text item=dryer label="Tørketrommel [%s %%]"
 				Text item=power_dryer visibility=[dryer==ON]
 				Text item=power_freezer
-				Text item=power_fridge	
+				Text item=power_fridge
 			}
 			Frame label="Alt" {
 				Group item=gBasement
@@ -177,7 +177,7 @@ sitemap default label="Huset"
                 Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==2]
                 Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=2W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==3]
 			}
-			
+
     	}
     	Text item=OutdoorTemperature label="Ute [%.1f °C]" icon="garden" valuecolor=[OutdoorTemperature_LastUpdate=="NULL"="lightgray",OutdoorTemperature_LastUpdate>90="lightgray",>25="orange",>15="green",>5="orange",<=5="blue"]  {
     		Frame {
@@ -194,6 +194,14 @@ sitemap default label="Huset"
 					Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
 					Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
 				}
+				Text label="Leaf" {
+					Text item=leaf_last_updated
+					Text item=leaf_battery
+					Text item=leaf_connected
+					Text item=leaf_charging_status
+					Switch item=leaf_heating mappings=[OFF="Off", ON="On"]
+					Switch item=leaf_request_update mappings=[OFF="Off", ON="On"]
+				}
 			}
 			Frame label="Ute" icon="garden" {
 				Text item=Outdoor_Temp_Max valuecolor=[>25="orange",>15="green",>5="orange",<=5="blue"]
@@ -207,7 +215,7 @@ sitemap default label="Huset"
 			}
     	}
     }
-    
+
     Frame label="Været" {
     	Text item=Condition icon="sun" {
         Frame {
@@ -243,7 +251,7 @@ sitemap default label="Huset"
              }
          }
          Text item=Sunrise_Time
-		 Text item=Sunset_Time	
+		 Text item=Sunset_Time
          Webview url="http://localhost:8080/weather?locationId=home&layout=weather&iconset=colorful" height=7
 			}
 		}
@@ -253,12 +261,12 @@ sitemap default label="Huset"
 		Text item=alarm_alarm icon="alarm"
     	Text label="Moduser" icon="present" {
 			Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
-			
+
 			Group item=proximity label="Nettverkshelse [(%d)]" icon="present"
 			Group item=Home label="Hjemme [(%d)]" icon="present"
 		}
 	}
-	
+
 	Frame label="Status" {
 		Text item=smappee_power icon="energy" {
 			Frame {
@@ -276,7 +284,7 @@ sitemap default label="Huset"
 			Frame {
 				Image refresh=120000 url="{{grafana_base_url}}?to=now&theme=light&width=700&height=350&panelId=2&from=now-48h"
 			}
-			
+
 		}
 		Text item=loadAverage1min icon="system" {
 			Frame {
@@ -285,16 +293,16 @@ sitemap default label="Huset"
 			Frame {
 				Text item=cpuCombined icon="system"
 			}
-			
+
 			Frame label="Load" {
 				Text item=loadAverage1min
 				Text item=loadAverage5min
 				Text item=loadAverage15min
 			}
 			Frame label="Minnebruk" {
-				Text item=memUsed 
-				Text item=memActualFree 
-				Text item=memTotal 
+				Text item=memUsed
+				Text item=memActualFree
+				Text item=memTotal
 			}
 			Frame label="Resultater" {
 	    			Text item=SpeedtestResultDown
@@ -312,30 +320,30 @@ sitemap default label="Huset"
   			}
 		}
 	}
-	
+
 	Frame label="Heating" {
 		Group item=Heating
 	}
-	
+
 	Frame label="Gulvvarme" {
 		Text label="Gulvvarme" icon="heating" {
 			Frame label="Kjeller" {
 				Switch item=scene_basement_floor_heating mappings=[0="Av", 1="Natt", 2="Dag", 3="Ferie"]
-				
+
 				Setpoint item=basementFloorWeekdaysON minValue=0 maxValue=23 step=1
 				Setpoint item=basementFloorWeekdaysOFF minValue=0 maxValue=23 step=1
-				
+
 				Setpoint item=basementFloorWeekendON minValue=0 maxValue=23 step=1
 				Setpoint item=basementFloorWeekendOFF minValue=0 maxValue=23 step=1
-				
+
 				Text item=laundry_basement_floor_temp
 				Text item=laundry_basement_floor_mode
 				Setpoint item=laundry_basement_floor_power_level minValue=0 maxValue=10 step=1
-				
+
 				Text item=hall_basement_floor_temp
 				Text item=hall_basement_floor_mode
 				Setpoint item=hall_basement_floor_power_level minValue=0 maxValue=10 step=1
-				
+
 				Text item=tv_room_basement_floor_temp
 				Text item=tv_room_basement_floor_mode
 				Setpoint item=tv_room_basement_floor_power_level minValue=0 maxValue=10 step=1
@@ -344,7 +352,7 @@ sitemap default label="Huset"
 				Text item=hall_gf_floor_temp
 				Text item=hall_gf_floor_mode
 				Setpoint item=hall_gf_floor_power_level minValue=0 maxValue=10 step=1
-				
+
 				Text item=bathroom_gf_floor_temp
 				Text item=bathroom_gf_floor_mode
 				Setpoint item=bathroom_gf_floor_power_level minValue=0 maxValue=10 step=1
@@ -354,7 +362,7 @@ sitemap default label="Huset"
 				Switch item=bathroom_1st_floor_mode mappings=[0="Av",1="Varme",11="Eco"]
 				Setpoint item=bathroom_1st_floor_set_temp_heating minValue=18 maxValue=30 step=1
 				Setpoint item=bathroom_1st_floor_set_temp_eco minValue=15 maxValue=20 step=1
-								
+
 			}
 			Frame label="Generelt" {
 				Setpoint item=floor_night_power_level minValue=0 maxValue=10 step=1
@@ -363,9 +371,9 @@ sitemap default label="Huset"
 			}
 		}
 	}
-	
+
 	Frame label="Bevegelse" icon="office" {
 		Group item=Motion
-		//Text item=livingroom_update 
+		//Text item=livingroom_update
 	}
 }

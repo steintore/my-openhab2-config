@@ -255,7 +255,7 @@ rule "Motion detector in basement wants to turn on the lights"
                         else if (mode.state == 1 || mode.state == 3) // NIGHT OR EVENING MODE
                                 sendCommand(scene_light_basement, 2) // NIGHT MODE
                         else { //AWAY
-                                pushover('Bevegelse i kjelleren...')
+                                sendNotification("{{stein_email}}",'Bevegelse i kjelleren...')
                         }
 
                         timerBasement = createTimer(now.plusSeconds(3600)) [|
@@ -318,7 +318,7 @@ rule "Remote in living room"
                 	sendCommand(ac_scene, 0)
             } 
             default: {
-            	pushover('Fikk en rar update fra fjernkontrollen: ' + scene_remote_livingroom.state.toString)
+            	sendNotification("{{stein_email}}",'Fikk en rar update fra fjernkontrollen: ' + scene_remote_livingroom.state.toString)
             }
     }
     // Set it to 0, so that all changes are considered

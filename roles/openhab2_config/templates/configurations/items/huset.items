@@ -94,8 +94,8 @@ Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Powe
 Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement)										{channel="zway:zwayDevice:11fb7777:2:sensorMultilevel-ZWayVDev_zway_2-0-50-0"}
 
 /* Garage */
-Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:7:switchControl-ZWayVDev_zway_Remote_7-0-0-B"}
-Switch garage_door_2    		"Garasjedør MONDEO [MAP(no.map):%s]"    <garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:8:switchControl-ZWayVDev_zway_Remote_8-0-0-B"}
+Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:7:sensorMotion-ZWayVDev_zway_7-0-48-1"}
+Switch garage_door_2    		"Garasjedør MONDEO [MAP(no.map):%s]"    <garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:8:sensorMotion-ZWayVDev_zway_8-0-48-1"}
 Switch message_received 		"Garasjedørmelding er mottatt"			<garagedoor>	(gOutdoor)
 Number garage_door_1_battery 	"Leaf [%s %%]"							<battery>		(gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:7:battery-ZWayVDev_zway_7-0-128"}
 Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:8:battery-ZWayVDev_zway_8-0-128"}
@@ -181,12 +181,6 @@ Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight,
 Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:10:color"}
 Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:7:color"}
 Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:8:color"}
-
-/* Config-values */
-String pushover_token_anette 	"Pushover Anette" 	{configadmin = "pushover:anetteToken"}
-String pushover_token_both 		"Pushover both" 	{configadmin = "pushover:bothToken"}
-String pushover_token_default 	"Pushover default" 	{configadmin = "pushover:defaultToken"}
-String stein_email				"STT e-mail"		{configadmin = "steintore:email"}
 
 /* Living room TV */
 Group TV <tv>

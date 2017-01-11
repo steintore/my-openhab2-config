@@ -119,7 +119,7 @@ then
 				Thread::sleep(500)
 				sendCommand(garage_door_1_relay, OFF)
 			} else {
-				pushover("Garage door 1 is already closed")
+				sendNotification("{{stein_email}}","Garage door 1 is already closed")
 			}
 		}
 		case 1: { // OPEN
@@ -128,7 +128,7 @@ then
 				Thread::sleep(500)
 				sendCommand(garage_door_1_relay, OFF)
 			} else {
-				pushover("Garage door 1 is already open")
+				sendNotification("{{stein_email}}","Garage door 1 is already open")
 			}	
 		}
 		case 2: { // OPEN FOR 10 MINUTES
@@ -144,7 +144,7 @@ then
 							}
 						garageDoorOpen1Timed = null
 						}
-						pushover("Cancelling timer, door 1 is already closed")	
+						sendNotification("{{stein_email}}","Cancelling timer, door 1 is already closed")	
 					} else { // SHOULD WE CHECK FOR MOTION?
 						sendCommand(scene_garage_1, 0) // CLOSE
 						if(garageDoorOpen1Timed != null) {
@@ -156,7 +156,7 @@ then
 					}			
 				]
 			} else {
-				pushover("Garage door 1 is already open")
+				sendNotification("{{stein_email}}","Garage door 1 is already open")
 			}	
 		}
 	}	
@@ -175,7 +175,7 @@ then
 				Thread::sleep(500)
 				sendCommand(garage_door_2_relay, OFF)
 			} else {
-				pushover("Garage door 2 is already closed")
+				sendNotification("{{stein_email}}","Garage door 2 is already closed")
 			}
 		}
 		case 1: { // OPEN
@@ -184,7 +184,7 @@ then
 				Thread::sleep(500)
 				sendCommand(garage_door_2_relay, OFF)
 			} else {
-				pushover("Garage door 2 is already open")
+				sendNotification("{{stein_email}}","Garage door 2 is already open")
 			}	
 		}
 		case 2: { // OPEN FOR 10 MINUTES
@@ -200,7 +200,7 @@ then
 							}
 						garageDoorOpen2Timed = null
 						}
-						pushover("Cancelling timer, door 2 is already closed")	
+						sendNotification("{{stein_email}}","Cancelling timer, door 2 is already closed")	
 					} else { // SHOULD WE CHECK FOR MOTION?
 						sendCommand(scene_garage_2, 0) // CLOSE
 						if(garageDoorOpen2Timed != null) {
@@ -212,7 +212,7 @@ then
 					}			
 				]
 			} else {
-				pushover("Garage door 2 is already open")
+				sendNotification("{{stein_email}}","Garage door 2 is already open")
 			}	
 		}
 	}	
@@ -223,6 +223,6 @@ rule "motion in the garage"
 when
 	Item garagepi_motion changed to ON
 then
-	pushover("Motion in the garage", 0 , "{{garagepi_screenshot_url}}")
+	sendNotification("{{stein_email}}","Motion in the garage", 0 , "{{garagepi_screenshot_url}}")
 	postUpdate(garagepi_motion, OFF)
 end

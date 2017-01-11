@@ -20,7 +20,7 @@ rule "Got command to send to Roomba"
 					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=CLEAN')
 					postUpdate(roombaCurrentState, 4)
 				} else {
-					pushover("Kan ikke starte støvsuging, det er for lite batteri: " + roombaBatteryPercentage.state + "%")
+					sendNotification("{{stein_email}}","Kan ikke starte støvsuging, det er for lite batteri: " + roombaBatteryPercentage.state + "%")
 				}
 			}
 			case 2: { // SPOT CLEANING

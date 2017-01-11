@@ -84,7 +84,7 @@ then
 		} else if (alarm_alarm.state == "armedaway" || alarm_alarm.state == "armed") // AWAY
 			sendCommand(mode, 2) 
 		else
-			pushover("Ukjent alarmstatus: " + alarm_alarm.state.toString)
+			sendNotification("{{stein_email}}","Ukjent alarmstatus: " + alarm_alarm.state.toString)
 	}
 end
 

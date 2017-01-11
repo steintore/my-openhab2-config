@@ -3,8 +3,8 @@ when
 	Item smoke_detector received update
 then
 	if(!smoke_detector.updatedSince(now.minusSeconds(20))) {
-		pushover("Røykvarsleren er utløst!")
-		sendMail(stein_email.state.toString, "[openhab] Røykvarlser utløst", "Røykvarsleren er utløst.")
+		sendNotification("{{stein_email}}","Røykvarsleren er utløst!")
+		sendMail({{stein_email}}, "[openhab] Røykvarlser utløst", "Røykvarsleren er utløst.")
 		logInfo("org.openhab.security", "Røykvarsler utløst.")
 		sendCommand(gLight, ON)
 	}

@@ -25,7 +25,7 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 					}
 				}
 				if (tempBasement < 16 && BasementTemperature.maximumSince(now.minusMinutes(21)).state >= 78) {
-					pushover('Kjellertemp er nå: ' + tempBasement + " - den har gått fra " + BasementTemperature.maximumSince(now.minusMinutes(21)).state + " de siste 20 minuttene")
+					sendNotification("{{stein_email}}",'Kjellertemp er nå: ' + tempBasement + " - den har gått fra " + BasementTemperature.maximumSince(now.minusMinutes(21)).state + " de siste 20 minuttene")
 				}
 				if (tempLivingroom < (new Double(ac_heat_temp.state.toString()) - 2) && mode.state == 0 && ac_scene.state != 1) {
 					sendCommand(ac_scene, 1)
@@ -42,7 +42,7 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 			
 		} else {
 			if (tempBasement < 12 || tempLivingroom < 12 || tempOffice < 12) {
-				pushover("En eller annen temperatur er under 12 grader: [Stue: " + tempLivingroom + ", kontor: " + tempOffice + ", kjeller: " + tempBasement + "]")
+				sendNotification("{{stein_email}}","En eller annen temperatur er under 12 grader: [Stue: " + tempLivingroom + ", kontor: " + tempOffice + ", kjeller: " + tempBasement + "]")
 				if (tempLivingroom < 12)
 					sendCommand(ac_scene, 1)
 				if (tempOffice < 12) {
@@ -61,7 +61,7 @@ rule "When the error code from the AC changes, please let me know"
 	when
 		Item ac_error changed
 	then
-	pushover("AC Error changed to: " + ac_error.state.toString())
+	sendNotification("{{stein_email}}","AC Error changed to: " + ac_error.state.toString())
 end
 
 rule "AC scenes"
@@ -197,25 +197,25 @@ rule "Adjust basement floor heating"
 			sendCommand(tv_room_basement_floor_power_level, 0)
 			sendCommand(laundry_basement_floor_power_level, 0)
 			sendCommand(hall_basement_floor_power_level, 0)
-			pushover("Basement floor heating switched off")
+			sendNotification("{{stein_email}}","Basement floor heating switched off")
 		}
 		case 1: { // NIGHT/LOW
 			sendCommand(tv_room_basement_floor_power_level, floor_night_power_level.state.toString)
 			sendCommand(laundry_basement_floor_power_level, floor_night_power_level.state.toString)
 			sendCommand(hall_basement_floor_power_level, floor_night_power_level.state.toString)
-			//pushover("Basement floor heating switched to night mode")
+			//sendNotification("{{stein_email}}","Basement floor heating switched to night mode")
 		}
 		case 2: { // DAY
 			sendCommand(tv_room_basement_floor_power_level, floor_day_power_level.state.toString)
 			sendCommand(laundry_basement_floor_power_level, floor_day_power_level.state.toString)
 			sendCommand(hall_basement_floor_power_level, floor_day_power_level.state.toString)
-			//pushover("Basement floor heating switched to day mode")
+			//sendNotification("{{stein_email}}","Basement floor heating switched to day mode")
 		}
 		case 3: { //HOLIDAY
 			sendCommand(tv_room_basement_floor_power_level, floor_holiday_power_level.state.toString)
 			sendCommand(laundry_basement_floor_power_level, floor_holiday_power_level.state.toString)
 			sendCommand(hall_basement_floor_power_level, floor_holiday_power_level.state.toString)
-			pushover("Basement floor heating switched to holiday mode")
+			sendNotification("{{stein_email}}","Basement floor heating switched to holiday mode")
 		}
 	}
 end
@@ -324,7 +324,7 @@ then
 			if (screen_pi.state == ON) 
 				sendCommand(screen_pi_screen, ON)
 			else 
-				pushover('ScreenPi is switched off...')	
+				sendNotification("{{stein_email}}",'ScreenPi is switched off...')	
 			sendCommand(roombaDock, ON)			
 		}
 	}
