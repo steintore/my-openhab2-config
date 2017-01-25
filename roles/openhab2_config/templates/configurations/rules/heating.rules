@@ -236,7 +236,7 @@ then
 	if (timerBFWeekendOn != null) timerBFWeekendOn.cancel()
 	timerBFWeekendOn = createTimer(onTime) [|
 		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && now.getDayOfWeek > 5) {
+		if (holiday_mode.state == OFF && now.getDayOfWeek > 4 && now.getDayOfWeek < 7) {
 			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
 		}
 	]
@@ -249,7 +249,7 @@ then
 	if (timerBFWeekendOff != null) timerBFWeekendOff.cancel()
 	timerBFWeekendOff = createTimer(onTime) [|
 		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && now.getDayOfWeek > 5) {
+		if (holiday_mode.state == OFF && now.getDayOfWeek > 4 && now.getDayOfWeek < 7) {
 			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
 		}
 	]
@@ -263,7 +263,7 @@ then
 	if (timerBFWeekdaysOff != null) timerBFWeekdaysOff.cancel()
 	timerBFWeekdaysOff = createTimer(onTime) [|
 		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && now.getDayOfWeek < 6) {
+		if (holiday_mode.state == OFF && (now.getDayOfWeek < 5 || now.getDayOfWeek > 6)) {
 			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
 		}
 	]
@@ -277,7 +277,7 @@ then
 	if (timerBFWeekdaysOn != null) timerBFWeekdaysOn.cancel()
 	timerBFWeekdaysOn = createTimer(onTime) [|
 		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && now.getDayOfWeek < 6) {
+		if (holiday_mode.state == OFF && (now.getDayOfWeek < 5 || now.getDayOfWeek > 6)) {
 			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
 		}
 	]

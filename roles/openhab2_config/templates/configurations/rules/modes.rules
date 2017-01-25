@@ -54,6 +54,8 @@ rule "A change of mode"
 			sendCommand(screen_pi_screen, ON)
 			sendCommand(roombaDock, ON)
 			
+			sendCommand(leaf_request_update, ON)
+			
 			if (motion_living_room.state == ON) 
 				sendCommand(scene_light_livingroom, 1)
 		}
@@ -92,7 +94,7 @@ rule "A change of mode"
 				
 			// TODO Check that door is locked and alarm is in night mode
 			postUpdate(motion_living_room, OFF)
-			sendNotification("stein.tore.tosse@gmail.com", "Nattmodus er på")
+			sendNotification("{{stein_email}}", "Nattmodus er på")
 		}
 		
 		case 2: { //AWAY
