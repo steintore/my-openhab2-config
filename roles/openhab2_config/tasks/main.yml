@@ -33,8 +33,10 @@
         - items/alarm.items
         - items/speedtest.items
         - items/leaf.items
+        - items/homekit.items
         - persistence/rrd4j.persist
         - persistence/influxdb.persist
+        - rules/homekit.rules
         - rules/leaf.rules
         - rules/garage.rules
         - rules/heating.rules

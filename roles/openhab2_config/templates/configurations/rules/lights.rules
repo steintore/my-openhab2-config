@@ -101,11 +101,12 @@ then
 		case 0: { // OFF
 			sendCommand(Living_Room_Lights, OFF)
 			sendCommand(light_dining_table_dimmer, 0)
-			
+			postUpdate(homekit_livingroom_light, OFF)
 		}
 		case 1: { // ON
 			sendCommand(Living_Room_Lights, ON)
 			sendCommand(light_dining_table_dimmer, 100)
+			postUpdate(homekit_livingroom_light, ON)
 		}
 	}	
 	logInfo('org.openhab', 'scene_light_livingroom update to: ' + scene_light_livingroom.state)
@@ -118,15 +119,20 @@ then
  	switch(receivedCommand) {
  		case 0: {
  			sendCommand(light_hall_ground_floor, OFF)
+ 			postUpdate(homekit_light_hall, OFF)
  		}
  		case 1: {
  			sendCommand(light_hall_ground_floor, ON)
+ 			postUpdate(homekit_light_hall, ON)
  		}
  		case 2: {
- 			if (hall_gf_motion.state == ON)
+ 			if (hall_gf_motion.state == ON) {
  				sendCommand(light_hall_ground_floor, ON)
- 			else
+ 				postUpdate(homekit_light_hall, ON)
+ 			 } else {
  				sendCommand(light_hall_ground_floor, OFF)
+ 				postUpdate(homekit_light_hall, OFF)
+			}
  		}
  	}
 end
@@ -163,18 +169,21 @@ rule "light in hall 1st floor"
 			sendCommand(light_hall_2, 0)
 			sendCommand(light_hall_3, 0)
 			sendCommand(light_hall_4, 0)
+			postUpdate(homekit_light_hall_1st_floor, OFF)
 		}
 		case 1: { //ON
 			sendCommand(light_hall_1, 100)
 			sendCommand(light_hall_2, 100)
 			sendCommand(light_hall_3, 100)
 			sendCommand(light_hall_4, 100)
+			postUpdate(homekit_light_hall_1st_floor, ON)
 		}
 		case 2: { //NIGHT MODE
 			sendCommand(light_hall_1, 0)
 			sendCommand(light_hall_2, 30)
 			sendCommand(light_hall_3, 30)
 			sendCommand(light_hall_4, 0)
+			postUpdate(homekit_light_hall_1st_floor, ON)
 		}
 	}
 end
@@ -205,18 +214,21 @@ rule "light in basement hall"
 			sendCommand(light_basement_2, 0)
 			sendCommand(light_basement_3, 0)
 			sendCommand(light_basement_4, 0)
+			postUpdate(homekit_basement_light, OFF)
 		}
 		case 1: { //ON
 			sendCommand(light_basement_1, 100)
 			sendCommand(light_basement_2, 100)
 			sendCommand(light_basement_3, 100)
 			sendCommand(light_basement_4, 100)
+			postUpdate(homekit_basement_light, ON)
 		}
 		case 2: { //NIGHT MODE
 			sendCommand(light_basement_1, 50)
 			sendCommand(light_basement_2, 50)
 			sendCommand(light_basement_3, 50)
 			sendCommand(light_basement_4, 50)
+			postUpdate(homekit_basement_light, ON)
 		}
 	}
 end
