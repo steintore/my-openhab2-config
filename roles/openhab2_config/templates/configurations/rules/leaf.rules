@@ -2,15 +2,15 @@
 rule "Disable fetching of status when status has arrived"
 	when Item leaf_last_updated changed or
 		Item leaf_charging_status changed or
-		Item leaf_battery changed	
+		Item leaf_battery changed
 then
 	if (leaf_request_update.state == ON) {
 		sendCommand(leaf_request_update, OFF)
 	}
-	
+
 	if (OutdoorTemperature.state < -5 && leaf_connected.state == '') {
 		sendNotification("{{stein_email}}", "Det er kaldt ute, kanskje skru på varmeapparetet på bilen?")
-	} 
+	}
 end
 
 rule "Check battery in evening"
@@ -19,7 +19,7 @@ rule "Check battery in evening"
 	then
 	if (mode.state != 2) {
 		if (leaf_charging_status.state == OFF && leaf_battery.state <= 50) {
-			sendNotification("{{stein_email", "Leaf har " + leaf_battery.state + "% batteri og står IKKE på lading")
+			sendNotification("{{stein_email}}", "Leaf har " + leaf_battery.state + "% batteri og står IKKE på lading")
 		}
 	}
 end
