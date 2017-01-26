@@ -94,7 +94,6 @@ rule "A change of mode"
 				
 			// TODO Check that door is locked and alarm is in night mode
 			postUpdate(motion_living_room, OFF)
-			sendNotification("{{stein_email}}", "Nattmodus er på")
 		}
 		
 		case 2: { //AWAY
