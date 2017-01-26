@@ -32,8 +32,10 @@
         - items/roomba.items
         - items/alarm.items
         - items/speedtest.items
+        - items/leaf.items
         - persistence/rrd4j.persist
         - persistence/influxdb.persist
+        - rules/leaf.rules
         - rules/garage.rules
         - rules/heating.rules
         - rules/lights.rules
