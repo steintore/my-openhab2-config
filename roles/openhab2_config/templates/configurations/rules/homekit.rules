@@ -54,3 +54,17 @@ rule "Homekit wants to turn on hall lighs"
 		}
 	}
 end
+
+rule "Homekit wants to turn on or off the TV" 
+	when
+		Item homekit_tv received command
+	then
+	switch (receivedCommand) {
+		case ON: {
+			// CANNOT DO THIS
+		}
+		case OFF: {
+			sendCommand(tv_power, OFF)
+		}
+	}
+end	

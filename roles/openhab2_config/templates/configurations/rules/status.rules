@@ -94,6 +94,7 @@ then
 		ac_mode.sendCommand(ac_mode_previous.state.toString)
 		ac_mode_previous.sendCommand(99)
 	}
+	postUpdate(homekit_tv, tv_power.state)
 end
 
 rule "If we manually change to quiet mode when the tv is on"
