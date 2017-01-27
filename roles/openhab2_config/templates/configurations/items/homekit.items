@@ -1,7 +1,7 @@
+Group homekit
+Switch homekit_livingroom_light       "Lys"	  <light>  (homekit)  [ "Lighting" ]
+Switch homekit_basement_light         "Lys"   <light>  (homekit)  [ "Lighting" ]
+Switch homekit_light_hall_1st_floor   "Lys"	  <light>  (homekit)  [ "Lighting" ]
+Switch homekit_light_hall             "Lys"   <light>  (homekit)  [ "Lighting" ]
 
-Switch homekit_livingroom_light       "Lys"		<light>  (gGF,gLight, Living_Room_Lights)      [ "Lighting" ]
-Switch homekit_basement_light         "Lys"   <light>  (gLight, gBasementLights, gBasement)  [ "Lighting" ]
-Switch homekit_light_hall_1st_floor   "Lys"		<light>  (gLight, gHallLights, gFirstFloor)    [ "Lighting" ]
-Switch homekit_light_hall             "Lys"   <light>  (gLight, gGF)                         [ "Lighting" ]
-
-Switch homekit_tv					"TV"	<tv> (gGF) [ "Switchable" ]
+Switch homekit_tv					"TV"	<tv> (homekit) [ "Switchable" ]

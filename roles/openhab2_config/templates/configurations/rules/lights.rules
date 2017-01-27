@@ -108,8 +108,7 @@ then
 			sendCommand(light_dining_table_dimmer, 100)
 			postUpdate(homekit_livingroom_light, ON)
 		}
-	}	
-	logInfo('org.openhab', 'scene_light_livingroom update to: ' + scene_light_livingroom.state)
+	}
 end
 
 rule "change scene for lights in hall ground floor"
