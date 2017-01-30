@@ -1,7 +1,6 @@
 sitemap default label="Huset"
 {
 	Frame label="Quick" {
-		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
 		Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
 		Switch item=holiday_mode visibility=[mode==2]
 		Switch item=ac_scene mappings=[0="Av", 1="Varm", 2="Kjøl", 3="Luft"]
@@ -11,8 +10,8 @@ sitemap default label="Huset"
 		Slider item=light_dining_table_dimmer icon="slider" visibility=[scene_light_livingroom==1]
 		Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
 		Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
-		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
 		Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
+		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
 	}
 
     Frame label="Huset" {
