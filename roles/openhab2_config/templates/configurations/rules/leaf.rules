@@ -6,6 +6,12 @@ rule "Disable fetching of status when status has arrived"
 then
 	if (leaf_request_update.state == ON) {
 		sendCommand(leaf_request_update, OFF)
+		if (mode.state == 0) {
+			var String charging = ''
+			if (leaf_charging_status.state.toString == 'NOT_CHARGING')
+				charging = 'IKKE '
+			postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri og står "+ charging +"på lading")
+		}
 	}
 
 	if (OutdoorTemperature.state < -5 && leaf_connected.state == '') {
@@ -19,7 +25,7 @@ rule "Check battery in evening"
 	then
 	if (mode.state != 2) {
 		if (leaf_charging_status.state == OFF && leaf_battery.state <= 50) {
-			sendNotification("{{stein_email}}", "Leaf har " + leaf_battery.state + "% batteri og står IKKE på lading")
+			postUpdate(push_message_text,"Leaf har " + leaf_battery.state + "% batteri og står IKKE på lading")
 		}
 	}
 end
