@@ -11,7 +11,7 @@ sitemap default label="Huset"
 		Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
 		Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
 		Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
-		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
+		Image url="{{garagepi_screenshot_url}}" refresh=20000 visibility=[garage_door_1==ON, garage_door_2==ON]
 	}
 
     Frame label="Huset" {
@@ -187,11 +187,11 @@ sitemap default label="Huset"
     		Frame label="Garasjen" {
 				Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
 				Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
-				Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
 				Text label="Livestream" icon="camera" {
-					Image url="{{garagepi_screenshot_url}}" refresh=5000
 					Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
 					Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
+					Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
+					Image url="{{garagepi_screenshot_url}}" refresh=5000
 				}
 				Text label="Leaf" {
 					Text item=leaf_last_updated

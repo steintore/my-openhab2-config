@@ -45,9 +45,6 @@ rule "A change of mode"
 					+ t
 				}
 				sendCommand(guest_home, ON)
-				if (dryer.state == ON) {
-					t = t + "Tørketrommelen ble startet igjen. "
-				}
 				if (t.length() > 0)
 					postUpdate(push_message_text, t)
 			}
@@ -178,7 +175,7 @@ end
  */
 rule "Switch to night mode in the evening"
 	when
-		Time cron "0 30 1 ? * *" 
+		Time cron "0 30 0 ? * *" 
 	then
 		if (mode.state == 0 || mode.state == 3) {
 			if (tv_power.state == ON || denon_receiver.state == ON || appletv.state == ON || xbox.state == ON) {
@@ -211,11 +208,11 @@ end
  */
 rule "Return to day mode during the week"
 	when
-		Time cron "0 0 5 ? * MON-FRI"
+		Time cron "0 0 6 ? * MON-FRI"
 	then
 		if (mode.state == 1) {
-			sendCommand(mode, 0)
 			sendCommand(justMorning, ON)
+			sendCommand(mode, 0)
 		}
 end
 
@@ -224,12 +221,12 @@ rule "Return to day mode during weekend"
 		Time cron "0 0 6 ? * SAT-SUN"
 	then
 		if (mode.state == 1) {
-			sendCommand(mode, 0)
 			sendCommand(justMorning, ON)
+			sendCommand(mode, 0)
 		}
 end
 
-rule "Switch no night/day mode when button is pressed"
+rule "Switch to night/day mode when button is pressed"
 	when
 		Item left_double_switch received command or
 		Item left_double_switch changed

@@ -71,3 +71,35 @@ rule "Homekit wants to turn on or off the TV"
 		}
 	}
 end	
+
+rule "Homekit good night"
+	when
+		Item homekit_goodnight received command ON
+	then
+	sendCommand(mode, 1)
+end
+
+rule "Homekit good morning"
+	when
+		Item homekit_goodmorning received command ON
+	then
+	if (mode.state != 2) {
+		sendCommand(justMorning, ON)
+		sendCommand(mode, 0)	
+	}
+end
+
+rule "Homekit good bye"
+	when
+		Item homekit_goodbye received command ON
+	then
+		if (mode.state != 2)
+			sendCommand(mode, 2)
+end
+
+rule "Homekit coming home"
+	when
+		Item homekit_cominghome received command ON
+	then
+		sendCommand(mode, 0)	
+end

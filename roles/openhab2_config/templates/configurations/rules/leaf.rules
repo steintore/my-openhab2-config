@@ -1,4 +1,6 @@
 
+var Timer timerHeater = null
+
 rule "Disable fetching of status when status has arrived"
 	when Item leaf_last_updated changed or
 		Item leaf_charging_status changed or
@@ -28,4 +30,27 @@ rule "Check battery in evening"
 			postUpdate(push_message_text,"Leaf har " + leaf_battery.state + "% batteri og står IKKE på lading")
 		}
 	}
+end
+
+rule "Stop requesting climate control to be switched OFF after 16 minutes"
+	when 
+		Item leaf_heating changed to ON
+	then
+		if (timerHeater == null) {
+			timerHeater = createTimer(now.plusMinutes(16)) [|
+					sendCommand(leaf_heating, OFF)
+					if(timerHeater != null) {
+						if(timerHeater.running) {
+							timerHeater.cancel()
+						}
+						timerHeater= null
+					}
+					sendNotification("{{stein_email}}", "Varmeappart ferdig med å sende..")
+				]
+		} else {
+			if(timerHeater.running) {
+				timerHeater.cancel()
+			}
+			timerHeater= null
+		}
 end
