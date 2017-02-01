@@ -1,5 +1,6 @@
 
 var Timer timerHeater = null
+var Timer timerLeafInfo = null
 
 rule "Disable fetching of status when status has arrived"
 	when Item leaf_last_updated changed or
@@ -7,13 +8,33 @@ rule "Disable fetching of status when status has arrived"
 		Item leaf_battery changed
 then
 	if (leaf_request_update.state == ON) {
-		sendCommand(leaf_request_update, OFF)
-		if (mode.state == 0) {
-			var String charging = ''
-			if (leaf_charging_status.state.toString == 'NOT_CHARGING')
-				charging = 'IKKE '
-			postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri og står "+ charging +"på lading")
+		if (timerLeafInfo == null) {
+			timerLeafInfo = createTimer(now.plusMinutes(1)) [|
+				var String charging = ''
+				var String connected = ''
+				if (leaf_charging_status.state.toString == 'NOT_CHARGING') {
+					charging = 'IKKE'
+				}
+				if (leaf_connected.state.toString != 'Yes') {
+					connected = 'og er IKKE tilkoblet strøm'
+				} else {
+					connected = 'og er tilkoblet strøm'
+				}
+				if (leaf_battery.state <= 99) {
+					postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri, står "+ charging +" på lading" + connected)
+				} else {
+					postUpdate(push_message_text, "Leaf er fulladet " + connected)
+				}
+				postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri, står "+ charging +" på lading")
+				if(timerLeafInfo != null) {
+					if(timerLeafInfo.running) {
+						timerLeafInfo.cancel()
+					}
+					timerLeafInfo= null
+				}	
+			]
 		}
+		sendCommand(leaf_request_update, OFF)
 	}
 
 	if (OutdoorTemperature.state < -5 && leaf_connected.state == '') {
@@ -21,23 +42,12 @@ then
 	}
 end
 
-rule "Check battery in evening"
-	when
-		Time cron "0 0 21 ? * MON-SUN"
-	then
-	if (mode.state != 2) {
-		if (leaf_charging_status.state == OFF && leaf_battery.state <= 50) {
-			postUpdate(push_message_text,"Leaf har " + leaf_battery.state + "% batteri og står IKKE på lading")
-		}
-	}
-end
-
-rule "Stop requesting climate control to be switched OFF after 16 minutes"
+rule "Stop requesting climate control to be switched OFF after 10 minutes"
 	when 
 		Item leaf_heating changed to ON
 	then
 		if (timerHeater == null) {
-			timerHeater = createTimer(now.plusMinutes(16)) [|
+			timerHeater = createTimer(now.plusMinutes(10)) [|
 					sendCommand(leaf_heating, OFF)
 					if(timerHeater != null) {
 						if(timerHeater.running) {

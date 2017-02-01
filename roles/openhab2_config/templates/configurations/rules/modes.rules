@@ -147,10 +147,11 @@ rule "A change of mode"
 					if (floor_night_power_level.state == 0 && item.state > 0) 
 						sendCommand(item, 1)
 					else
-						sendCommand(item, floor_night_power_level.state as DecimalType)
+						sendCommand(item, floor_night_power_level.state as Number)
 				]
 			}
 			sendCommand(justMorning, OFF)
+			sendCommand(leaf_request_update, ON)
 		}
 	}
 	postUpdate(previous_mode, mode.state.toString)

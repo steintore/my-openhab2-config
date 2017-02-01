@@ -1,6 +1,6 @@
 
 rule "Homekit wants to turn living room lights on or OFF"
-	when 
+	when
 		Item homekit_livingroom_light received
 	then
 	switch (receivedCommand) {
@@ -13,7 +13,7 @@ rule "Homekit wants to turn living room lights on or OFF"
 				sendCommand(scene_light_livingroom, 0)
 			}
 	}
-		
+
 end
 
 rule "Homekit wants to turn basement lights on or off"
@@ -27,10 +27,10 @@ rule "Homekit wants to turn basement lights on or off"
 		case OFF: {
 			sendCommand(scene_light_basement, 0)
 		}
-	}	
+	}
 end
 
-rule "Homekit wants to turn on or off 1st floor hall lights" 
+rule "Homekit wants to turn on or off 1st floor hall lights"
 	when
 		Item homekit_light_hall_1st_floor received command
 	then
@@ -58,7 +58,7 @@ rule "Homekit wants to turn on or off hall lights"
 	}
 end
 
-rule "Homekit wants to turn on or off the TV" 
+rule "Homekit wants to turn on or off the TV"
 	when
 		Item homekit_tv received command
 	then
@@ -70,13 +70,14 @@ rule "Homekit wants to turn on or off the TV"
 			sendCommand(tv_power, OFF)
 		}
 	}
-end	
+end
 
 rule "Homekit good night"
 	when
 		Item homekit_goodnight received command ON
 	then
-	sendCommand(mode, 1)
+	if (mode.state != 2 && mode.state != 1)
+		sendCommand(mode, 1)
 end
 
 rule "Homekit good morning"
@@ -85,7 +86,7 @@ rule "Homekit good morning"
 	then
 	if (mode.state != 2) {
 		sendCommand(justMorning, ON)
-		sendCommand(mode, 0)	
+		sendCommand(mode, 0)
 	}
 end
 
@@ -101,5 +102,5 @@ rule "Homekit coming home"
 	when
 		Item homekit_cominghome received command ON
 	then
-		sendCommand(mode, 0)	
+		sendCommand(mode, 0)
 end
