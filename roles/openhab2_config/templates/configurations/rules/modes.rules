@@ -232,7 +232,6 @@ rule "Switch to night/day mode when button is pressed"
 		Item left_double_switch received command or
 		Item left_double_switch changed
 	then
-	
 		switch (left_double_switch.state as OnOffType) {
 			case ON: { // DAY MODE
 				if(mode.state != 0)
@@ -243,6 +242,6 @@ rule "Switch to night/day mode when button is pressed"
 					sendCommand(mode, 1)
 			}
 		}
-
+		postUpdate(left_double_switch, UNDEF)
+		postUpdate(right_double_switch, UNDEF)
 end
-

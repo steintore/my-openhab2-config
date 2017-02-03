@@ -3,9 +3,10 @@ var Timer timerHeater = null
 var Timer timerLeafInfo = null
 
 rule "Disable fetching of status when status has arrived"
-	when Item leaf_last_updated changed or
-		Item leaf_charging_status changed or
-		Item leaf_battery changed
+	when Item leaf_last_updated changed 
+	//or
+		//Item leaf_charging_status changed or
+		//Item leaf_battery changed
 then
 	if (leaf_request_update.state == ON) {
 		if (timerLeafInfo == null) {
@@ -25,7 +26,7 @@ then
 				} else {
 					postUpdate(push_message_text, "Leaf er fulladet " + connected)
 				}
-				postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri, står "+ charging +" på lading")
+				//postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri, står "+ charging +" på lading")
 				if(timerLeafInfo != null) {
 					if(timerLeafInfo.running) {
 						timerLeafInfo.cancel()
