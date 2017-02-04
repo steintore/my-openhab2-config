@@ -328,3 +328,6 @@ Switch DenonInputAux1       "Input PC"            {denon="denon#SIAUX1"}
 Switch justMorning
 
 String zWaveStatus "Z-Wave server: [%s]" {http="<[http://{{zwave_ip}}:8083/ZAutomation/api/v1/status:60000:JSONPATH($.message)]"}
+
+
+String habPanel_hallway "Hallway"

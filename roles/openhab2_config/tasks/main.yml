@@ -51,6 +51,7 @@
         - rules/roomba.rules
         - rules/alarm.rules
         - rules/speedtest.rules
+        - rules/habpanel.rules
         - scripts/pushMessages.script
         - scripts/alarm-climate.js
         - scripts/alarm.js

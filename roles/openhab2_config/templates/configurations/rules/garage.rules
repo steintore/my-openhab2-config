@@ -30,6 +30,7 @@ rule "Send a message if garage door LEAF has been open for 15 minutes"
 				garageDoorOpenLeaf.reschedule(now.plusSeconds(1200))
 			}			
 		]
+	habPanel_hallway.postUpdate("Garasjen")
 end
 
 rule "Send a message if garage door MONDEO has been open for 15 minutes"
@@ -56,6 +57,7 @@ rule "Send a message if garage door MONDEO has been open for 15 minutes"
 				garageDoorOpenMondeo.reschedule(now.plusSeconds(1200))
 			}			
 		]
+		habPanel_hallway.postUpdate("Garasjen")
 end
 
 rule "Reset timer if someone closes the garage door, and both is closed"
@@ -86,6 +88,9 @@ rule "Reset timer if someone closes the garage door, and both is closed"
 			postUpdate(scene_garage_2, 1)
 			garageDoorOpenMondeo.reschedule(now.plusSeconds(1200))
 		}	
+		
+		if (garage_door_1.state == OFF && garage_door_2.state == OFF)
+			habPanel_hallway.postUpdate("Hallway")
 end
 
 rule "Send a message after 7 minutes if garage door is open and nobody is home"
