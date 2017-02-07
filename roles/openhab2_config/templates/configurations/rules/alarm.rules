@@ -153,6 +153,6 @@ rule "Check the status off the door lock"
 	when
 		Item alarm_door_lock_check received update
 	then
-	var result = executeCommandLine("vsure {{alarm_login} {{alarm_password}} overview doorLockStatusList", 5000)
+	var result = executeCommandLine("vsure {{alarm_login}} {{alarm_password}} overview doorLockStatusList", 5000)
 	logDebug("org.openhab.alarm", "Door lock state: " + result)
 end
