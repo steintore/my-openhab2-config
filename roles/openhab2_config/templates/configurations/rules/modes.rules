@@ -89,14 +89,10 @@ rule "A change of mode"
 			sendCommand(justMorning, OFF)
 			sendCommand(roombaDock, OFF)
 			
-			var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 2000)
-			var String alarmstate =  transform("JSONPATH", "$.status", json)
-			logInfo("org.openhab.rules.modes", "JSON is {}, and alarmstate is then {}, switched to night mode", json, alarmstate)
-			if (alarmstate != null && alarmstate != alarm_alarm.state.toString())
-				sendCommand(alarm_alarm, alarmstate)
+			alarm_check.postUpdate(""+ now)
 				
-			// TODO Check that door is locked and alarm is in night mode
 			postUpdate(motion_living_room, OFF)
+			sendCommand(alarm_door_lock, ON)
 		}
 		
 		case 2: { //AWAY

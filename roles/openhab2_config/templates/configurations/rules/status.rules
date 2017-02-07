@@ -210,5 +210,29 @@ when
 then
 	postUpdate(bathroom_lux_update, new DateTimeType(now.toGregorianCalendar))
 end
+
+rule "Switch ON or OFF the screen in the hall way"
+	when
+		Item screen_pi_screen received command
+	then
+	switch (receivedCommand) {
+		case ON: {
+			val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@'export DISPLAY=:0;xset dpms force on'", 5000)
+			logDebug("org.openhab.status.screenpi", result)
+		}
+		case OFF: {
+			val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@'export DISPLAY=:0;xset dpms force off'", 5000)
+			logDebug("org.openhab.status.screenpi", result)
+		}
+	}
+end
+	
+rule "Switch OFF the computer in the hallway"
+	when
+		Item screen_pi received command OFF
+	then
+	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@'sudo shutdown -h now'", 5000)
+	logDebug("org.openhab.status.shutdown", result)
+end
 	
 

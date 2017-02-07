@@ -1,6 +1,6 @@
 import org.joda.time.DateTime
 
-var Timer timerRouterLAN = null
+var Timer checkAlarmTimer = null
 
 rule "Set alarm climate items"
 	when 
@@ -55,14 +55,41 @@ then
         }
 end
 
+rule "Check alarm state" 
+when
+	Item alarm_check received update
+then
+	if (checkAlarmTimer == null) {
+		checkAlarmTimer = createTimer(now.plusSeconds(5)) [|
+			logInfo("org.openhab.rules", "Timer has timed out. Checking status from Alarm")
+            var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
+			var String alarmstate =  transform("JSONPATH", "$.status", json)
+			logInfo("org.openhab.rules", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
+			
+			if (alarmstate == null) {
+				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds...")
+				checkAlarmTimer.reschedule(now.plusSeconds(30))
+			} else {
+				sendCommand(alarm_alarm, alarmstate)
+				if(checkAlarmTimer!=null) {
+					if(checkAlarmTimer.running) {
+						checkAlarmTimer.cancel()
+					}
+					checkAlarmTimer = null
+				}
+			}
+		]	
+	}
+end
+
 rule "Arming, disarming alarm"
 when 	Item alarm_alarm changed or
 		Item alarm_alarm received command
 then
-	logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString() + " - current state from binding: " + alarm_current_status.state.toString())
-	if (alarm_alarm.state == null && alarm_current_status.state != null) {
-		postUpdate(alarm_alarm, alarm_current_status.state)
-		logInfo("org.openhab.rules.alarm", "Alarm status is null, so trying to update it to: " + alarm_current_status.state)
+	logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
+	if (alarm_alarm.state == null) {
+		logInfo("org.openhab.rules.alarm", "Alarm state is null, trying to fetch state again...")
+		postUpdate(alarm_check, ""+ now)
 	} else {
 		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
 		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome") // HOME 
@@ -98,49 +125,34 @@ end
 
 rule "Leaving home, we think"
 when
-	Item home_away_lan changed from ON to OFF
+	Item home_away_lan changed
 then
-	logInfo("org.openhab.rules","Arduino disconnected, started timer.")
-	if( timerRouterLAN == null ) {
-		timerRouterLAN = createTimer(now.plusSeconds(10)) [|
-			logInfo("org.openhab.rules", "Timer has timed out. Checking status from Alarm")
-            var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
-			var String alarmstate =  transform("JSONPATH", "$.status", json)
-			logInfo("org.openhab.rules", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
-			
-			if (alarmstate == null) {
-				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds...")
-				timerRouterLAN.reschedule(now.plusSeconds(30))
-			} else {
-				sendCommand(alarm_alarm, alarmstate)
-				if(timerRouterLAN!=null) {
-					if(timerRouterLAN.running) {
-						timerRouterLAN.cancel()
-					}
-					timerRouterLAN= null
-				}
-			
-			}
-		]
-	} else {
-		timerRouterLAN.reschedule(now.plusSeconds(30))
-	}
+	logInfo("org.openhab.rules","Arduino state changed to: " + home_away_lan.state + ", checking alarm")
+	postUpdate(alarm_check, "" + now)
 end
 
-rule "Alarm is being disarmed"
+
+rule "Lock or unlock the door"
 	when
-		Item home_away_lan changed from OFF to ON
+		Item alarm_door_lock received command
 	then
-		if(timerRouterLAN != null) {
-			timerRouterLAN.cancel()
-			timerRouterLAN = null
+	var String cmd = "vsure {{alarm_login}} {{alarm_password}} set lock {{alarm_key}} '{{alarm_lock_id}}'"
+	switch (receivedCommand) {
+		case ON: {
+			// Lock door
+			executeCommandLine(cmd + " lock", 5000)
 		}
-		logInfo("org.openhab.rules", "Arduino is online. Checking status from Alarm")
-        var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
-		var String alarmstate =  transform("JSONPATH", "$.status", json)
-		logInfo("org.openhab.rules", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
-			
-		if (alarmstate != null) {
-			sendCommand(alarm_alarm, alarmstate)
+		case OFF: {
+			// Unlock door
+			executeCommandLine(cmd + " unlock", 5000)
 		}
+	}	
+end
+
+rule "Check the status off the door lock"
+	when
+		Item alarm_door_lock_check received update
+	then
+	var result = executeCommandLine("vsure {{alarm_login} {{alarm_password}} overview doorLockStatusList", 5000)
+	logDebug("org.openhab.alarm", "Door lock state: " + result)
 end

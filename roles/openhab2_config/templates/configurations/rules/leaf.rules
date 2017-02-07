@@ -17,14 +17,14 @@ then
 					charging = 'IKKE'
 				}
 				if (leaf_connected.state.toString != 'Yes') {
-					connected = 'og er IKKE tilkoblet strøm'
+					connected = ' og er IKKE tilkoblet strøm'
 				} else {
-					connected = 'og er tilkoblet strøm'
+					connected = ' og er tilkoblet strøm'
 				}
 				if (leaf_battery.state <= 99) {
 					postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri, står "+ charging +" på lading" + connected)
 				} else {
-					postUpdate(push_message_text, "Leaf er fulladet " + connected)
+					postUpdate(push_message_text, "Leaf er fulladet" + connected)
 				}
 				//postUpdate(push_message_text, "Leaf har " + leaf_battery.state + "% batteri, står "+ charging +" på lading")
 				if(timerLeafInfo != null) {

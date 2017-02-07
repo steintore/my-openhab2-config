@@ -56,9 +56,9 @@ Switch garage_pi			"GaragePi"				<present>		(proximity) {nh="{{garagepi_ip}}"}
 Switch xbox					"XBox"					<present>		(proximity) {nh="{{xbox_ip}}"}
 Switch appletv				"Apple Tv"				<present>		(proximity) {nh="{{appletv_ip}}"}
 Switch denon_receiver		"Denon receiver"		<present>		(proximity) {nh="{{denon_ip}}"}
-Switch screen_pi			"ScreenPi"				<present>		(proximity) {nh="{{screenpi_ip}}", exec="OFF:ssh@@pi@{{screenpi_ip}}@@sudo shutdown -h now"}
+Switch screen_pi			"ScreenPi"				<present>		(proximity) {nh="{{screenpi_ip}}"}
 
-Switch screen_pi_screen		"Monitor screenPi" 		(gGF) {exec="ON:ssh@@pi@192.168.1.162@@export DISPLAY=:0;xset dpms force on, OFF:ssh@@pi@192.168.1.162@@export DISPLAY=:0;xset dpms force off"}
+Switch screen_pi_screen		"Monitor screenPi" 		(gGF)
 
 /* Temperature */
 Group Temperature_Chart (Weather)
