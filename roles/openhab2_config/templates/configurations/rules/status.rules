@@ -215,24 +215,26 @@ rule "Switch ON or OFF the screen in the hall way"
 	when
 		Item screen_pi_screen received command
 	then
+	var String result = null
 	switch (receivedCommand) {
 		case ON: {
-			val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@'export DISPLAY=:0;xset dpms force on'", 5000)
-			logDebug("org.openhab.status.screenpi", result)
+			result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@export DISPLAY=:0;xset dpms force on", 5000)
 		}
 		case OFF: {
-			val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@'export DISPLAY=:0;xset dpms force off'", 5000)
-			logDebug("org.openhab.status.screenpi", result)
+			result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@export DISPLAY=:0;xset dpms force off", 5000)
 		}
 	}
+	if (result != null && result.length() > 0)
+		logInfo("org.openhab.status.screenpi", result)
 end
 	
 rule "Switch OFF the computer in the hallway"
 	when
 		Item screen_pi received command OFF
 	then
-	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@'sudo shutdown -h now'", 5000)
-	logDebug("org.openhab.status.shutdown", result)
+	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@sudo shutdown -h now", 5000)
+	if (result != null && result.length() > 0)
+		logInfo("org.openhab.status.shutdown", result)
 end
 	
 
