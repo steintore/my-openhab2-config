@@ -6,6 +6,8 @@ var Timer garageDoorOpenMondeo = null
 var Timer garageDoorOpen1Timed = null
 var Timer garageDoorOpen2Timed = null
 
+var Timer garagePiTimer =null
+
 rule "Send a message if garage door LEAF has been open for 15 minutes"
 	when
 		Item garage_door_1 changed to ON	
@@ -230,4 +232,30 @@ when
 then
 	sendNotification("{{stein_email}}","Motion in the garage", 0 , "{{garagepi_screenshot_url}}")
 	postUpdate(garagepi_motion, OFF)
+end
+
+rule "Garagepi is offline or offline"
+when
+	Item garage_pi changed
+then
+	switch(garage_pi.state as OnOffType) {
+		case ON: {
+			if (garagePiTimer != null) {
+				if (garagePiTimer.running)
+					garagePiTimer.cancel()
+				garagePiTimer = null
+				sendNotification("{{stein_email}}", "GaragePi er online igjen")
+			}
+		}		
+		case OFF: {
+			if (garagePiTimer != null) {
+				garagePiTimer.reschedule(now.plusHours(1))
+			} else {
+				garagePiTimer = createTimer(now.plusHours(1)) [|
+					sendNotification("{[stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
+					garagePiTimer.reschedule(now.plusHours(12))
+				]
+				}
+		}
+	}
 end

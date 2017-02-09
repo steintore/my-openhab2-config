@@ -236,5 +236,14 @@ rule "Switch OFF the computer in the hallway"
 	if (result != null && result.length() > 0)
 		logInfo("org.openhab.status.shutdown", result)
 end
+
+rule "Reboot computer in the hallway"
+	when
+		Item screen_pi_reboot received command ON
+	then
+	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@sudo shutdown -r now", 5000)
+	if (result != null && result.length() > 0)
+		logInfo("org.openhab.status.reboot", result)
+end
 	
 
