@@ -60,7 +60,7 @@ when
 	Item alarm_check received update
 then
 	if (checkAlarmTimer == null) {
-		checkAlarmTimer = createTimer(now.plusSeconds(5)) [|
+		checkAlarmTimer = createTimer(now.plusSeconds(15)) [|
 			logInfo("org.openhab.rules", "Timer has timed out. Checking status from Alarm")
             var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
 			var String alarmstate =  transform("JSONPATH", "$.status", json)
@@ -70,20 +70,20 @@ then
 				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds...")
 				checkAlarmTimer.reschedule(now.plusSeconds(30))
 			} else {
-				sendCommand(alarm_alarm, alarmstate)
 				if(checkAlarmTimer!=null) {
 					if(checkAlarmTimer.running) {
 						checkAlarmTimer.cancel()
 					}
 					checkAlarmTimer = null
 				}
+				sendCommand(alarm_alarm, alarmstate)
 			}
 		]	
 	}
 end
 
 rule "Arming, disarming alarm"
-when 	Item alarm_alarm changed or
+when 	
 		Item alarm_alarm received command
 then
 	logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())

@@ -80,6 +80,7 @@
         - things/samsungtv.things
         - things/hue.things
         - things/rfxcom.things
+        - things/network.things
 
 - name: sync alarm-api script into configurations
   become: yes

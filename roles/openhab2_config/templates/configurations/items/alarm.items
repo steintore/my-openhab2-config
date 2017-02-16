@@ -22,3 +22,5 @@ Switch alarm_door_lock
 String alarm_door_lock_check
 
 String alarm_check
+
+String alarm_code

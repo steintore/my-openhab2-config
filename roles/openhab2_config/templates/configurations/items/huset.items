@@ -43,20 +43,19 @@ Switch anette_home   		"Anette @ Home"       		<present>	(Home){ mqttitude="brok
 Switch guest_home 			"Guests @ Home" 			<present>	(Home)
 
 Group:Switch:OR(ON, OFF) proximity (All)
-Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity) {nh="{{stt_ip}}"}
-Switch Mobile_Anette_Wlan	"Anettes iPhone Wlan" 	<present> 		(proximity) {nh="{{anette_ip}}"}
-Switch time_capsule_lan 	"Time capsule"			<present>		(proximity) {nh="{{time_capsule_ip}}"}
-Switch home_away_lan		"Hjemme/borte"			<present>		(proximity) {nh="{{home_away_ip}}"}
-Switch router_wlan			"Router"				<present>		(proximity) {nh="{{router_ip}}"}
-Switch boss_lan				"Boss server"       	<present>       (proximity) {nh="{{boss_ip}}"}
-Switch nas_lan				"NAS"					<present>		(proximity) {nh="{{nas_ip}}"}
-Switch zwave_lan			"Z-Wave"				<present>		(proximity) {nh="{{zwave_ip}}"}
-Switch roomba_lan			"Roomba"				<present>		(proximity) {nh="{{roomba_ip}}"}
-Switch garage_pi			"GaragePi"				<present>		(proximity) {nh="{{garagepi_ip}}"}
-Switch xbox					"XBox"					<present>		(proximity) {nh="{{xbox_ip}}"}
-Switch appletv				"Apple Tv"				<present>		(proximity) {nh="{{appletv_ip}}"}
-Switch denon_receiver		"Denon receiver"		<present>		(proximity) {nh="{{denon_ip}}"}
-Switch screen_pi			"ScreenPi"				<present>		(proximity) {nh="{{screenpi_ip}}"}
+Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity) {channel="network:device:mobileStein:online"}
+Switch Mobile_Anette_Wlan	"Anettes iPhone Wlan" 	<present> 		(proximity) {channel="network:device:mobileAnette:online"}
+Switch time_capsule_lan 	"Time capsule"			<present>		(proximity) {channel="network:device:timeCapsule:online"}
+Switch home_away_lan		"Hjemme/borte"			<present>		(proximity) {channel="network:device:homeAway:online"}
+Switch boss_lan				"Boss server"       	<present>       (proximity) {channel="network:device:boss:online"}
+Switch nas_lan				"NAS"					<present>		(proximity) {channel="network:device:nas:online"}
+Switch zwave_lan			"Z-Wave"				<present>		(proximity) {channel="network:device:zwave:online"}
+Switch roomba_lan			"Roomba"				<present>		(proximity) {channel="network:device:roomba:online"}
+Switch garage_pi			"GaragePi"				<present>		(proximity) {channel="network:device:garagePi:online"}
+Switch xbox					"XBox"					<present>		(proximity) {channel="network:device:xbox:online"}
+Switch appletv				"Apple Tv"				<present>		(proximity) {channel="network:device:appleTv:online"}
+Switch denon_receiver		"Denon receiver"		<present>		(proximity) {channel="network:device:denon:online"}
+Switch screen_pi			"ScreenPi"				<present>		(proximity) {channel="network:device:screenPi:online"}
 
 Switch screen_pi_screen		"Monitor screenPi" 		(gGF)
 
@@ -184,7 +183,7 @@ Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight,
 
 /* Living room TV */
 Group TV <tv>
-Switch 		tv_power 	"TV"		<power>		(TV, proximity)	{channel="samsungtv:tv:Livingroom:power", nh="{{samsungtv_ip}}"}
+Switch 		tv_power 	"TV"		<power>		(TV, proximity)	{channel="samsungtv:tv:Livingroom:power", channel="network:device:tv:online"}
 Switch        	tv_mute		"Lyd av/på" 	<volume>	(TV)		{channel="samsungtv:tv:Livingroom:mute"}
 Dimmer		tv_volume     	"Volum"		<volume>	(TV)		{channel="samsungtv:tv:Livingroom:volume"}
 

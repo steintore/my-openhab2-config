@@ -11,7 +11,12 @@ rule "A change of mode"
 	when
 		Item mode received command
 	then
+	if (mode.state != previous_mode.state) {
+	
 	logInfo('org.openhab', 'mode received state:' + mode.state)
+	postUpdate(left_double_switch, UNDEF)
+	postUpdate(right_double_switch, UNDEF)
+	
 	var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 	switch (receivedCommand) {
 		case 0: { // HOME
@@ -157,7 +162,8 @@ rule "A change of mode"
 			sendCommand(leaf_request_update, ON)
 		}
 	}
-	postUpdate(previous_mode, mode.state.toString)
+	postUpdate(previous_mode, mode.state.toString)	
+	}
 end
 
 /*
@@ -212,12 +218,15 @@ end
  */
 rule "Return to day mode during the week"
 	when
-		Time cron "0 0 6 ? * MON-FRI"
+		Time cron "0 0 5 ? * MON-FRI"
 	then
 		if (mode.state == 1) {
 			sendCommand(justMorning, ON)
 			sendCommand(mode, 0)
 		}
+		postUpdate(left_double_switch, UNDEF)
+		postUpdate(right_double_switch, UNDEF)
+		
 end
 
 rule "Return to day mode during weekend"
@@ -228,6 +237,9 @@ rule "Return to day mode during weekend"
 			sendCommand(justMorning, ON)
 			sendCommand(mode, 0)
 		}
+		postUpdate(left_double_switch, UNDEF)
+		postUpdate(right_double_switch, UNDEF)
+		
 end
 
 rule "Switch to night/day mode when button is pressed"
