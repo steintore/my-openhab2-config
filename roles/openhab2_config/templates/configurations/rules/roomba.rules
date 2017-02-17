@@ -1,6 +1,8 @@
 import org.eclipse.smarthome.core.library.types.DateTimeType
 import org.eclipse.smarthome.core.library.types.StringType
 
+var Timer roombaTimer = null
+
 /* http://www.robotappstore.com/files/KB/Roomba/Roomba_SCI_Spec_Manual.pdf */
 rule "Got command to send to Roomba"
 	when
@@ -30,6 +32,35 @@ rule "Got command to send to Roomba"
 				postUpdate(roombaCurrentState, 4)
 			}
 		}
+end
+
+rule "Fetching data from Roomba"
+	when
+		Item roomba_lan received command 
+		or 
+		Item roomba_lan changed
+	then
+	switch (roomba_lan) {
+		case ON: {
+			if (roombaTimer == null) {
+				roombaTimer = createTimer(now.plusSeconds(30)) [|
+					var roombaJson = sendHttpGetRequest("{{roomba_url}}/roomba.json")
+					logDebug("org.openhab.rules.roomba", "Got response from roomba: " + roombaJson)			
+					postUpdate(roombaRaw, roombaJson)		
+					roombaTimer.reschedule(now.plusSeconds(30))
+				]
+			}
+		}
+		case OFF: {
+			logDebug("org.openhab.rules.roomba", "Cancelling roomba timer, as it is not accesible on the network")
+			if (roombaTimer != null) {
+				if(roombaTimer.running) {
+						roombaTimer.cancel()
+					}
+					roombaTimer= null
+			}
+		}
+	}
 end
 
 rule "Changing state from Roomba"
