@@ -1,14 +1,14 @@
 String alarm_climate "Alarm climate data" <w> (gAll)
-Number alarm_temperature_kitchen "Kjøkken temp [%.1f°C]" <temperature> (gGF, gTemperature)
-Number alarm_temperature_laundry "Vaskerom temp [%.1f°C]" <temperature> (gBasement, gTemperature)
-Number alarm_temperature_hall_gf "Gang temp [%.1f°C]" <temperature> (gGF, gTemperature)
-Number alarm_temperature_hall_basement "Kjellergang temp [%.1f°C]" <temperature> (gBasement, gTemperature)
-Number alarm_temperature_hall_1st "Gang 2. temp [%.1f°C]" <temperature> (gFirstFloor, gTemperature)
+Number alarm_temperature_kitchen "Kjøkken temp [%.1f°C]" <temperature> (gGF, gTemperature, gInfluxDB)
+Number alarm_temperature_laundry "Vaskerom temp [%.1f°C]" <temperature> (gBasement, gTemperature, gInfluxDB)
+Number alarm_temperature_hall_gf "Gang temp [%.1f°C]" <temperature> (gGF, gTemperature, gInfluxDB)
+Number alarm_temperature_hall_basement "Kjellergang temp [%.1f°C]" <temperature> (gBasement, gTemperature, gInfluxDB)
+Number alarm_temperature_hall_1st "Gang 2. temp [%.1f°C]" <temperature> (gFirstFloor, gTemperature, gInfluxDB)
 DateTime alarm_temperature_hall_1st_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number alarm_humidity_laundry "Vaskerom luftfuktighet [%.1f %%]" <humidity> (gBasement,gHumidity)
-Number alarm_humidity_hall_gf "Gang luftfuktighet [%.1f %%]" <humidity> (gGF,gHumidity)
-Number alarm_humidity_hall_basement "Kjellergang luftfuktighet [%.1f %%]" <humidity> (gBasement, gHumidity)
-Number alarm_humidity_hall_1st "Gang 2. luftfuktighet [%.1f %%]" <humidity> (gFirstFloor,gHumidity)
+Number alarm_humidity_laundry "Vaskerom luftfuktighet [%.1f %%]" <humidity> (gBasement,gHumidity, gInfluxDB)
+Number alarm_humidity_hall_gf "Gang luftfuktighet [%.1f %%]" <humidity> (gGF,gHumidity, gInfluxDB)
+Number alarm_humidity_hall_basement "Kjellergang luftfuktighet [%.1f %%]" <humidity> (gBasement, gHumidity, gInfluxDB)
+Number alarm_humidity_hall_1st "Gang 2. luftfuktighet [%.1f %%]" <humidity> (gFirstFloor,gHumidity, gInfluxDB)
 String alarm_alarm "Alarmstatus [MAP(alarm.map):%s]" <siren> (gGF) //{exec="<[node@@{{openhab_configuration_dir}}/scripts/alarm.js:1800000:JSONPATH($.status)]"}
 
 String alarm_current_status {channel="verisure:bridge:myverisure:status"}

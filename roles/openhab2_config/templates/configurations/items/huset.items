@@ -11,6 +11,7 @@ Group away_group	(All)
 Group gTemperature  (All)
 Group gHumidity		(All)
 Group gPower 		(All)
+Group gInfluxDB
 
 /* NTP binding demo item */
 DateTime Date	"[%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
@@ -28,69 +29,69 @@ Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, Heating, away_gr
 Group:Number:SUM					Power			"Nå: [%.1f W]"			<energy>				(All, gPower)
 Group:Number:SUM					PowerHeating	"Varme: [%.1f W]"		<energy>				(All)
 Group:Number:SUM					Energy			"Totalt: [%.1f KWh]"	<energy>				(All)
-Number panelovn_kontor_energy 	"Panelovn totalforbruk: [%.2f KWh]"			<energy> (Energy) 										{channel="zway:zwayDevice:11fb7777:5:sensorMultilevel-ZWayVDev_zway_5-0-50-0"}
-Number power_panelovn_kontor  	"Strøm panelovn kontor	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{channel="zway:zwayDevice:11fb7777:5:sensorEnergy-ZWayVDev_zway_5-0-49-4"}
-Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart) 	{channel="zway:zwayDevice:11fb7777:10:sensorMeterW-ZWayVDev_zway_10-0-50-2"}
-Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (Energy) 										{channel="zway:zwayDevice:11fb7777:10:sensorMultilevel-ZWayVDev_zway_10-0-50-0"}
+Number panelovn_kontor_energy 	"Panelovn totalforbruk: [%.2f KWh]"			<energy> (Energy, gInfluxDB) 										{channel="zway:zwayDevice:11fb7777:5:sensorMultilevel-ZWayVDev_zway_5-0-50-0"}
+Number power_panelovn_kontor  	"Strøm panelovn kontor	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:5:sensorEnergy-ZWayVDev_zway_5-0-49-4"}
+Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:10:sensorMeterW-ZWayVDev_zway_10-0-50-2"}
+Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (Energ, gInfluxDBy) 										{channel="zway:zwayDevice:11fb7777:10:sensorMultilevel-ZWayVDev_zway_10-0-50-0"}
 
 Group Power_Chart (Power)
 Number Power_Chart_Period "Periode"
 
 /* Presence detection */
 Group:Switch:OR(ON, OFF)	Home 			"Is someone at home [(%d)]" (All)
-Switch stein_home    		"Stein @ Home"       		<present>	(Home){ mqttitude="broker:owntracks/stein/iphone:home" }
-Switch anette_home   		"Anette @ Home"       		<present>	(Home){ mqttitude="broker:owntracks/anette/iphone:home" }
-Switch guest_home 			"Guests @ Home" 			<present>	(Home)
+Switch stein_home    		"Stein @ Home"       		<present>	(Home, gInfluxDB){ mqttitude="broker:owntracks/stein/iphone:home" }
+Switch anette_home   		"Anette @ Home"       		<present>	(Home, gInfluxDB){ mqttitude="broker:owntracks/anette/iphone:home" }
+Switch guest_home 			"Guests @ Home" 			<present>	(Home, gInfluxDB)
 
 Group:Switch:OR(ON, OFF) proximity (All)
-Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity) {channel="network:device:mobileStein:online"}
-Switch Mobile_Anette_Wlan	"Anettes iPhone Wlan" 	<present> 		(proximity) {channel="network:device:mobileAnette:online"}
-Switch time_capsule_lan 	"Time capsule"			<present>		(proximity) {channel="network:device:timeCapsule:online"}
-Switch home_away_lan		"Hjemme/borte"			<present>		(proximity) {channel="network:device:homeAway:online"}
-Switch boss_lan				"Boss server"       	<present>       (proximity) {channel="network:device:boss:online"}
-Switch nas_lan				"NAS"					<present>		(proximity) {channel="network:device:nas:online"}
-Switch zwave_lan			"Z-Wave"				<present>		(proximity) {channel="network:device:zwave:online"}
-Switch roomba_lan			"Roomba"				<present>		(proximity) {channel="network:device:roomba:online"}
-Switch garage_pi			"GaragePi"				<present>		(proximity) {channel="network:device:garagePi:online"}
-Switch xbox					"XBox"					<present>		(proximity) {channel="network:device:xbox:online"}
-Switch appletv				"Apple Tv"				<present>		(proximity) {channel="network:device:appleTv:online"}
-Switch denon_receiver		"Denon receiver"		<present>		(proximity) {channel="network:device:denon:online"}
-Switch screen_pi			"ScreenPi"				<present>		(proximity) {channel="network:device:screenPi:online"}
+Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity, gInfluxDB) {channel="network:device:mobileStein:online"}
+Switch Mobile_Anette_Wlan	"Anettes iPhone Wlan" 	<present> 		(proximity, gInfluxDB) {channel="network:device:mobileAnette:online"}
+Switch time_capsule_lan 	"Time capsule"			<present>		(proximity, gInfluxDB) {channel="network:device:timeCapsule:online"}
+Switch home_away_lan		"Hjemme/borte"			<present>		(proximity, gInfluxDB) {channel="network:device:homeAway:online"}
+Switch boss_lan				"Boss server"       	<present>       (proximity, gInfluxDB) {channel="network:device:boss:online"}
+Switch nas_lan				"NAS"					<present>		(proximity, gInfluxDB) {channel="network:device:nas:online"}
+Switch zwave_lan			"Z-Wave"				<present>		(proximity, gInfluxDB) {channel="network:device:zwave:online"}
+Switch roomba_lan			"Roomba"				<present>		(proximity, gInfluxDB) {channel="network:device:roomba:online"}
+Switch garage_pi			"GaragePi"				<present>		(proximity, gInfluxDB) {channel="network:device:garagePi:online"}
+Switch xbox					"XBox"					<present>		(proximity, gInfluxDB) {channel="network:device:xbox:online"}
+Switch appletv				"Apple Tv"				<present>		(proximity, gInfluxDB) {channel="network:device:appleTv:online"}
+Switch denon_receiver		"Denon receiver"		<present>		(proximity, gInfluxDB) {channel="network:device:denon:online"}
+Switch screen_pi			"ScreenPi"				<present>		(proximity, gInfluxDB) {channel="network:device:screenPi:online"}
 
-Switch screen_pi_screen		"Monitor screenPi" 		(gGF)
+Switch screen_pi_screen		"Monitor screenPi" 		(gGF, gInfluxDB)
 
 /* Temperature */
 Group Temperature_Chart (Weather)
 Number Temperature_Chart_Period 			"Periode"
 Number Temperature_Livingroom_Chart_Period  "Periode"
-Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart)
-Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart)
-Number Outdoor_Humidex						"Humidex [%.1f]"					(Weather)
-Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
-Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, gHumidity, Weather) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
+Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart, gInfluxDB)
+Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart, gInfluxDB)
+Number Outdoor_Humidex						"Humidex [%.1f]"					(Weather, gInfluxDB)
+Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
+Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, gHumidity, Weather, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
 DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:temperature" }
-Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
+Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:temperature" }
+Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime OfficeTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
-Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
+Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
+Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime BasementTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
 Number Temperature_Basement_Chart_Period 	"Periode"
-Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
-Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF, gHumidity) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:humidity" }
+Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
+Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:humidity" }
 DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
 
 /* Home appliances */
 Group HomeAppliances (Appliance)
-Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{channel="zway:zwayDevice:11fb7777:6:sensorEnergy-ZWayVDev_zway_6-0-49-4"}
+Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{channel="zway:zwayDevice:11fb7777:6:sensorEnergy-ZWayVDev_zway_6-0-49-4"}
 Switch freezer		  	"Fryser"								<kitchen>   (gBasement, Control, HomeAppliances)					{channel="zway:zwayDevice:11fb7777:6:switchPowerOutlet-ZWayVDev_zway_6-0-37"}
-Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(Energy, gBasement)										{channel="zway:zwayDevice:11fb7777:6:sensorMultilevel-ZWayVDev_zway_6-0-50-0"}
-Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, Power, Power_Chart) 						{channel="zway:zwayDevice:11fb7777:4:sensorEnergy-ZWayVDev_zway_4-0-49-4"}
-Switch dryer			"Tørketrommel"							<dryer>		(gBasement, HomeAppliances, night_group, away_group) 	{channel="zway:zwayDevice:11fb7777:4:switchPowerOutlet-ZWayVDev_zway_4-0-37"}
-Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(Energy, gBasement)										{channel="zway:zwayDevice:11fb7777:4:sensorMultilevel-ZWayVDev_zway_4-0-50-0"}
-Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, Control, HomeAppliances)						{channel="zway:zwayDevice:11fb7777:2:switchPowerOutlet-ZWayVDev_zway_2-0-37"}
-Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart) 						{channel="zway:zwayDevice:11fb7777:2:sensorEnergy-ZWayVDev_zway_2-0-49-4"}
-Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement)										{channel="zway:zwayDevice:11fb7777:2:sensorMultilevel-ZWayVDev_zway_2-0-50-0"}
+Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(Energy, gBasement, gInfluxDB)										{channel="zway:zwayDevice:11fb7777:6:sensorMultilevel-ZWayVDev_zway_6-0-50-0"}
+Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{channel="zway:zwayDevice:11fb7777:4:sensorEnergy-ZWayVDev_zway_4-0-49-4"}
+Switch dryer			"Tørketrommel"							<dryer>		(gBasement, HomeAppliances, night_group, away_group, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:4:switchPowerOutlet-ZWayVDev_zway_4-0-37"}
+Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(Energy, gBasement, gInfluxDB)										{channel="zway:zwayDevice:11fb7777:4:sensorMultilevel-ZWayVDev_zway_4-0-50-0"}
+Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, Control, HomeAppliances, gInfluxDB)						{channel="zway:zwayDevice:11fb7777:2:switchPowerOutlet-ZWayVDev_zway_2-0-37"}
+Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{channel="zway:zwayDevice:11fb7777:2:sensorEnergy-ZWayVDev_zway_2-0-49-4"}
+Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement, gInfluxDB)										{channel="zway:zwayDevice:11fb7777:2:sensorMultilevel-ZWayVDev_zway_2-0-50-0"}
 
 /* Garage */
 Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:7:sensorMotion-ZWayVDev_zway_7-0-48-1"}
@@ -183,7 +184,7 @@ Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight,
 
 /* Living room TV */
 Group TV <tv>
-Switch 		tv_power 	"TV"		<power>		(TV, proximity)	{channel="samsungtv:tv:Livingroom:power", channel="network:device:tv:online"}
+Switch 		tv_power 	"TV"		<power>		(TV, proximity, gInfluxDB)	{channel="samsungtv:tv:Livingroom:power", channel="network:device:tv:online"}
 Switch        	tv_mute		"Lyd av/på" 	<volume>	(TV)		{channel="samsungtv:tv:Livingroom:mute"}
 Dimmer		tv_volume     	"Volum"		<volume>	(TV)		{channel="samsungtv:tv:Livingroom:volume"}
 
@@ -202,12 +203,12 @@ String Season		"Sesong"						(Astro) { channel="astro:sun:home:seasin#name" }
 /* Samsung AC */
 Group AC
 Number ac_scene "Varmepumpe"										(AC, night_group)
-Number ac_current_temp "Målt temperatur [%.1f °C]" 	<temperature> 	(AC) 							{samsungac="[Livingroom|AC_FUN_TEMPNOW]"}
+Number ac_current_temp "Målt temperatur [%.1f °C]" 	<temperature> 	(AC, gInfluxDB) 							{samsungac="[Livingroom|AC_FUN_TEMPNOW]"}
 Switch ac_power "Varmepumpe"						<power> 		(AC) 							{samsungac="[Livingroom|AC_FUN_POWER]"}
 Number ac_mode "Convenient mode [%s]" 				<sofa> 			(AC)						 	{samsungac="[Livingroom|AC_FUN_COMODE]"}
 Number ac_mode_previous
 Number ac_op_mode "Operation mode [%s]" 			<sofa> 			(AC) 							{samsungac="[Livingroom|AC_FUN_OPMODE]"}
-Number ac_set_temp "Temperatur [%.1f°C]" 			<temperature> 	(AC)						 	{samsungac="[Livingroom|AC_FUN_TEMPSET]"}
+Number ac_set_temp "Temperatur [%.1f°C]" 			<temperature> 	(AC, gInfluxDB)						 	{samsungac="[Livingroom|AC_FUN_TEMPSET]"}
 Number ac_night_temp "Natttemp [%.1f°C]"			<temperature> 	(AC)
 Number ac_heat_temp "Varmetemp [%.1f°C]"			<temperature> 	(AC)
 Number ac_cool_temp "Kjøletemp [%.1f°C]"			<temperature> 	(AC)
@@ -233,8 +234,8 @@ Number AC_additional_degrees   "Ekstra grader [%.1f°C]" 	(AC)
 
 
 Group Motion <office>
-Number hall_gf_temp 		"Temp gang [%.1f °C]" 			<temperature> 	(Motion, gGF) 								{channel="zway:zwayDevice:11fb7777:16:sensorTemperature-ZWayVDev_zway_16-0-49-1"}
-Number hall_gf_luminance 	"Lux gang [%.0f Lux]" 			<sun>			(Motion, gGF) 								{channel="zway:zwayDevice:11fb7777:16:sensorLuminosity-ZWayVDev_zway_16-0-49-3"}
+Number hall_gf_temp 		"Temp gang [%.1f °C]" 			<temperature> 	(Motion, gGF, gInfluxDB) 								{channel="zway:zwayDevice:11fb7777:16:sensorTemperature-ZWayVDev_zway_16-0-49-1"}
+Number hall_gf_luminance 	"Lux gang [%.0f Lux]" 			<sun>			(Motion, gGF, gInfluxDB) 								{channel="zway:zwayDevice:11fb7777:16:sensorLuminosity-ZWayVDev_zway_16-0-49-3"}
 DateTime hall_gf_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gGF)
 Switch hall_gf_motion 		"Gang [MAP(motion.map):%s]" 	<present>		(Motion, gGF) 								{channel="zway:zwayDevice:11fb7777:16:sensorMotion-ZWayVDev_zway_16-0-48-1"}
 Number hall_gf_battery 		"Bev.sensor, gang [%s %%]"		<energy>		(Motion, gGF, gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:16:battery-ZWayVDev_zway_16-0-128"}
@@ -247,8 +248,8 @@ Switch holiday_mode "Feriemodus [%s]"	<present>
 /* Bathroom 1st floor */
 Switch light_bathroom		 "Taklys"						<light>			(gLight, gFirstFloor) 								{channel="zway:zwayDevice:11fb7777:14:switchPowerOutlet-ZWayVDev_zway_14-0-37"}
 Number light_bathroom_dimmer "Dimmer [%s]" 					<light> 		(gFirstFloor)										{channel="zway:zwayDevice:11fb7777:14:switchMultilevel-ZWayVDev_zway_14-0-38"}
-Number bathroom_temp 		 "Temp [%.1f °C]" 				<temperature> 	(Motion, gFirstFloor) 								{channel="zway:zwayDevice:11fb7777:15:sensorTemperature-ZWayVDev_zway_15-0-49-1"}
-Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>			(Motion, gFirstFloor) 								{channel="zway:zwayDevice:11fb7777:15:sensorLuminosity-ZWayVDev_zway_15-0-49-3"}
+Number bathroom_temp 		 "Temp [%.1f °C]" 				<temperature> 	(Motion, gFirstFloor, gInfluxDB) 								{channel="zway:zwayDevice:11fb7777:15:sensorTemperature-ZWayVDev_zway_15-0-49-1"}
+Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>			(Motion, gFirstFloor, gInfluxDB) 								{channel="zway:zwayDevice:11fb7777:15:sensorLuminosity-ZWayVDev_zway_15-0-49-3"}
 DateTime bathroom_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gFirstFloor)
 Switch bathroom_motion 		 "Bad [MAP(motion.map):%s]" 	<present>		(Motion, gFirstFloor) 								{channel="zway:zwayDevice:11fb7777:15:sensorMotion-ZWayVDev_zway_15-0-48-1"}
 Number bathroom_battery 	 "Bev.sensor, bad [%s %%]"		<battery>		(Motion, gBattery, BatteryLevel_100, gFirstFloor)	{channel="zway:zwayDevice:11fb7777:15:battery-ZWayVDev_zway_15-0-128"}

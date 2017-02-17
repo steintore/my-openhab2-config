@@ -4,6 +4,5 @@ Strategies {
 }
 
 Items {
-	//gTemperature*, gPower*, Power*, gHumidity*, Smappee*, gWeather*, System*, gSpeedtest*, gHeatingFloor* : strategy = everyChange, everyMinute
-    * : strategy = everyChange, everyMinute
+    gInfluxDB* : strategy = everyChange, everyMinute
 }
