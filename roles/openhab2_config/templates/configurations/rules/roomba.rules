@@ -45,14 +45,14 @@ rule "Fetching data from Roomba"
 			if (roombaTimer == null) {
 				roombaTimer = createTimer(now.plusSeconds(30)) [|
 					var roombaJson = sendHttpGetRequest("{{roomba_url}}/roomba.json")
-					logDebug("org.openhab.rules.roomba", "Got response from roomba: " + roombaJson)			
+					logDebug("org.openhab.rules.roomba", "Got response from Roomba: " + roombaJson)			
 					postUpdate(roombaRaw, roombaJson)		
 					roombaTimer.reschedule(now.plusSeconds(30))
 				]
 			}
 		}
 		case OFF: {
-			logDebug("org.openhab.rules.roomba", "Cancelling roomba timer, as it is not accesible on the network")
+			logDebug("org.openhab.rules.roomba", "Canceling Roomba-timer, as it is not accessible on the network")
 			if (roombaTimer != null) {
 				if(roombaTimer.running) {
 						roombaTimer.cancel()

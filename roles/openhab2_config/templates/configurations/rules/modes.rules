@@ -98,6 +98,7 @@ rule "A change of mode"
 				
 			postUpdate(motion_living_room, OFF)
 			sendCommand(alarm_door_lock, ON)
+			sendCommand(screen_pi_reboot, ON)
 		}
 		
 		case 2: { //AWAY
@@ -138,6 +139,7 @@ rule "A change of mode"
 			}
 			sendCommand(screen_pi_screen, OFF)
 			sendCommand(justMorning, OFF)
+			sendCommand(screen_pi_reboot, ON)
 			
 			sendCommand(scene_roomba, 1) // Start vacuuming
 			habPanel_hallway.postUpdate("Hallway") 

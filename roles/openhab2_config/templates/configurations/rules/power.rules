@@ -1,3 +1,6 @@
+import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants
+
 rule "Log in to smappee every 20 minutes"
  	when
  		Time cron "0 0/20 * * * ?"
@@ -18,11 +21,59 @@ rule "Updated power"
 	var Double total = (one + two + three) 
 
 	postUpdate(smappee_power, total)
+	postUpdate(smappee_kwh, total*0.000017)
 	if(smappee_power != null) {
-		val startOfDay = now.toDateMidnight
+		val startOfDay = now.toLocalDate.toDateTimeAtStartOfDay
         postUpdate(smappee_power_max, smappee_power.maximumSince(startOfDay).state)
         postUpdate(smappee_power_min, smappee_power.minimumSince(startOfDay).state)
     }
+end
+
+rule "Smappee kWh changed"
+	when
+		Item smappee_kwh changed
+	then
+	var DateTime lastUpdate = now
+	if (smappee_kwh_lastupdate.state != UNDEF)
+		lastUpdate = new DateTime((smappee_kwh_lastupdate.state as DateTimeType).calendar.timeInMillis)
+	
+	var kwh = new Double(smappee_kwh.state.toString())
+	var DateTime startOfDay = now.toLocalDate.toDateTimeAtStartOfDay
+	
+	// TODAY
+	if (lastUpdate.isBefore(startOfDay)) {
+		postUpdate(smappee_total_yesterday, new Double(smappee_total_today.state.toString()))
+		postUpdate(smappee_total_today, kwh)
+	} else {
+		var Double today = new Double(smappee_total_today.state.toString())
+		postUpdate(smappee_total_today, kwh + today)
+	}
+	
+	// WEEK
+	if (lastUpdate.isBefore(startOfDay.withDayOfWeek(DateTimeConstants.MONDAY))) {
+		postUpdate(smappee_total_week, kwh)
+	} else {
+		var Double week = new Double(smappee_total_week.state.toString())
+		postUpdate(smappee_total_week, kwh + week)
+	}
+	
+	// MONTH
+	if (lastUpdate.isBefore(startOfDay.withDayOfMonth(1))) {
+		postUpdate(smappee_total_month, kwh)
+	} else {
+		var Double month = new Double(smappee_total_month.state.toString())
+		postUpdate(smappee_total_month, kwh + month)
+	}
+	
+	// YEAR
+	if (lastUpdate.isBefore(startOfDay.withDayOfYear(1))) {
+		postUpdate(smappee_total_year, kwh)
+	} else {
+		var Double year = new Double(smappee_total_year.state.toString())
+		postUpdate(smappee_total_year, kwh + year)
+	}
+	
+	postUpdate(smappee_kwh_lastupdate, new DateTimeType())
 end
 
 rule "Updated ampere"

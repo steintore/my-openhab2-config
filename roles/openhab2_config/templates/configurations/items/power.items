@@ -23,4 +23,12 @@ Number smappee_peak_phase1 {http="<[smappeeCache:30000:REGEX(.*Phase 1.*?peak ac
 Number smappee_peak_phase2 {http="<[smappeeCache:30000:REGEX(.*Phase 2.*?peak active power (.*?) W.*)]"}
 Number smappee_peak_phase3 {http="<[smappeeCache:30000:REGEX(.*Phase 3.*?peak active power (.*?) W.*)]"}
 Number smappee_peak "Peak [%.1f W]" <energy> 	(Smappee, gInfluxDB)
+
+Number smappee_kwh "[%.1f kWh]" (Smappee, gInfluxDB)
+DateTime smappee_kwh_lastupdate
+Number smappee_total_today "I dag: [%.1f kWh]" (Smappee, gInfluxDB)
+Number smappee_total_yesterday "I går: [%.1f kWh]" (Smappe, gInfluxDB)
+Number smappee_total_week "Denne uken: [%.1f kWh]" (Smappee, gInfluxDB)
+Number smappee_total_month "Denne mnd: [%.1f kWh]" (Smappee, gInfluxDB)
+Number smappee_total_year "I år: [%.1f kWh]" (Smappee, gInfluxDB)
  

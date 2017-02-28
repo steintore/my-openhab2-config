@@ -59,6 +59,7 @@ Switch denon_receiver		"Denon receiver"		<present>		(proximity, gInfluxDB) {chan
 Switch screen_pi			"ScreenPi"				<present>		(proximity, gInfluxDB) {channel="network:device:screenPi:online"}
 
 Switch screen_pi_screen		"Monitor screenPi" 		(gGF, gInfluxDB)
+Switch screen_pi_reboot
 
 /* Temperature */
 Group Temperature_Chart (Weather)

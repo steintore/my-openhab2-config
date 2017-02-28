@@ -4,6 +4,13 @@ import org.eclipse.smarthome.model.script.actions.Timer
 
 var Timer timerDryer = null
 
+rule "Startup"
+	when
+		System started
+	then
+	logInfo("org.openhab.rules", "System started")
+end
+
 rule "When text is changed, send a push message"
 	when
 		Item push_message_text received update
