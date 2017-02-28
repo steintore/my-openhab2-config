@@ -4,7 +4,7 @@ Group roomba (All)
 
 Number roombaCurrentState "Roomba: [MAP(roombaStatus.map):%s]" <sofa> (gGF, roomba, gInfluxDB)
 Number scene_roomba "Roomba kommando:" <sofa> (gGF, HomeAppliances,roomba)
-String roombaRaw (gGF) {http="<[roombaCache:40000:REGEX((.*))]"}
+String roombaRaw (gGF) //{http="<[roombaCache:40000:REGEX((.*))]"}
 Number roombaBatteryPercentage "Batteri [%.1f %%]" <battery> (gGF, roomba, gInfluxDB)
 Number roombaChargingStatus "Ladestatus: [MAP(roomba.map):%s]" (gGF, roomba, gInfluxDB)
 Number roombaTemperature "Roomba temp [%.1f °C]" (gGF, roomba, gInfluxDB)
@@ -15,4 +15,4 @@ Number roombaCharge "Roomba ladet [%d mAh]" (gGF, roomba, gInfluxDB)
 Number roombaCapacity "Roomba kapasitet [%d mAh]" (gGF, roomba, gInfluxDB)
 
 DateTime roombaLastUpdate		"Roomba last update [%1$ta %1$tR]"			<clock> (gGF, roomba)
-Switch roombaDock "Dock av/på" (gGF, roomba, gInfluxDB) 										{channel="rfxcom:lighting2:usbrfxcom:roomba_switch:command" }
+Switch roombaDock "Dock av/på" (gGF, roomba, gInfluxDB) {channel="rfxcom:lighting2:usbrfxcom:roomba_switch:command" }

@@ -34,11 +34,18 @@ rule "Smappee kWh changed"
 		Item smappee_kwh changed
 	then
 	var DateTime lastUpdate = now
-	if (smappee_kwh_lastupdate.state != UNDEF)
+	if (smappee_kwh_lastupdate.state != UNDEF && smappee_kwh_lastupdate.state != NULL  && smappee_kwh_lastupdate.state != null) {
 		lastUpdate = new DateTime((smappee_kwh_lastupdate.state as DateTimeType).calendar.timeInMillis)
+		logInfo("org.openhab.rules.power", smappee_kwh_lastupdate.state.toString())
+	}
 	
 	var kwh = new Double(smappee_kwh.state.toString())
 	var DateTime startOfDay = now.toLocalDate.toDateTimeAtStartOfDay
+	if (smappee_total_today.state == NULL) postUpdate(smappee_total_today, 0)
+	if (smappee_total_yesterday.state == NULL) postUpdate(smappee_total_yesterday, 0)
+	if (smappee_total_week.state == NULL) postUpdate(smappee_total_week, 0)
+	if (smappee_total_month.state == NULL) postUpdate(smappee_total_month, 0)
+	if (smappee_total_year.state == NULL) postUpdate(smappee_total_year, 0)
 	
 	// TODAY
 	if (lastUpdate.isBefore(startOfDay)) {
