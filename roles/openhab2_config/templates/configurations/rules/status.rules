@@ -8,6 +8,10 @@ rule "Startup"
 	when
 		System started
 	then
+	
+	if (alarm_alarm.state == null || alarm_alarm.state == UNDEF)
+		postUpdate(alarm_check, "" + now)
+	
 	logInfo("org.openhab.rules", "System started")
 end
 
