@@ -15,7 +15,7 @@ rule "When text is changed, send a push message"
 	when
 		Item push_message_text received update
 	then
-		logInfo('org.openhab.rules.status', 'message text is: ' + push_message_text.state + ' , with url: ' + push_message_url.state)
+		logInfo('org.openhab.rules.status', 'push_message_text is: ' + push_message_text.state + ' , with url: ' + push_message_url.state)
 		try {
 			callScript('pushMessages')
 		} catch (Exception e) {
@@ -90,6 +90,7 @@ rule "Set TV to same state as LAN-checking, and set Air Conditioner to QUIET-mod
 when
 	Item tv_power changed
 then
+	logInfo('org.openhab.rules.status', "TV power changed to: " + tv_power.state)
 	if (tv_power.state == ON && ac_mode.state != 1 && ac_power.state == ON && (mode.state == 0 || mode.state == 3)) {
 		var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 		var double quietThreshold = new Double(AC_quiet_temp_threshold.state.toString())
@@ -108,6 +109,7 @@ rule "If we manually change to quiet mode when the tv is on"
 when 	
 	Item ac_mode changed
 then
+	logInfo('org.openhab.rules.status', "Someone changed the ac_mode to: " + ac_mode.state)
 	if (tv_power.state == ON && (ac_mode_previous.state == NULL || ac_mode_previous.state.toString == '99')) {
 		ac_mode_previous.sendCommand(ac_mode.previousState(true).state.toString())
 	}
@@ -117,6 +119,7 @@ rule "Dryer has been started, notify me when it is done"
 when
 	Item power_dryer changed
 then
+	logInfo('org.openhab.rules.status', "Dryer power changed to: " + power_dryer.state)
 	if (dryer.state == ON) {
 		var double w = new Double(power_dryer.state.toString())
 		if (w > 0 && w < 1) w = 1
@@ -156,6 +159,7 @@ then
 	var double w = new Double(power_freezer.state.toString())
 	var double maxLastHour = new Double(power_freezer.maximumSince(now.minusHours(1)).state.toString())
 	if (w < 5 || (w < 70 && maxLastHour < 70 )) {
+		logInfo('org.openhab.rules.status', "Sending message about freezer because: (" + w + " < 5 || (" + w + " < 70 && " + maxLastHour + "< 70 ))")
 		sendNotification("{{stein_email}}","Fryseren drar plutselig mindre strøm enn vanlig, nå kun: " + w + " watt og maks siste time er: " + maxLastHour)
 	}
 end
@@ -164,6 +168,7 @@ rule "Send a status message at 22 if anything is NOT ok"
 	when
 		Time cron "0 0 22 ? * *"
 	then
+		logInfo('org.openhab.rules.status', "Checking if everything is ok")
 		if (garage_door_1.state == ON || garage_door_2.state == ON) {
 			postUpdate(push_message_text, "Venstre: " + garage_door_1.state.toString() + ", Høyre:" + garage_door_2.state.toString())
 		}
@@ -174,7 +179,7 @@ rule "Send a status message at 22 if anything is NOT ok"
 			sendNotification("{{stein_email}}",'NAS is not responding, and has been off for too long(' + nas_lan.lastUpdate.toString + ')')
 		} 	
 		if (mode.state != 0 && mode.state != 3 && tv_power.state == ON) {
-			sendNotification("{{stein_email}}",'TV-en står på, men du har enten lagt deg eller er borte..')
+			postUpdate(push_message_text, 'TV-en står på, men du har enten lagt deg eller er borte..')
 		} 	
 		
 		if (!zWaveStatus.state.toString().equalsIgnoreCase("200 OK")) {
@@ -187,6 +192,7 @@ when
 	Item BatteryLevel_10 changed or
 	Item BatteryLevel_100 changed
 then
+	logInfo('org.openhab.rules.status', "BatteryLevel changed, BatteryLevel_10: " + BatteryLevel_10.state + " - BatteryLevel_100: " + BatteryLevel_100.state)
 	if (BatteryLevel_10.state <= 2) {
 		BatteryLevel_10?.members.forEach [item | 
 			if (item.state <= 2) {
@@ -208,6 +214,7 @@ rule "Luminance Hall GF changed"
 when 
 	Item hall_gf_luminance changed
 	then
+		logInfo('org.openhab.rules.status', "Item hall_gf_luminance changed " + hall_gf_luminance)
 		postUpdate(hall_gf_lux_update, new DateTimeType(now.toGregorianCalendar))
 end
 
@@ -215,6 +222,7 @@ rule "Luminance Bathroom 1st floor changed"
 when
 	Item bathroom_lux changed
 then
+	logInfo('org.openhab.rules.status', "Item bathroom_lux changed: " + bathroom_lux.state)
 	postUpdate(bathroom_lux_update, new DateTimeType(now.toGregorianCalendar))
 end
 
@@ -222,6 +230,7 @@ rule "Switch ON or OFF the screen in the hall way"
 	when
 		Item screen_pi_screen received command
 	then
+	logInfo('org.openhab.rules.status.screenpi', "Item screen_pi_screen received command: " + receivedCommand)
 	var String result = null
 	switch (receivedCommand) {
 		case ON: {
@@ -239,6 +248,7 @@ rule "Switch OFF the computer in the hallway"
 	when
 		Item screen_pi received command OFF
 	then
+	logInfo('org.openhab.rules.status.shutdown', "Item screen_pi received command OFF")
 	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@sudo shutdown -h now", 5000)
 	if (result != null && result.length() > 0)
 		logInfo("org.openhab.status.shutdown", result)
@@ -248,6 +258,7 @@ rule "Reboot computer in the hallway"
 	when
 		Item screen_pi_reboot received command ON
 	then
+	logInfo('org.openhab.rules.status.reboot', "Item screen_pi_reboot received command ON")
 	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@sudo shutdown -r now", 5000)
 	if (result != null && result.length() > 0)
 		logInfo("org.openhab.status.reboot", result)

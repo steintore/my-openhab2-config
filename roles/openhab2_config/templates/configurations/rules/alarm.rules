@@ -10,6 +10,7 @@ rule "Set alarm climate items"
 then
 		var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm-climate.js", 5000)
         if (json != null) {
+        	logInfo("org.openhab.rules.alarm", "Got response from alarm-climate: ["+ json + "]")
         		try {
         			var String climate = json.replace('&#176;', '')
 	
@@ -51,7 +52,7 @@ then
                 	logError("org.openhab.rules.alarm", "Something went wrong when trying to parse json {}, exception is: {}", json, e)
                 }
         } else {
-                logInfo("org.openhab.rules.alarm", "Tried to fetch climate-data, but only got null..")
+                logError("org.openhab.rules.alarm", "Tried to fetch climate-data, but only got null..")
         }
 end
 
@@ -59,12 +60,13 @@ rule "Check alarm state"
 when
 	Item alarm_check received update
 then
+	logInfo("org.openhab.rules.alarm", "Item alarm_check received update: " + alarm_check)
 	if (checkAlarmTimer == null) {
 		checkAlarmTimer = createTimer(now.plusSeconds(15)) [|
-			logInfo("org.openhab.rules", "Timer has timed out. Checking status from Alarm")
+			logInfo("org.openhab.rules.alarm", "Timer [checkAlarmTimer] has timed out. Checking status from Alarm")
             var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
 			var String alarmstate =  transform("JSONPATH", "$.status", json)
-			logInfo("org.openhab.rules", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
+			logInfo("org.openhab.rules.alarm", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
 			
 			if (alarmstate == null) {
 				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds...")
@@ -86,7 +88,7 @@ rule "Arming, disarming alarm"
 when 	
 		Item alarm_alarm received command
 then
-	logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
+	logInfo("org.openhab.rules.alarm", "[Item alarm_alarm received command] Alarm state changed to: " + alarm_alarm.state.toString())
 	if (alarm_alarm.state == null) {
 		logInfo("org.openhab.rules.alarm", "Alarm state is null, trying to fetch state again...")
 		postUpdate(alarm_check, ""+ now)
@@ -127,7 +129,7 @@ rule "Leaving home, we think"
 when
 	Item home_away_lan changed
 then
-	logInfo("org.openhab.rules","Arduino state changed to: " + home_away_lan.state + ", checking alarm")
+	logInfo("org.openhab.rules.alarm","Arduino state changed to: " + home_away_lan.state + ", checking alarm")
 	postUpdate(alarm_check, "" + now)
 end
 
@@ -136,15 +138,18 @@ rule "Lock or unlock the door"
 	when
 		Item alarm_door_lock received command
 	then
+	logInfo("org.openhab.rules.alarm", "Item alarm_door_lock received command " + alarm_door_lock)
 	var String cmd = "vsure {{alarm_login}} {{alarm_password}} set lock {{alarm_key}} '{{alarm_lock_id}}'"
 	switch (receivedCommand) {
 		case ON: {
 			// Lock door
-			executeCommandLine(cmd + " lock", 5000)
+			var result = executeCommandLine(cmd + " lock", 5000)
+			logInfo("org.openhab.rules.alarm", "result from locking the door is: " + result)
 		}
 		case OFF: {
 			// Unlock door
-			executeCommandLine(cmd + " unlock", 5000)
+			var result = executeCommandLine(cmd + " unlock", 5000)
+			logInfo("org.openhab.rules.alarm", "result from unlocking the door is: " + result)
 		}
 	}	
 end
@@ -155,5 +160,5 @@ rule "Check the status off the door lock"
 		Item alarm_door_lock_check received command
 	then
 	var result = executeCommandLine("vsure {{alarm_login}} {{alarm_password}} overview doorLockStatusList", 5000)
-	logDebug("org.openhab.alarm", "Door lock state: " + result)
+	logDebug("org.openhab.rules.alarm", "Door lock state is now: " + result)
 end

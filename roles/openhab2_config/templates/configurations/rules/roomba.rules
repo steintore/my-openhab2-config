@@ -8,6 +8,7 @@ rule "Got command to send to Roomba"
 	when
 		Item scene_roomba received command
 	then
+		logInfo('org.openhab.rules.roomba', "Item scene_roomba received command: " + receivedCommand)
 		switch(receivedCommand) {
 			case 0: { // DOCK THIS THING
 				if (roombaCurrentState.state == 1 || roombaCurrentState.state == 4)
@@ -40,6 +41,7 @@ rule "Fetching data from Roomba"
 		or 
 		Item roomba_lan changed
 	then
+	logInfo('org.openhab.rules.roomba', "Item roomba_lan received command: " + roomba_lan)
 	switch (roomba_lan) {
 		case ON: {
 			if (roombaTimer == null) {
@@ -52,7 +54,7 @@ rule "Fetching data from Roomba"
 			}
 		}
 		case OFF: {
-			logDebug("org.openhab.rules.roomba", "Canceling Roomba-timer, as it is not accessible on the network")
+			logDebug("org.openhab.rules.roomba", "Canceling roombaTimer, as it is not accessible on the network")
 			if (roombaTimer != null) {
 				if(roombaTimer.running) {
 						roombaTimer.cancel()
@@ -67,7 +69,7 @@ rule "Changing state from Roomba"
 	when
 		Item roombaRaw changed
 	then
-	
+	logDebug("org.openhab.rules.roomba", "Item roombaRaw changed: " + roombaRaw)
 	postUpdate(roombaLastUpdate, new DateTimeType())
 	
 	var String json = (roombaRaw.state as StringType).toString
