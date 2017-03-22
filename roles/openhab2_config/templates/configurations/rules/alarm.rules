@@ -65,14 +65,17 @@ then
 		checkAlarmTimer = createTimer(now.plusSeconds(15)) [|
 			logInfo("org.openhab.rules.alarm", "Timer [checkAlarmTimer] has timed out. Checking status from Alarm")
             var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
-			var String alarmstate =  transform("JSONPATH", "$.status", json)
-			logInfo("org.openhab.rules.alarm", "JSON is [" + json + "] , and alarm state is then [" +  alarmstate + "]")
-			
-			if (alarmstate == null) {
-				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds...")
+            logInfo("org.openhab.rules.alarm", "JSON is [" + json + "]")
+            var String alarmstate = null
+            if (json != null) {
+				alarmstate = transform("JSONPATH", "$.status", json)
+				logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
+			}
+			if (alarmstate == null || json == null) {
+				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
 				checkAlarmTimer.reschedule(now.plusSeconds(30))
 			} else {
-				if(checkAlarmTimer!=null) {
+				if(checkAlarmTimer != null) {
 					if(checkAlarmTimer.running) {
 						checkAlarmTimer.cancel()
 					}

@@ -251,27 +251,29 @@ rule "Return to day mode during weekend"
 		postUpdate(right_double_switch, UNDEF)
 		
 end
-
+	
 rule "Switch to night/day mode when button is pressed"
 	when
 		Item left_double_switch received command or
 		Item left_double_switch changed
 	then
 		logInfo('org.openhab.rules.modes', "Left double switch has been pressed, the state is now: " + left_double_switch.state)
-		switch (left_double_switch.state as OnOffType) {
-			case ON: { // DAY MODE
-				if(mode.state != 0) {
-					logInfo('org.openhab.rules.modes', "Left double switch sets day mode")
-					sendCommand(mode, 0)	
+		if (left_double_switch.state != UNDEF) {
+			switch (left_double_switch.state as OnOffType) {
+				case ON: { // DAY MODE
+					if(mode.state != 0) {
+						logInfo('org.openhab.rules.modes', "Left double switch sets day mode")
+						sendCommand(mode, 0)	
+					}
+				}
+				case OFF: { // NIGHT MODE
+					if (mode.state != 1) {
+						logInfo('org.openhab.rules.modes', "Left double switch sets night mode")
+						sendCommand(mode, 1)
+					}
 				}
 			}
-			case OFF: { // NIGHT MODE
-				if (mode.state != 1) {
-					logInfo('org.openhab.rules.modes', "Left double switch sets night mode")
-					sendCommand(mode, 1)
-				}
-			}
+			postUpdate(left_double_switch, UNDEF)
+			postUpdate(right_double_switch, UNDEF)
 		}
-		postUpdate(left_double_switch, UNDEF)
-		postUpdate(right_double_switch, UNDEF)
-end
+		end
