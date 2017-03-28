@@ -6,7 +6,8 @@ rule "Log in to smappee every 20 minutes"
  		Time cron "0 0/20 * * * ?"
  	then
  		var String htp = "http://{{smappee_ip}}/gateway/apipublic/logon"
-		sendHttpPostRequest(htp, "application/json", "admin")
+		var String result = sendHttpPostRequest(htp, "application/json", "admin")
+		logInfo("org.openhab.rules.power", "Logged into Smappee with result: " + result)
 end
 
 rule "Updated power"

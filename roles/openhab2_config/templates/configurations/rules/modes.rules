@@ -11,10 +11,8 @@ rule "A change of mode"
 	when
 		Item mode received command
 	then
-	logInfo('org.openhab.rules.modes', 'mode received state:' + mode.state)
+	logInfo('org.openhab.rules.modes', 'mode received state:' + mode.state + ' previous state was: ' + previous_mode.state)
 	if (mode.state != previous_mode.state) {
-	
-		logInfo('org.openhab.rules.modes', 'mode received state:' + mode.state)	
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
 	
@@ -177,6 +175,7 @@ rule "Switch to evening mode in the evening"
 	when
 		Time cron "0 0 21 ? * *" 
 	then
+		alarm_check.postUpdate(""+ now)
 		if (mode.state == 0) {
 			logInfo('org.openhab.rules.modes', "Evening mode because it is time")
 			sendCommand(mode, 3)
@@ -191,6 +190,7 @@ rule "Switch to night mode in the evening"
 	when
 		Time cron "0 30 0 ? * *" 
 	then
+		alarm_check.postUpdate(""+ now)
 		if (mode.state == 0 || mode.state == 3) {
 			logInfo('org.openhab.rules.modes', "Trying to switch into night mode")
 			if (tv_power.state == ON || denon_receiver.state == ON || appletv.state == ON || xbox.state == ON) {
@@ -228,6 +228,7 @@ rule "Return to day mode during the week"
 	when
 		Time cron "0 0 5 ? * MON-FRI"
 	then
+		alarm_check.postUpdate(""+ now)
 		if (mode.state == 1) {
 			logInfo('org.openhab.rules.modes', "Switching to day mode because it is time")
 			sendCommand(justMorning, ON)
@@ -242,6 +243,7 @@ rule "Return to day mode during weekend"
 	when
 		Time cron "0 0 6 ? * SAT-SUN"
 	then
+		alarm_check.postUpdate(""+ now)
 		if (mode.state == 1) {
 			logInfo('org.openhab.rules.modes', "Switching to day mode because it is time")
 			sendCommand(justMorning, ON)
@@ -276,4 +278,4 @@ rule "Switch to night/day mode when button is pressed"
 			postUpdate(left_double_switch, UNDEF)
 			postUpdate(right_double_switch, UNDEF)
 		}
-		end
+end

@@ -37,8 +37,10 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 					
 			} 
 		
-			if (tempOutdoor >= 19 && ac_scene.state == 1)
+			if (tempOutdoor >= 19 && ac_scene.state == 1) {
 				sendCommand(ac_scene , 0)
+				logInfo("org.openhab.rules,heating", "Switched of air conditioner because outdoor temp is higher than 19.")
+				}
 			
 		} else {
 			if (tempBasement < 12 || tempLivingroom < 12 || tempOffice < 12) {

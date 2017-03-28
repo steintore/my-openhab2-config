@@ -9,9 +9,10 @@ rule "Startup"
 		System started
 	then
 	
-	if (alarm_alarm.state == null || alarm_alarm.state == UNDEF)
-		postUpdate(alarm_check, "" + now)
-	
+	createTimer(now.plusSeconds(120)) [|
+		if (alarm_alarm.state == null || alarm_alarm.state == UNDEF)
+			postUpdate(alarm_check, "" + now)
+	]
 	logInfo("org.openhab.rules", "System started")
 end
 

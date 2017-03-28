@@ -1,3 +1,5 @@
+Group gAlarm
+
 String alarm_climate "Alarm climate data" <w> (gAll)
 Number alarm_temperature_kitchen "Kjøkken temp [%.1f°C]" <temperature> (gGF, gTemperature, gInfluxDB)
 Number alarm_temperature_laundry "Vaskerom temp [%.1f°C]" <temperature> (gBasement, gTemperature, gInfluxDB)
@@ -9,17 +11,20 @@ Number alarm_humidity_laundry "Vaskerom luftfuktighet [%.1f %%]" <humidity> (gBa
 Number alarm_humidity_hall_gf "Gang luftfuktighet [%.1f %%]" <humidity> (gGF,gHumidity, gInfluxDB)
 Number alarm_humidity_hall_basement "Kjellergang luftfuktighet [%.1f %%]" <humidity> (gBasement, gHumidity, gInfluxDB)
 Number alarm_humidity_hall_1st "Gang 2. luftfuktighet [%.1f %%]" <humidity> (gFirstFloor,gHumidity, gInfluxDB)
-String alarm_alarm "Alarmstatus [MAP(alarm.map):%s]" <siren> (gGF) //{exec="<[node@@{{openhab_configuration_dir}}/scripts/alarm.js:1800000:JSONPATH($.status)]"}
+String alarm_alarm "Alarmstatus [MAP(alarm.map):%s]" <siren> (gGF, gAlarm) //{exec="<[node@@{{openhab_configuration_dir}}/scripts/alarm.js:1800000:JSONPATH($.status)]"}
 
-String alarm_current_status {channel="verisure:bridge:myverisure:status"}
-Number alarm_current_status_number {channel="verisure:bridge:myverisure:statusnumeric"}
-String alarm_current_status_no {channel="verisure:bridge:myverisure:alarmstatuslocalized"}
-String alarm_changed_by {channel="verisure:bridge:myverisure:changername"}
-DateTime alarm_time_changed {channel="verisure:bridge:myverisure:timestamp"}
-
+String alarm_current_status 
+Number alarm_current_status_number 
+String alarm_current_status_no 
+String alarm_changed_by 
+DateTime alarm_time_changed
 
 Switch alarm_door_lock
 String alarm_door_lock_check
+String alarm_door_locked_state (gGF, gAlarm)
+String alarm_door_current_lock_state (gGF, gAlarm)
+String alarm_door_motor_jam (gGF, gAlarm)
+String alarm_door_method (gGF, gAlarm)
 
 String alarm_check
 

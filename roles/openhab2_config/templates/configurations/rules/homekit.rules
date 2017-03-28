@@ -1,7 +1,7 @@
 
 rule "Homekit wants to turn living room lights on or OFF"
 	when
-		Item homekit_livingroom_light received
+		Item homekit_livingroom_light received command
 	then
 	switch (receivedCommand) {
 		case ON:

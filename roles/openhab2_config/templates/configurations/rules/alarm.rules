@@ -1,4 +1,5 @@
 import org.joda.time.DateTime
+import jdk.nashorn.internal.parser.JSONParser
 
 var Timer checkAlarmTimer = null
 
@@ -141,7 +142,7 @@ rule "Lock or unlock the door"
 	when
 		Item alarm_door_lock received command
 	then
-	logInfo("org.openhab.rules.alarm", "Item alarm_door_lock received command " + alarm_door_lock)
+	logInfo("org.openhab.rules.alarm", "Item alarm_door_lock received command " + alarm_door_lock + " state of door lock is " + alarm_door_locked_state)
 	var String cmd = "vsure {{alarm_login}} {{alarm_password}} set lock {{alarm_key}} '{{alarm_lock_id}}'"
 	switch (receivedCommand) {
 		case ON: {
@@ -157,6 +158,7 @@ rule "Lock or unlock the door"
 	}	
 end
 
+
 rule "Check the status off the door lock"
 	when
 		Item alarm_door_lock_check received update or
@@ -164,4 +166,11 @@ rule "Check the status off the door lock"
 	then
 	var result = executeCommandLine("vsure {{alarm_login}} {{alarm_password}} overview doorLockStatusList", 5000)
 	logDebug("org.openhab.rules.alarm", "Door lock state is now: " + result)
+	if (result != null) {
+		postUpdate(alarm_door_locked_state, transform("JSONPATH", "$..lockedState", result))
+		postUpdate(alarm_door_current_lock_state, transform("JSONPATH", "$..currentLockState", result))
+		postUpdate(alarm_door_motor_jam, transform("JSONPATH", "$..motorJam", result))
+		postUpdate(alarm_door_method, transform("JSONPATH", "$..method", result))
+	}
 end
+

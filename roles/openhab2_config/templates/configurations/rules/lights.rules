@@ -11,7 +11,7 @@ rule "motion detected in the bathroom"
 	when
 		Item bathroom_motion changed
 	then
-	logInfo('org.openhab', 'Motion sensor in the bathroom changed to: ' + bathroom_motion.state)
+	logInfo('org.openhab.rules.lights', 'Motion sensor in the bathroom changed to: ' + bathroom_motion.state)
 	switch (bathroom_motion.state as OnOffType) {
 		case ON: {
 			if (mode.state != 2) {
@@ -38,14 +38,14 @@ rule "motion detected in the bathroom"
 						]
 				} else {
 					timerBathroom.reschedule(now.plusSeconds(240))
-					logInfo("org.openhab", "Bathroom dimmer timer rescheduled to 240 seconds from now")
+					logInfo("org.openhab.rules.lights", "Bathroom dimmer timer rescheduled to 240 seconds from now")
 				}
 			}
 		}
 		case OFF: {
 			if (timerBathroom == null) {
 				timerBathroom = createTimer(now.plusSeconds(120)) [|
-					logInfo("org.openhab", "Bathroom dimmer timer created by OFF-signal timed out, state for motion: '" + bathroom_motion.state)
+					logInfo("org.openhab.rules.lights", "Bathroom dimmer timer created by OFF-signal timed out, state for motion: '" + bathroom_motion.state)
 					if (bathroom_motion.state == ON) {
 						timerBathroom.reschedule(now.plusSeconds(120))
 					} else {
@@ -72,6 +72,7 @@ then
 		case ON: {
 			sendCommand(light_hall_ground_floor, ON)
 			if (justMorning.state == ON) {
+				logDebug('org.openhab.rules.lights', 'Item hall_gf_motion changed runs the morning routine.. good morning!')
 				sendCommand(scene_light_livingroom, 1)
 				sendCommand(justMorning, OFF)
 				if (alarm_alarm.state == 'armedhome') {
@@ -80,7 +81,7 @@ then
 			}
 			sendCommand(screen_pi_screen, ON)
 			if (mode.state == 2) {
-				// Checking if the alarm has been switched off now.
+				logDebug('org.openhab.rules.lights', 'Item hall_gf_motion changed want alarm status to be checked')
 				postUpdate(alarm_check, "" + now)
 			}				
 		}
@@ -94,7 +95,7 @@ rule "scene for lights in living room"
 when
 	Item scene_light_livingroom received command
 then
-	logInfo('org.openhab', 'scene_light_livingroom received state:' + scene_light_livingroom.state)
+	logInfo('org.openhab.rules.lights', 'scene_light_livingroom received state:' + receivedCommand)
 	switch (receivedCommand) {
 		case 0: { // OFF
 			sendCommand(Living_Room_Lights, OFF)
@@ -113,6 +114,7 @@ rule "change scene for lights in hall ground floor"
 when
  	Item scene_light_hall_gf received command
 then
+	logDebug('org.openhab.rules.lights', 'Item scene_light_hall_gf received command ' + receivedCommand)
  	switch(receivedCommand) {
  		case 0: {
  			sendCommand(light_hall_ground_floor, OFF)
@@ -160,6 +162,7 @@ rule "light in hall 1st floor"
 	when
 		Item scene_light_hall received command
 	then
+	logDebug('org.openhab.rules.lights', "Item scene_light_hall received command " + receivedCommand)
 	switch (receivedCommand) {
 		case 0:  { //OFF 
 			sendCommand(light_hall_1, 0)
@@ -192,6 +195,7 @@ rule "lights in hall changed from other source"
 		Item light_hall_3 received update or
 		Item light_hall_4 received update
 	then
+	logDebug('org.openhab.rules.lights', "lights in hall changed from other source")
 	if (light_hall_1.state == 0 && light_hall_2.state == 0 && light_hall_3.state == 0 && light_hall_4.state == 0) {
 		postUpdate(scene_light_hall, 0)
 	} else if (light_hall_1.state == 100 && light_hall_2.state == 100 && light_hall_3.state == 100 && light_hall_4.state == 100) {
@@ -205,6 +209,7 @@ rule "light in basement hall"
 	when
 		Item scene_light_basement received command
 	then
+	logDebug('org.openhab.rules.lights', "Item scene_light_basement received command " + receivedCommand)
 	switch (receivedCommand) {
 		case 0:  { //OFF 
 			sendCommand(light_basement_1, 0)
@@ -237,6 +242,7 @@ rule "lights in basement hall changed from other source"
 		Item light_basement_3 received update or
 		Item light_basement_4 received update
 	then
+	logDebug('org.openhab.rules.lights', "Lights in basement hall changed from other source")
 	if (light_basement_1.state == 0 && light_basement_2.state == 0 && light_basement_3.state == 0 && light_basement_4.state == 0) {
 		postUpdate(scene_light_basement, 0)
 	} else if (light_basement_1.state == 100 && light_basement_2.state == 100 && light_basement_3.state == 100 && light_basement_4.state == 100) {
@@ -251,6 +257,7 @@ rule "Motion detector in basement wants to turn on the lights"
                 Item motion_detector_basement received command or
                 Item motion_detector_basement changed
         then
+        	logDebug('org.openhab.rules.lights', "Motion detector in basement wants to turn on the lights " + motion_detector_basement)
                 if (timerBasement != null) {
                         if(timerBasement.running) {
                                 timerBasement.cancel()
@@ -271,14 +278,14 @@ rule "Motion detector in basement wants to turn on the lights"
                         }
 
                         timerBasement = createTimer(now.plusSeconds(seconds)) [|
-                            logInfo("org.openhab", "Basement light timer created by ON-signal, state for motion: " + motion_detector_basement.state)
+                            logInfo("org.openhab.rules.lights", "Basement light timer created by ON-signal, state for motion: " + motion_detector_basement.state)
                             sendCommand(scene_light_basement, 0)
                             postUpdate(motion_detector_basement, OFF)
                         ]
                 }
                 case OFF: {
                        	timerBasement = createTimer(now.plusSeconds(120)) [|
-                        	logInfo("org.openhab", "Basement light timer created by OFF-signal timed out, state for motion: " + motion_detector_basement.state)
+                        	logInfo("org.openhab.rules.lights", "Basement light timer created by OFF-signal timed out, state for motion: " + motion_detector_basement.state)
                             sendCommand(scene_light_basement, 0)
                             postUpdate(motion_detector_basement, OFF)
                         ]
