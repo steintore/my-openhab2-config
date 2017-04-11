@@ -4,3 +4,4 @@
   roles:
     - openhab2_stop
     - openhab2_config
+    - openhab2_start
