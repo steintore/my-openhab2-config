@@ -10,6 +10,7 @@ rule "Startup"
 	then
 	
 	createTimer(now.plusSeconds(120)) [|
+		logDebug("org.openhab.rules", "Checking alarm again, it is now: " + alarm_alarm)
 		if (alarm_alarm.state == null || alarm_alarm.state == UNDEF)
 			postUpdate(alarm_check, "" + now)
 	]

@@ -1,8 +1,11 @@
----
 - hosts: webservers
+  user: "{{username}}"
+  become: false
   roles:
     - os_config
     - node
     - speedtest
+    - networkupstools
+    - openhab2_stop
     - openhab2_config
     - mosquitto

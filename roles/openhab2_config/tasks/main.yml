@@ -1,11 +1,5 @@
 - include_vars: vault.yml
 
-- name: Stop OpenHAB 2 service before continuing
-  become: yes
-  service:
-    name: openhab2
-    state: stopped
-
 - name: See if configurations is a directory (then we nuke it next)
   shell: "[ -d {{ openhab_configuration_dir  }}] && echo 'Directory' || echo ''"
   register: is_directory
@@ -40,6 +34,7 @@
         - items/speedtest.items
         - items/leaf.items
         - items/homekit.items
+        - items/networkupstools.items
         - persistence/rrd4j.persist
         - persistence/influxdb.persist
         - rules/homekit.rules
@@ -81,6 +76,7 @@
         - services/runtime.cfg
         - services/addons.cfg
         - services/homekit.cfg
+        - services/networkupstools.cfg
         - things/astro.things
         - things/systeminfo.things
         - things/samsungtv.things
@@ -92,13 +88,6 @@
   become: yes
   become_user: openhab
   copy: dest={{ openhab_configuration_dir }}/scripts/alarm-api.js src=../templates/configurations/scripts/alarm-api.js
-
-- name: sync transform setup into config
-  copy: dest={{ openhab_configuration_dir }}/{{item}} src=../templates/configurations/{{item}}
-  become: yes
-  become_user: openhab
-  with_fileglob:
-        - transform/*
 
 - name: sync openhab java opts
   become: yes
