@@ -1,0 +1,2 @@
+Number Ups_Output_Voltage "UPS output voltage [%.1f V]" (Ups) {networkupstools="ups1:output.voltage"}
+String Ups_Status "UPS status [%s]" (Ups) {networkupstools="ups1:ups.status"}

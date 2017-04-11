@@ -1,0 +1,5 @@
+- name: Stop OpenHAB 2 service before continuing
+  become: yes
+  service:
+    name: openhab2
+    state: stopped
