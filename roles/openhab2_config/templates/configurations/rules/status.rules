@@ -8,13 +8,9 @@ rule "Startup"
 	when
 		System started
 	then
-	
-	createTimer(now.plusSeconds(120)) [|
-		logDebug("org.openhab.rules", "Checking alarm again, it is now: " + alarm_alarm)
-		if (alarm_alarm.state == null || alarm_alarm.state == UNDEF)
-			postUpdate(alarm_check, "" + now)
-	]
 	logInfo("org.openhab.rules", "System started")
+	sendCommand(alarm_check, "" + now)
+	sendCommand(roomba_lan, ON)
 end
 
 rule "When text is changed, send a push message"
@@ -268,6 +264,13 @@ rule "Reboot computer in the hallway"
 	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@sudo shutdown -r now", 5000)
 	if (result != null && result.length() > 0)
 		logInfo("org.openhab.status.reboot", result)
+end
+
+rule "Z-wave api status changes"
+	when
+		Item zWaveStatus changed
+	then
+	logInfo("org.openhab.rules.status", "Z-Wave status changed to: " + zWaveStatus)
 end
 	
 

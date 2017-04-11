@@ -8,13 +8,13 @@ rule "Got command to send to Roomba"
 	when
 		Item scene_roomba received command
 	then
-		logInfo('org.openhab.rules.roomba', "Item scene_roomba received command: " + receivedCommand)
+		logInfo('org.openhab.rules.roomba', "Item scene_roomba received command: " + receivedCommand + " , currentState is: " + roombaCurrentState)
 		switch(receivedCommand) {
 			case 0: { // DOCK THIS THING
 				if (roombaCurrentState.state == 1 || roombaCurrentState.state == 4)
 					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=DOCK')	
 				var result = sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=DOCK')
-				logDebug("org.openhab.rules.roomba", "Result from request: " + result)
+				logInfo("org.openhab.rules.roomba", "Result from request: " + result)
 				postUpdate(roombaCurrentState, 2)
 			}
 			case 1: { // CLEAN PLEASE
@@ -22,7 +22,7 @@ rule "Got command to send to Roomba"
 					if (roombaCurrentState.state > 1)
 						sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=CLEAN')
 					var result = sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=CLEAN')
-					logDebug("org.openhab.rules.roomba", "Result from request: " + result)
+					logInfo("org.openhab.rules.roomba", "Result from request: " + result)
 					postUpdate(roombaCurrentState, 4)
 				} else {
 					sendNotification("{{stein_email}}","Kan ikke starte støvsuging, det er for lite batteri: " + roombaBatteryPercentage.state + "%")
@@ -32,38 +32,42 @@ rule "Got command to send to Roomba"
 				if (roombaCurrentState.state > 0)
 					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=SPOT')
 				var result = sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=SPOT')
-				logDebug("org.openhab.rules.roomba", "Result from request: " + result)
+				logInfo("org.openhab.rules.roomba", "Result from request: " + result)
 				postUpdate(roombaCurrentState, 4)
 			}
 		}
+		sendCommand(roomba_lan, ON)
 end
 
 rule "Fetching data from Roomba"
 	when
-		Item roomba_lan received command 
-		or 
 		Item roomba_lan changed
 	then
-	logInfo('org.openhab.rules.roomba', "Item roomba_lan received command: " + roomba_lan)
-	switch (roomba_lan) {
-		case ON: {
-			if (roombaTimer == null) {
-				roombaTimer = createTimer(now.plusSeconds(30)) [|
-					var roombaJson = sendHttpGetRequest("{{roomba_url}}/roomba.json")
-					logDebug("org.openhab.rules.roomba", "Got response from Roomba: " + roombaJson)			
-					postUpdate(roombaRaw, roombaJson)		
-					roombaTimer.reschedule(now.plusSeconds(30))
-				]
-			}
+	logInfo('org.openhab.rules.roomba', "Item roomba_lan received command: " + roomba_lan.state + " , timer is " + roombaTimer)
+	
+	if (roomba_lan.state == ON) {
+		logInfo("org.openhab.rules.roomba", "Roomba ON")
+		if (roombaTimer == null) {
+			logInfo("org.openhab.rules.roomba", "Scheduling Roomba timer in 30 seconds")
+			roombaTimer = createTimer(now.plusSeconds(30)) [|
+				logInfo("org.openhab.rules.roomba", "Roomba timer triggered...")
+				var roombaJson = sendHttpGetRequest("{{roomba_url}}/roomba.json")
+				logInfo("org.openhab.rules.roomba", "Got response from Roomba: " + roombaJson)			
+				postUpdate(roombaRaw, roombaJson)		
+				roombaTimer.reschedule(now.plusSeconds(30))
+			]
+		} else if (roombaTimer.running) {
+			roombaTimer.cancel()
+			roombaTimer.reschedule(now.plusSeconds(10))
+			logInfo("org.openhab.rules.roomba", "Checking response from Roomba in 10 seconds")
 		}
-		case OFF: {
-			logDebug("org.openhab.rules.roomba", "Canceling roombaTimer, as it is not accessible on the network")
-			if (roombaTimer != null) {
-				if(roombaTimer.running) {
-						roombaTimer.cancel()
-					}
-					roombaTimer= null
-			}
+	} else if (roomba_lan.state == OFF) {
+		logInfo("org.openhab.rules.roomba", "Canceling roombaTimer, as it is not accessible on the network")
+		if (roombaTimer != null) {
+			if(roombaTimer.running) {
+					roombaTimer.cancel()
+				}
+				roombaTimer= null
 		}
 	}
 end

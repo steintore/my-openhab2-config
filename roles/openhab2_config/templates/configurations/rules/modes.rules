@@ -272,6 +272,7 @@ rule "Switch to night/day mode when button is pressed"
 					if (mode.state != 1) {
 						logInfo('org.openhab.rules.modes', "Left double switch sets night mode")
 						sendCommand(mode, 1)
+						postUpdate(push_message_text, 'Nattmodus aktivert av bryter på soverommet. God natt!')
 					}
 				}
 			}
