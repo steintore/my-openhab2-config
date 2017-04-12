@@ -1,0 +1,117 @@
+import java.util.concurrent.locks.ReentrantLock
+
+val Number MODE_OFF = 0
+val Number MODE_STANDBY = 1
+val Number MODE_ACTIVE = 2
+val Number MODE_FINISHED = 3
+var java.util.concurrent.locks.ReentrantLock finishLock  = new java.util.concurrent.locks.ReentrantLock()
+var java.util.concurrent.locks.ReentrantLock finishLockDryer  = new java.util.concurrent.locks.ReentrantLock()
+
+var Timer timerDryer = null
+
+rule "Washingmachine Consumption State Machine (Extended)"
+when
+    Item power_washingmachine changed
+then
+    if (power_washingmachine.state <= 0.5)
+      Washingmachine_OpState.postUpdate(MODE_OFF)
+    else if (power_washingmachine.state > 10)
+      Washingmachine_OpState.postUpdate(MODE_ACTIVE)
+    else if (power_washingmachine.state < 4.5) {
+        if (Washingmachine_OpState.state == MODE_OFF) Washingmachine_OpState.postUpdate(MODE_STANDBY)
+        else if (Washingmachine_OpState.state == MODE_ACTIVE) {
+            finishLock.lock()
+            try {
+                Thread::sleep(10000) // Debounce for 10 seconds
+                if (power_washingmachine.state < 4.5) Washingmachine_OpState.postUpdate(MODE_FINISHED)
+            } finally {
+                finishLock.unlock()
+            }
+        }
+    }
+end
+
+rule "Washingmachine Notifications"
+when
+    Item Washingmachine_OpState changed
+then
+    if (Washingmachine_OpState.state == MODE_FINISHED) {
+        postUpdate(push_message_text, "Vaskemaskinen er ferdig!")
+        if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
+          sendCommand(washingmachine, OFF)
+    }
+end
+
+rule "Dryer Consumption State Machine (Extended)"
+when
+    Item power_dryer changed
+then
+    logInfo('org.openhab.rules.household', 'Dryer changed to: ' + power_dryer.state)
+    if (power_dryer.state <= 0.5)
+      dryer_OpState.postUpdate(MODE_OFF)
+    else if (power_dryer.state > 10)
+      dryer_OpState.postUpdate(MODE_ACTIVE)
+    else if (power_dryer.state < 4.5) {
+        if (dryer_OpState.state == MODE_OFF) dryer_OpState.postUpdate(MODE_STANDBY)
+        else if (dryer_OpState.state == MODE_ACTIVE) {
+            finishLockDryer.lock()
+            try {
+                Thread::sleep(10000) // Debounce for 10 seconds
+                if (power_dryer.state < 4.5) dryer_OpState.postUpdate(MODE_FINISHED)
+            } finally {
+                finishLockDryer.unlock()
+            }
+        }
+    }
+end
+
+/*
+rule "Dryer has been started, notify me when it is done"
+when
+	Item power_dryer changed
+then
+	logInfo('org.openhab.rules.household', "Dryer power changed to: " + power_dryer.state)
+	if (dryer.state == ON) {
+		var double w = new Double(power_dryer.state.toString())
+		if (w > 0 && w < 1) w = 1
+		var double maxLastHour = new Double(power_dryer.maximumSince(now.minusHours(1)).state.toString())
+		var double maxLastTwoMinutes = new Double(power_dryer.maximumSince(now.minusMinutes(2)).state.toString())
+		if (w <= 5 && maxLastHour > 200 && (maxLastTwoMinutes <= (w*2) || w == 0)) {
+			if (timerDryer == null) {
+			postUpdate(push_message_text, "Tørketrommelen er ferdig!")
+				timerDryer = createTimer(now.plusSeconds(240)) [|
+					var double w2 = new Double(power_dryer.state.toString())
+					if (w2 > 0 && w2 < 1) w2 = 1
+					var double maxLastTwo = new Double(power_dryer.maximumSince(now.minusMinutes(2)).state.toString())
+					if (maxLastTwo <= (w2*2) || w2 == 0) {
+						sendCommand(dryer, OFF)
+					}
+					if(timerDryer != null) {
+						if(timerDryer.running) {
+							timerDryer.cancel()
+						}
+						timerDryer= null
+					}
+				]
+			}
+		}
+	} else if(timerDryer != null) {
+		if(timerDryer.running) {
+			timerDryer.cancel()
+		}
+		timerDryer= null
+	}
+end
+*/
+
+rule "Freezer is suddenly using less power"
+when
+	Item power_freezer changed
+then
+	var double w = new Double(power_freezer.state.toString())
+	var double maxLastHour = new Double(power_freezer.maximumSince(now.minusHours(1)).state.toString())
+	if (w < 5 || (w < 70 && maxLastHour < 70 )) {
+		logInfo('org.openhab.rules.household', "Sending message about freezer because: (" + w + " < 5 || (" + w + " < 70 && " + maxLastHour + "< 70 ))")
+		sendNotification("{{stein_email}}","Fryseren drar plutselig mindre strøm enn vanlig, nå kun: " + w + " watt og maks siste time er: " + maxLastHour)
+	}
+end

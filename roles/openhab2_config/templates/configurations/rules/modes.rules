@@ -15,7 +15,7 @@ rule "A change of mode"
 	if (mode.state != previous_mode.state) {
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
-	
+
 		var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 		switch (receivedCommand) {
 			case 0: { // HOME
@@ -25,81 +25,85 @@ rule "A change of mode"
 				// 	If we're coming home it is no longer a holiday..
 				if (holiday_mode.state == ON)
 					sendCommand(holiday_mode, OFF)
-			
+
 				if (tempOutdoor < 10 && ac_scene.state != 1) {
 					sendCommand(ac_scene, 1)
 				}
 				if (tempOutdoor < 0) {
 					sendCommand(gang_panelovn, ON)
 				}
-			
+
 				if (previous_mode.state == 2) {
 					var t = ""
 					if (garage_door_1.state == ON || garage_door_2.state == ON) {
 						if (garage_door_1.state == ON) t = "Leafs"
 						if (garage_door_2.state == ON) {
 							if (t.length() > 0)
-					  			t = t + " og " 
+					  			t = t + " og "
 							t = t + "Mondeos"
-						}	 
+						}
 						t = t + " garasjeport er ikke lukket. "
-				
-					t = "Velkommen hjem! Nå " + OutdoorTemperature.state.format("%.1f") + " °C ute, og " 
+
+					t = "Velkommen hjem! Nå " + OutdoorTemperature.state.format("%.1f") + " °C ute, og "
 						+ LivingRoomTemperature.state.format("%.1f") + " °C i stua. "
 						+ t
 					}
 					sendCommand(guest_home, ON)
-					if (t.length() > 0) 
+					if (t.length() > 0)
 						postUpdate(push_message_text, t)
 				}
 				sendCommand(screen_pi_screen, ON)
 				sendCommand(roombaDock, ON)
-			
+
 				sendCommand(leaf_request_update, ON)
-			
-				if (motion_living_room.state == ON) 
+
+				if (motion_living_room.state == ON)
 					sendCommand(scene_light_livingroom, 1)
-			
+
 				if (justMorning.state == ON)
 					habPanel_hallway.postUpdate("Weather")
 				else
 					habPanel_hallway.postUpdate("Hallway")
 			}
-		
+
 			case 1: { // NIGHT
 				logInfo('org.openhab.rules.modes', 'NIGHT MODE')
 				sendCommand(scene_light_livingroom, 0)
 				sendCommand(light_basement_power, OFF)
 				sendCommand(scene_light_hall, 2) // NIGHT
 				sendCommand(scene_light_basement, 0)
-			
+
 				if (dryer.state == ON && new Double(power_dryer.state.toString()) > 10) {
 					postUpdate(push_message_text, "Husk tørketrommelen før du legger deg")
 				}
+				if (Washingmachine_OpState.state == 2) {
+					postUpdate(push_message_text, "Vaskemaskinen er ikke ferdig, så vi skrur av strømmen når den er ferdig")
+				}
+				
 				if (tv_power.state == ON) {
 					sendCommand(tv_power, OFF)
 					sendCommand(ac_mode, 0)
 				}
 				if (ac_scene.state > 1)
 					sendCommand(ac_scene, 0)
-					
+
 				if (ac_mode.state == 1) // QUIET
-					sendCommand(ac_mode, 0) 
-					
+					sendCommand(ac_mode, 0)
+
 				sendCommand(kontor_panelovn, OFF)
 				sendCommand(gang_panelovn, OFF)
-				
+
 				sendCommand(screen_pi_screen, OFF)
 				sendCommand(justMorning, OFF)
 				sendCommand(roombaDock, OFF)
-				
+
 				alarm_check.postUpdate(""+ now)
-				
+
 				postUpdate(motion_living_room, OFF)
 				sendCommand(alarm_door_lock, ON)
 				sendCommand(screen_pi_reboot, ON)
 			}
-			
+
 			case 2: { //AWAY
 				logInfo('org.openhab.rules.modes', 'AWAY MODE')
 				var t = ""
@@ -118,7 +122,11 @@ rule "A change of mode"
 					}
 					postUpdate(push_message_text, t)
 				}
-				
+
+				if (Washingmachine_OpState.state == 2) {
+					postUpdate(push_message_text, "Vaskemaskinen er ikke ferdig, så vi skrur av strømmen når den er ferdig")
+				}
+
 				sendCommand(guest_home, OFF)
 				sendCommand(light_basement_power, OFF)
 				sendCommand(kontor_panelovn, OFF)
@@ -139,21 +147,21 @@ rule "A change of mode"
 				sendCommand(screen_pi_screen, OFF)
 				sendCommand(justMorning, OFF)
 				sendCommand(screen_pi_reboot, ON)
-				
+
 				sendCommand(scene_roomba, 1) // Start vacuuming
-				habPanel_hallway.postUpdate("Hallway") 
+				habPanel_hallway.postUpdate("Hallway")
 			}
-			
+
 			case 3: { // EVENING MODE
 				logInfo('org.openhab.rules.modes', 'EVENING MODE')
 				stored_heating_states = storeStates(floorHeatingNight)
 				sendCommand(scene_light_hall, 2) // NIGHT
 				sendCommand(kontor_panelovn, OFF)
-				
+
 				if (floor_night_power_level.state != NULL) {
-					
+
 					floorHeatingNight?.members.forEach [item |
-						if (floor_night_power_level.state == 0 && item.state > 0) 
+						if (floor_night_power_level.state == 0 && item.state > 0)
 							sendCommand(item, 1)
 						else
 							sendCommand(item, floor_night_power_level.state as Number)
@@ -163,7 +171,7 @@ rule "A change of mode"
 				sendCommand(leaf_request_update, ON)
 			}
 		}
-		postUpdate(previous_mode, mode.state.toString)	
+		postUpdate(previous_mode, mode.state.toString)
 	}
 end
 
@@ -173,7 +181,7 @@ end
  */
 rule "Switch to evening mode in the evening"
 	when
-		Time cron "0 0 21 ? * *" 
+		Time cron "0 0 21 ? * *"
 	then
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 0) {
@@ -188,7 +196,7 @@ end
  */
 rule "Switch to night mode in the evening"
 	when
-		Time cron "0 30 0 ? * *" 
+		Time cron "0 30 0 ? * *"
 	then
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 0 || mode.state == 3) {
@@ -204,11 +212,11 @@ rule "Switch to night mode in the evening"
 							logInfo('org.openhab.rules.modes', "Actually going into night mode")
 							sendCommand(mode, 1)
 						}
-				
+
 						if(night_timer!=null) {
 							if(night_timer.running) {
 								night_timer.cancel()
-							}	
+							}
 							night_timer = null
 						}
 					}
@@ -236,7 +244,7 @@ rule "Return to day mode during the week"
 		}
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
-		
+
 end
 
 rule "Return to day mode during weekend"
@@ -251,9 +259,9 @@ rule "Return to day mode during weekend"
 		}
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
-		
+
 end
-	
+
 rule "Switch to night/day mode when button is pressed"
 	when
 		Item left_double_switch received command or
@@ -265,7 +273,7 @@ rule "Switch to night/day mode when button is pressed"
 				case ON: { // DAY MODE
 					if(mode.state != 0) {
 						logInfo('org.openhab.rules.modes', "Left double switch sets day mode")
-						sendCommand(mode, 0)	
+						sendCommand(mode, 0)
 					}
 				}
 				case OFF: { // NIGHT MODE

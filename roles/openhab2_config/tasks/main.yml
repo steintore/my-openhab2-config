@@ -53,6 +53,7 @@
         - rules/alarm.rules
         - rules/speedtest.rules
         - rules/habpanel.rules
+        - rules/household-devices.rules
         - scripts/pushMessages.script
         - scripts/alarm-climate.js
         - scripts/alarm.js
@@ -65,6 +66,7 @@
         - transform/alarm.map
         - transform/roomba.map
         - transform/roombaStatus.map
+        - transform/household-device.map
         - services/samsungac.cfg
         - services/http.cfg
         - services/pushover.cfg

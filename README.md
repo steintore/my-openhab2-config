@@ -2,7 +2,7 @@ An ansible playbook to install/update openHAB 2 on my Raspberry PI
 ===========================================================
 
 This setup uses [Ansible](http://docs.ansible.com) to automate provisioning of a linux machine
-containing a setup for [OpenHAB2](http://www.openhab.org) 
+containing a setup for [OpenHAB2](http://www.openhab.org)
 
 
 ## Bootstrap and prereqs
@@ -12,11 +12,11 @@ containing a setup for [OpenHAB2](http://www.openhab.org)
 2. Clone this repo from the command line (in a directory of your choice):
    ```git clone https://github.com/steintore/my-openhab2-config.git```
 3. `cd my-openhab2-config` into your cloned repo.
-4. From the command line run: 
+4. From the command line run:
     To install everything:
-	`ansible-playbook playbook.yml -i hosts --ask-vault-pass -vvvv --ask-sudo-pass`. 
+	`ansible-playbook playbook.yml -i hosts --ask-vault-pass --ask-sudo-pass`. 
     To update the OpenHAB2 configurations:
-	`ansible-playbook updateOpenhab.yml -i hosts --ask-vault-pass -v --ask-sudo-pass`
+	`ansible-playbook updateOpenhab.yml -i hosts --ask-vault-pass --ask-sudo-pass`
 
 Note! The repository contains file(s) encrypted using `ansible-vault` - in such files there are secrets - like binding keys etc. Without the passphrase to the encrypted files you cannot start the system - in other words you need to replace the files with your own encrypted files with your secrets - or remove the functionality.
 

@@ -97,11 +97,10 @@ sitemap default label="Huset"
     		Frame label="Kontor"{
     			Text item=OfficeTemperature
     			Text item=OfficeHumidity
-				Text item=OfficeTemperature_LastUpdate visibility=[OfficeTemperature_LastUpdate>1800] valuecolor=[OfficeTemperature_LastUpdate>120="orange", OfficeTemperature_LastUpdate>300="red"]
+					Text item=OfficeTemperature_LastUpdate visibility=[OfficeTemperature_LastUpdate>1800] valuecolor=[OfficeTemperature_LastUpdate>120="orange", OfficeTemperature_LastUpdate>300="red"]
     		}
     		Frame label="Varme" {
     			Switch item=Heating
-    			Text item=power_panelovn_kontor visibility=[kontor_panelovn==ON]
     			Text item=power_panelovn_gang visibility=[gang_panelovn==ON]
     		}
     		Frame label="Alt" {
@@ -112,7 +111,7 @@ sitemap default label="Huset"
     		Frame {
     			Text item=BasementTemperature
     			Text item=BasementHumidity
-				Text item=BasementTemperature_LastUpdate visibility=[BasementTemperature_LastUpdate>1800] valuecolor=[BasementTemperature_LastUpdate>120="orange", BasementTemperature_LastUpdate>300="red"]
+					Text item=BasementTemperature_LastUpdate visibility=[BasementTemperature_LastUpdate>1800] valuecolor=[BasementTemperature_LastUpdate>120="orange", BasementTemperature_LastUpdate>300="red"]
 			}
     		Frame label="Lys"{
     			Switch item=scene_light_basement mappings=[0="Av", 1="På", 2="Natt"]
@@ -151,20 +150,27 @@ sitemap default label="Huset"
     					Switch item=DenonMute
     					Switch item=DenonCommand label="Surround Mode" mappings=[MSSTANDARD="Standard", MSSTEREO="Stereo"]
     					Text item=DenonSurroundMode
-					}
-					Frame label="Main Zone Input" {
+							}
+						Frame label="Main Zone Input" {
     					Selection label="Input" item=DenonInput mappings=[DVD="XBox One", BD="XBox", "SAT/CBL"="TV", MPLAY="Apple TV", AUX1="PC", SPOTIFY="Spotify", NET="Nettverk"]
-					}
-				}
+					  }
+				  }
     		}
 
     		Frame label="Diverse" {
     			Text item=alarm_temperature_laundry
     			Text item=alarm_humidity_laundry
-				Text item=dryer label="Tørketrommel [%s %%]"
-				Text item=power_dryer visibility=[dryer==ON]
-				Text item=power_freezer
-				Text item=power_fridge
+
+					Text item=dryer_OpState
+				  Switch item=dryer
+					Text item=power_dryer visibility=[dryer==ON]
+
+					Text item=Washingmachine_OpState
+					Switch item=washingmachine
+					Text item=power_washingmachine
+
+				  Text item=power_freezer
+				  Text item=power_fridge
 			}
 			Frame label="Alt" {
 				Group item=gBasement
@@ -276,7 +282,7 @@ sitemap default label="Huset"
 			Frame {
 				Text item=power_dryer
 				Text item=power_freezer
-				Text item=power_panelovn_kontor
+				Text item=power_washingmachine
 				Text item=power_panelovn_gang
 				Text item=power_fridge
 			}

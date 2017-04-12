@@ -9,19 +9,19 @@ var Timer timerBFWeekendOff = null
 
 rule "If the room is too cold and we are home, then heat it up, but only if it is less than 10 degrees outside"
 	when
-		Time cron "0 0/20 * * * ?" 
+		Time cron "0 0/20 * * * ?"
 	then
 		var double tempOffice = new Double(OfficeTemperature.state.toString())
 		var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 		var double tempBasement = new Double(BasementTemperature.state.toString())
 		var double tempLivingroom = new Double(LivingRoomTemperature.state.toString())
-		
+
 		if(holiday_mode.state == OFF) {
 			if (tempOutdoor <= 10) {
 				if (gang_panelovn.state == OFF && mode.state == 0) {
 					if (tempOffice < 17) {
 						sendCommand(gang_panelovn, ON)
-						sendCommand(kontor_panelovn, ON)	
+						sendCommand(kontor_panelovn, ON)
 					}
 				}
 				if (tempBasement < 16 && BasementTemperature.maximumSince(now.minusMinutes(21)).state >= 78) {
@@ -34,14 +34,14 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 				} else if (tempLivingroom < (new Double(ac_night_temp.state.toString()) -2) && mode.state == 2 && ac_scene.state != 1) {
 					sendCommand(ac_scene, 1)
 				}
-					
-			} 
-		
+
+			}
+
 			if (tempOutdoor >= 19 && ac_scene.state == 1) {
 				sendCommand(ac_scene , 0)
 				logInfo("org.openhab.rules,heating", "Switched of air conditioner because outdoor temp is higher than 19.")
 				}
-			
+
 		} else {
 			if (tempBasement < 12 || tempLivingroom < 12 || tempOffice < 12) {
 				sendNotification("{{stein_email}}","En eller annen temperatur er under 12 grader: [Stue: " + tempLivingroom + ", kontor: " + tempOffice + ", kjeller: " + tempBasement + "]")
@@ -49,14 +49,14 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 					sendCommand(ac_scene, 1)
 				if (tempOffice < 12) {
 					sendCommand(kontor_panelovn, ON)
-					//sendCommand(gang_panelovn, ON)	
+					//sendCommand(gang_panelovn, ON)
 				}
 			}
 			if (tempOffice >= 19 && kontor_panelovn.state == ON) {
 				sendCommand(kontor_panelovn, OFF)
 			}
 		}
-		
+
 end
 
 rule "When the error code from the AC changes, please let me know"
@@ -82,16 +82,16 @@ then
 			var double additionalDegrees = new Double(AC_additional_degrees.state.toString())
 			if (ac_power.state == OFF)
 				sendCommand(ac_power, ON)
-						
+
 			// Set to heating if not already set
 			if (ac_op_mode.state != 4)
 				sendCommand(ac_op_mode, 4)
-				
+
 			// set direction to fixed
 			if (ac_direction.state != 3)
 				sendCommand(ac_direction, 3)
-			
-			// windlevel	
+
+			// windlevel
 			if (ac_windlevel.state != 0)
 				sendCommand(ac_windlevel, 0)
 
@@ -100,9 +100,9 @@ then
 				if (ac_set_temp.state != ac_heat_temp.state && tempOutdoor > lowerTempThreshold)
 					sendCommand(ac_set_temp, ac_heat_temp.state.toString)
 				else if (tempOutdoor <= lowerTempThreshold )
-					sendCommand(ac_set_temp, (new Double(ac_heat_temp.state.toString) + additionalDegrees).toString())	
+					sendCommand(ac_set_temp, (new Double(ac_heat_temp.state.toString) + additionalDegrees).toString())
 			} else if (mode.state == 1) { //NIGHT
-				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_heat_temp.state) 
+				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_heat_temp.state)
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 				if (tempOutdoor <= lowerTempThreshold)
 					sendCommand(ac_set_temp, (new Double(ac_night_temp.state.toString) + additionalDegrees).toString())
@@ -112,7 +112,7 @@ then
 					else if (tempOutdoor <= lowerTempThreshold)
 					sendCommand(ac_set_temp, (new Double(ac_night_temp.state.toString) + additionalDegrees).toString())
 			}
-			
+
 			if (tempOutdoor < lowerTempThreshold && mode.state == 0) {
 				sendCommand(ac_mode, 5) // TURBO MODE
 			} else {
@@ -122,48 +122,48 @@ then
 				else if (tv_power.state == ON && ac_mode.state != 1)
 					sendCommand(ac_mode, 1) // QUIET
 			}
-							
+
 		}
 		case 2: { // COOLING
 			if (ac_power.state == OFF)
 				sendCommand(ac_power, ON)
-				
+
 			// Set to Off if tv is off, otherwise to QUIET
 			if (tv_power.state == OFF && ac_mode.state != 0)
 				sendCommand(ac_mode, 0)
 			else if (tv_power.state == ON && ac_mode.state != 1)
 				sendCommand(ac_mode, 1) // QUIET
-			
+
 			// Set to cooling if not already set
 			if (ac_op_mode.state != 1)
 				sendCommand(ac_op_mode, 1)
-				
+
 			// set direction to fixed
 			if (ac_direction.state != 3)
 				sendCommand(ac_direction, 3)
-			
-			// windlevel	
+
+			// windlevel
 			if (ac_windlevel.state != 0)
 				sendCommand(ac_windlevel, 0)
 
 			// correct temperature
 			if (ac_set_temp.state != ac_cool_temp.state)
-				sendCommand(ac_set_temp, ac_cool_temp.state.toString)	
+				sendCommand(ac_set_temp, ac_cool_temp.state.toString)
 		}
 		case 3: { // AIR
 			if (ac_power.state == OFF)
 				sendCommand(ac_power, ON)
-			sendCommand(ac_mode, 5) 
-			
+			sendCommand(ac_mode, 5)
+
 			// Set to wind if not already set
 			if (ac_op_mode.state != 3)
 				sendCommand(ac_op_mode, 3)
-				
+
 			// set direction
 			if (ac_direction.state != 2)
 				sendCommand(ac_direction, 2)
-			
-			// windlevel	
+
+			// windlevel
 			if (ac_windlevel.state != 4)
 				sendCommand(ac_windlevel, 4)
 
@@ -171,7 +171,7 @@ then
 			if (ac_set_temp.state != ac_cool_temp.state)
 				sendCommand(ac_set_temp, ac_cool_temp.state.toString)
 		}
-	}	
+	}
 end
 
 rule "AC changed from remote"
@@ -232,7 +232,7 @@ when
 then
     var int hours = (basementFloorWeekendON.state as DecimalType).intValue()
 	var DateTime onTime = now.withTime(hours, 0, 0, 0)
-	
+
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo("org.openhab.rules", "Scheduling basement floor ON (weekend) for: " + onTime)
 	if (timerBFWeekendOn != null) timerBFWeekendOn.cancel()
@@ -245,7 +245,7 @@ then
 
     hours = (basementFloorWeekendOFF.state as DecimalType).intValue()
 	onTime = now.withTime(hours, 0, 0, 0)
-	
+
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo("org.openhab.rules", "Scheduling basement floor OFF (weekend) for: " + onTime)
 	if (timerBFWeekendOff != null) timerBFWeekendOff.cancel()
@@ -259,7 +259,7 @@ then
 	// basement floor weekdays NIGHT MODE
     hours = (basementFloorWeekdaysOFF.state as DecimalType).intValue()
 	onTime = now.withTime(hours, 0, 0, 0)
-	
+
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo("org.openhab.rules", "Scheduling basement floor OFF for: " + onTime)
 	if (timerBFWeekdaysOff != null) timerBFWeekdaysOff.cancel()
@@ -273,7 +273,7 @@ then
 	// basement floor weekdays DAY MODE
     hours = (basementFloorWeekdaysON.state as DecimalType).intValue()
 	onTime = now.withTime(hours, 0, 0, 0)
-	
+
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo("org.openhab.rules", "Scheduling basement floor ON for: " + onTime)
 	if (timerBFWeekdaysOn != null) timerBFWeekdaysOn.cancel()
@@ -285,7 +285,7 @@ then
 	]
 end
 
-rule "Setting holiday mode" 
+rule "Setting holiday mode"
 when
 	Item holiday_mode received command
 then
@@ -298,43 +298,44 @@ then
 			if (bathroom_gf_floor_power_level.state > 0 && bathroom_gf_floor_power_level.state != floor_holiday_power_level.state)
 				sendCommand(bathroom_gf_floor_power_level, floor_holiday_power_level.state.toString)
 			if (ac_scene.state == 1) {
-				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_set_temp.state) 
+				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_set_temp.state)
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 			} else if(ac_scene.state != 0) { // switch of air conditioner if not heating
 				sendCommand(ac_scene, 0)
 			}
 			if (!bathroom_1st_floor_mode.state.toString.equalsIgnoreCase('OFF'))
 				sendCommand(bathroom_1st_floor_mode, 'ECO') //ECO MODE
-			
+
 			sendCommand(screen_pi_screen, OFF)
 			sendCommand(screen_pi, OFF)
 			sendCommand(roombaDock, OFF)
+			sendCommand(washingmachine, OFF)
 		}
 		case OFF: {
 			if (scene_basement_floor_heating.state > 0)
 				sendCommand(scene_basement_floor_heating, 2)
-			if (hall_gf_floor_power_level.state > 0 && hall_gf_floor_power_level.state != floor_day_power_level.state)	
+			if (hall_gf_floor_power_level.state > 0 && hall_gf_floor_power_level.state != floor_day_power_level.state)
 				sendCommand(hall_gf_floor_power_level, floor_day_power_level.state.toString)
 			if (bathroom_gf_floor_power_level.state > 0 && bathroom_gf_floor_power_level.state != floor_day_power_level.state)
 				sendCommand(bathroom_gf_floor_power_level, floor_day_power_level.state.toString)
 			if (bathroom_1st_floor_mode.state.toString.equalsIgnoreCase('ECO'))
 				sendCommand(bathroom_1st_floor_mode, 'HEATING') //HEATING MODE
 			if (ac_scene.state == 1) {
-				if (ac_heat_temp.state != NULL && ac_heat_temp.state != ac_set_temp.state) 
+				if (ac_heat_temp.state != NULL && ac_heat_temp.state != ac_set_temp.state)
 					sendCommand(ac_set_temp, ac_heat_temp.state.toString)
 			}
-			if (screen_pi.state == ON) 
+			if (screen_pi.state == ON)
 				sendCommand(screen_pi_screen, ON)
-			else 
-				sendNotification("{{stein_email}}",'ScreenPi is switched off...')	
-			sendCommand(roombaDock, ON)			
+			else
+				sendNotification("{{stein_email}}",'ScreenPi is switched off...')
+			sendCommand(roombaDock, ON)
 		}
 	}
-end	
+end
 
 rule "Make sure the z-wave-api has the configuration values"
 	when
-		Time cron "0 0/40 * * * ?" 
+		Time cron "0 0/40 * * * ?"
 	then
 	var String htp = "http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%5B23%5D.Configuration.Get(12)"
 	sendHttpGetRequest(htp)
@@ -349,7 +350,7 @@ rule "Make sure the z-wave-api has the configuration values"
 	htp = "http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%5B28%5D.Configuration.Get(12)"
 	sendHttpGetRequest(htp)
 end
-	
+
 rule "Changing floor mode on 1st floor bathroom"
 when
 	Item bathroom_1st_floor_mode received command
@@ -357,6 +358,4 @@ then
 	var String htp = "http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%5B24%5D.ThermostatMode.Set("+ receivedCommand.toString + ")"
 	logInfo("org.openhab.rules.heating.floorheating", "Sending request to set thermostat to : " + receivedCommand.toString + " , like this: [" + htp + "]")
 	sendHttpGetRequest(htp)
-end 
-
-	
+end

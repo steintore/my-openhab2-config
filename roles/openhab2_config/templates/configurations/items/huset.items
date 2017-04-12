@@ -22,15 +22,12 @@ Group:Number:MIN	BatteryLevel_100	"Batteri [(%d)] %"	<battery>		(All)
 
 /* Heating */
 Group:Switch:OR(ON, OFF) 			Heating 		"All varme [(%d)]" 				<heating> 				(All)
-Switch kontor_panelovn  "Panelovn kontor"	<heating>   (gFirstFloor, Heating, away_group)	{channel="zway:zwayDevice:11fb7777:5:switchPowerOutlet-ZWayVDev_zway_5-0-37"}
 Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, Heating, away_group)	{channel="zway:zwayDevice:11fb7777:10:switchPowerOutlet-ZWayVDev_zway_10-0-37"}
 
 /* Energy/Power measuring */
 Group:Number:SUM					Power			"Nå: [%.1f W]"			<energy>				(All, gPower)
 Group:Number:SUM					PowerHeating	"Varme: [%.1f W]"		<energy>				(All)
 Group:Number:SUM					Energy			"Totalt: [%.1f KWh]"	<energy>				(All)
-Number panelovn_kontor_energy 	"Panelovn totalforbruk: [%.2f KWh]"			<energy> (Energy, gInfluxDB) 										{channel="zway:zwayDevice:11fb7777:5:sensorMultilevel-ZWayVDev_zway_5-0-50-0"}
-Number power_panelovn_kontor  	"Strøm panelovn kontor	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:5:sensorEnergy-ZWayVDev_zway_5-0-49-4"}
 Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:10:sensorMeterW-ZWayVDev_zway_10-0-50-2"}
 Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (Energ, gInfluxDBy) 										{channel="zway:zwayDevice:11fb7777:10:sensorMultilevel-ZWayVDev_zway_10-0-50-0"}
 
@@ -87,12 +84,21 @@ Group HomeAppliances (Appliance)
 Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{channel="zway:zwayDevice:11fb7777:6:sensorEnergy-ZWayVDev_zway_6-0-49-4"}
 Switch freezer		  	"Fryser"								<kitchen>   (gBasement, Control, HomeAppliances)					{channel="zway:zwayDevice:11fb7777:6:switchPowerOutlet-ZWayVDev_zway_6-0-37"}
 Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(Energy, gBasement, gInfluxDB)										{channel="zway:zwayDevice:11fb7777:6:sensorMultilevel-ZWayVDev_zway_6-0-50-0"}
+
 Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{channel="zway:zwayDevice:11fb7777:4:sensorEnergy-ZWayVDev_zway_4-0-49-4"}
 Switch dryer			"Tørketrommel"							<dryer>		(gBasement, HomeAppliances, night_group, away_group, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:4:switchPowerOutlet-ZWayVDev_zway_4-0-37"}
 Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(Energy, gBasement, gInfluxDB)										{channel="zway:zwayDevice:11fb7777:4:sensorMultilevel-ZWayVDev_zway_4-0-50-0"}
+Number dryer_OpState "Tørketrommel [MAP(household-device.map):%s]" <dryer>
+
 Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, Control, HomeAppliances, gInfluxDB)						{channel="zway:zwayDevice:11fb7777:2:switchPowerOutlet-ZWayVDev_zway_2-0-37"}
 Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{channel="zway:zwayDevice:11fb7777:2:sensorEnergy-ZWayVDev_zway_2-0-49-4"}
 Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement, gInfluxDB)										{channel="zway:zwayDevice:11fb7777:2:sensorMultilevel-ZWayVDev_zway_2-0-50-0"}
+
+Number energy_washingmachine 	"Vaskemaskin totalforbruk: [%.2f KWh]"	<energy> 			(Energy, gInfluxDB) 												{channel="zway:zwayDevice:11fb7777:5:sensorMultilevel-ZWayVDev_zway_5-0-50-0"}
+Number power_washingmachine  	"Strøm vaskemaskin	[%.1f W]" 			<energy> 			(gBasement, gPower, HomeAppliances, Power, Power_Chart, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:5:sensorEnergy-ZWayVDev_zway_5-0-49-4"}
+Switch washingmachine  			"Vaskemaskin"							<washingmachine>	(gFirstFloor, HomeAppliances, gInfluxDB)							{channel="zway:zwayDevice:11fb7777:5:switchPowerOutlet-ZWayVDev_zway_5-0-37"}
+Number Washingmachine_OpState 	"Vaskemaskinstatus [MAP(household-device.map):%s]" <washingmachine>
+
 
 /* Garage */
 Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{channel="zway:zwayDevice:11fb7777:7:sensorMotion-ZWayVDev_zway_7-0-48-1"}

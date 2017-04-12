@@ -8,11 +8,11 @@ rule "Got command to send to Roomba"
 	when
 		Item scene_roomba received command
 	then
-		logInfo('org.openhab.rules.roomba', "Item scene_roomba received command: " + receivedCommand + " , currentState is: " + roombaCurrentState)
+		logInfo('org.openhab.rules.roomba', "Item scene_roomba received command: " + receivedCommand + " , currentState is: " + roombaCurrentState.state + " Battery is at: " + roombaBatteryPercentage.state)
 		switch(receivedCommand) {
 			case 0: { // DOCK THIS THING
 				if (roombaCurrentState.state == 1 || roombaCurrentState.state == 4)
-					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=DOCK')	
+					sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=DOCK')
 				var result = sendHttpGetRequest('{{roomba_url}}/roomba.cgi?button=DOCK')
 				logInfo("org.openhab.rules.roomba", "Result from request: " + result)
 				postUpdate(roombaCurrentState, 2)
@@ -44,7 +44,7 @@ rule "Fetching data from Roomba"
 		Item roomba_lan changed
 	then
 	logInfo('org.openhab.rules.roomba', "Item roomba_lan received command: " + roomba_lan.state + " , timer is " + roombaTimer)
-	
+
 	if (roomba_lan.state == ON) {
 		logInfo("org.openhab.rules.roomba", "Roomba ON")
 		if (roombaTimer == null) {
@@ -52,9 +52,9 @@ rule "Fetching data from Roomba"
 			roombaTimer = createTimer(now.plusSeconds(30)) [|
 				logInfo("org.openhab.rules.roomba", "Roomba timer triggered...")
 				var roombaJson = sendHttpGetRequest("{{roomba_url}}/roomba.json")
-				logInfo("org.openhab.rules.roomba", "Got response from Roomba: " + roombaJson)			
-				postUpdate(roombaRaw, roombaJson)		
-				roombaTimer.reschedule(now.plusSeconds(30))
+				logDebug("org.openhab.rules.roomba", "Got response from Roomba: " + roombaJson)
+				postUpdate(roombaRaw, roombaJson)
+				roombaTimer.reschedule(now.plusSeconds(60))
 			]
 		} else if (roombaTimer.running) {
 			roombaTimer.cancel()
@@ -78,23 +78,23 @@ rule "Changing state from Roomba"
 	then
 	logDebug("org.openhab.rules.roomba", "Item roombaRaw changed: " + roombaRaw)
 	postUpdate(roombaLastUpdate, new DateTimeType())
-	
+
 	var String json = (roombaRaw.state as StringType).toString
 	//logInfo("org.openhab.rules.roomba", "Roomba raw data is {}", roombaRaw)
 	var String charge = transform("JSONPATH", "$.response.r18.value", json)
 	var String capacity = transform("JSONPATH", "$.response.r19.value", json)
 	postUpdate(roombaBatteryPercentage, ((new Double(charge) / new Double(capacity))*100))
-	
+
 	postUpdate(roombaCharge, charge)
 	postUpdate(roombaCapacity, capacity)
-	
+
 	postUpdate(roombaChargingStatus, transform("JSONPATH", "$.response.r14.value", json))
 	postUpdate(roombaTemperature, transform("JSONPATH", "$.response.r17.value", json))
 	postUpdate(roombaDistance, transform("JSONPATH", "$.response.r12.value", json))
-	
+
 	postUpdate(roombaVoltage, transform("JSONPATH", "$.response.r15.value", json))
 	postUpdate(roombaCurrent, transform("JSONPATH", "$.response.r16.value", json))
-	
+
 	if ((roombaChargingStatus.state == 0 || roombaChargingStatus.state == 4) && roombaDistance.state != 0 && roombaCurrentState.state != 2) {
 		postUpdate(roombaCurrentState, 4) // It is probably cleaning
 		postUpdate(scene_roomba, 1)
@@ -106,5 +106,5 @@ rule "Changing state from Roomba"
 	} else {
 		postUpdate(roombaCurrentState, 3) // Unknown state
 	}
-	
+
 end
