@@ -11,7 +11,7 @@ sitemap default label="Huset"
 		Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
 		Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
 		Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
-		Image url="{{garagepi_screenshot_url}}" refresh=20000 visibility=[garage_door_1==ON, garage_door_2==ON]
+		Image url="{{garagepi_screenshot_url}}" refresh=10000 visibility=[garage_door_1==ON, garage_door_2==ON]
 	}
 
     Frame label="Huset" {
@@ -177,10 +177,10 @@ sitemap default label="Huset"
 			}
 			Frame label="Tempdetaljer" {
 				Switch item=Temperature_Basement_Chart_Period label="Periode" mappings=[0="Timer", 1="Dag", 2="Uke", 3="2 uker"]
-                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=12h" refresh=90000 visibility=[Temperature_Basement_Chart_Period==0, Temperature_Basement_Chart_Period=="NULL"]
-                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=D" refresh=90000 visibility=[Temperature_Basement_Chart_Period==1]
-                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==2]
-                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,tv_room_basement_floor_temp,hall_basement_floor_temp,laundry_basement_floor_temp&period=2W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==3]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,alarm_temperature_laundry&period=12h" refresh=90000 visibility=[Temperature_Basement_Chart_Period==0, Temperature_Basement_Chart_Period=="NULL"]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,alarm_temperature_laundry&period=D" refresh=90000 visibility=[Temperature_Basement_Chart_Period==1]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,alarm_temperature_laundry&period=W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==2]
+                Image url="http://localhost:8080/rrdchart.png?items=BasementTemperature,alarm_temperature_laundry&period=2W" refresh=90000 visibility=[Temperature_Basement_Chart_Period==3]
 			}
 
     	}
@@ -341,24 +341,19 @@ sitemap default label="Huset"
 				Setpoint item=basementFloorWeekendON minValue=0 maxValue=23 step=1
 				Setpoint item=basementFloorWeekendOFF minValue=0 maxValue=23 step=1
 
-				Text item=laundry_basement_floor_temp
 				Text item=laundry_basement_floor_mode
 				Setpoint item=laundry_basement_floor_power_level minValue=0 maxValue=10 step=1
 
-				Text item=hall_basement_floor_temp
 				Text item=hall_basement_floor_mode
 				Setpoint item=hall_basement_floor_power_level minValue=0 maxValue=10 step=1
 
-				Text item=tv_room_basement_floor_temp
 				Text item=tv_room_basement_floor_mode
 				Setpoint item=tv_room_basement_floor_power_level minValue=0 maxValue=10 step=1
 			}
 			Frame label="Første etasje" {
-				Text item=hall_gf_floor_temp
 				Text item=hall_gf_floor_mode
 				Setpoint item=hall_gf_floor_power_level minValue=0 maxValue=10 step=1
 
-				Text item=bathroom_gf_floor_temp
 				Text item=bathroom_gf_floor_mode
 				Setpoint item=bathroom_gf_floor_power_level minValue=0 maxValue=10 step=1
 			}
