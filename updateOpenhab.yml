@@ -2,6 +2,6 @@
   user: "{{username}}"
   become: false
   roles:
-    - openhab2_stop
+    #- openhab2_stop
     - openhab2_config
-    - openhab2_start
+    #- openhab2_start

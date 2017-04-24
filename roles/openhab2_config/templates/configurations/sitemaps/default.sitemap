@@ -45,6 +45,17 @@ sitemap default label="Huset"
 					Text item=ac_error
 				}
 			}
+			Frame label="Bad" {
+    			Text item=BathroomGFTemperature
+    			Text item=BathroomGFHumidity
+    			Text item=BathroomGFTemperature_LastUpdate
+    			Text item=bathroom_gf_floor_mode
+				Setpoint item=bathroom_gf_floor_power_level minValue=0 maxValue=10 step=1
+				Setpoint item=BathroomGFStandbyPowerLevel minValue=0 maxValue=10 step=1
+				Setpoint item=BathroomGFTargetTemperature minValue=16 maxValue=28 step=1 icon="temperature"
+				Setpoint item=BathroomGFHeatedFrom minValue=6 maxValue=23 step=1 icon="clock"
+				Setpoint item=BathroomGFHeatedTo minValue=6 maxValue=23 step=1 icon="clock"
+    		}
 			Frame label="Rengjøring" {
 				Switch item=scene_roomba mappings=[0='Dock', 1='Clean', 2='Spot'] icon="sofa"
 				Text item=roombaCurrentState label="Roomba status: [MAP(roombaStatus.map):%s]"  icon="sofa"
@@ -256,7 +267,9 @@ sitemap default label="Huset"
              }
          }
          Text item=Sunrise_Time
-		 Text item=Sunset_Time
+		 	 	 Text item=Sunset_Time
+				 Text item=Moon_Phase
+				 Text item=Season
          Webview url="http://localhost:8080/weather?locationId=home&layout=weather&iconset=colorful" height=7
 			}
 		}

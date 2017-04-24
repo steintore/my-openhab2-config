@@ -73,11 +73,11 @@ rule "A change of mode"
 				sendCommand(scene_light_hall, 2) // NIGHT
 				sendCommand(scene_light_basement, 0)
 
-				if (dryer.state == ON && new Double(power_dryer.state.toString()) > 10) {
-					postUpdate(push_message_text, "Husk tørketrommelen før du legger deg")
+				if (Washingmachine_OpState.state == 2) {
+					postUpdate(push_message_text, "Tørketrommelen tørker, strømmen blir skrudd av når den er ferdig")
 				}
 				if (Washingmachine_OpState.state == 2) {
-					postUpdate(push_message_text, "Vaskemaskinen er ikke ferdig, så vi skrur av strømmen når den er ferdig")
+					postUpdate(push_message_text, "Vaskemaskinen vasker, strømmen blir skrudd av når den er ferdig")
 				}
 
 				if (tv_power.state == ON) {
@@ -107,10 +107,6 @@ rule "A change of mode"
 				logInfo('org.openhab.rules.modes', 'AWAY MODE')
 				var t = ""
 				stored_states = storeStates(away_group)
-				if (dryer.state == ON && new Double(power_dryer.state.toString()) > 10) {
-					t = " Tørketrommelen ble skrudd av."
-					sendCommand(dryer, OFF)
-				}
 				if (tv_power.state == ON) {
 					t = t + " TV-en ble skrudd av."
 					sendCommand(tv_power, OFF)
@@ -123,7 +119,10 @@ rule "A change of mode"
 				}
 
 				if (Washingmachine_OpState.state == 2) {
-					postUpdate(push_message_text, "Vaskemaskinen er ikke ferdig, så vi skrur av strømmen når den er ferdig")
+					postUpdate(push_message_text, "Tørketrommelen tørker, strømmen blir skrudd av når den er ferdig")
+				}
+				if (Washingmachine_OpState.state == 2) {
+					postUpdate(push_message_text, "Vaskemaskinen vasker, strømmen blir skrudd av når den er ferdig")
 				}
 
 				sendCommand(guest_home, OFF)
@@ -265,7 +264,7 @@ rule "Switch to night/day mode when button is pressed"
 		Item left_double_switch changed
 	then
 		logInfo('org.openhab.rules.modes', "Left double switch has been pressed, the state is now: " + left_double_switch.state)
-		if (left_double_switch.state != UNDEF) {
+		if (left_double_switch.state != UNDEF && left_double_switch.state != null && (left_double_switch.state == ON || left_double_switch.state == OFF)) {
 			switch (left_double_switch.state as OnOffType) {
 				case ON: { // DAY MODE
 					if(mode.state != 0) {

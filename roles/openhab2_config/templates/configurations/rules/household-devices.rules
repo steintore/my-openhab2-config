@@ -1,11 +1,12 @@
 import java.util.concurrent.locks.ReentrantLock
+import org.eclipse.smarthome.model.script.actions.Timer
 
 val Number MODE_OFF = 0
 val Number MODE_STANDBY = 1
 val Number MODE_ACTIVE = 2
 val Number MODE_FINISHED = 3
-var java.util.concurrent.locks.ReentrantLock finishLock  = new java.util.concurrent.locks.ReentrantLock()
-var java.util.concurrent.locks.ReentrantLock finishLockDryer  = new java.util.concurrent.locks.ReentrantLock()
+var ReentrantLock finishLock  = new ReentrantLock()
+var ReentrantLock finishLockDryer  = new ReentrantLock()
 
 var Timer timerDryer = null
 
@@ -13,17 +14,18 @@ rule "Washingmachine Consumption State Machine (Extended)"
 when
     Item power_washingmachine changed
 then
-    if (power_washingmachine.state <= 0.5)
+  logInfo('org.openhab.rules.household', 'Washing machine changed to: ' + power_washingmachine.state)
+    if (power_washingmachine.state < 0.3)
       Washingmachine_OpState.postUpdate(MODE_OFF)
-    else if (power_washingmachine.state > 10)
+    else if (power_washingmachine.state > 0.5)
       Washingmachine_OpState.postUpdate(MODE_ACTIVE)
-    else if (power_washingmachine.state < 4.5) {
+    else if (power_washingmachine.state <= 0.5) {
         if (Washingmachine_OpState.state == MODE_OFF) Washingmachine_OpState.postUpdate(MODE_STANDBY)
         else if (Washingmachine_OpState.state == MODE_ACTIVE) {
             finishLock.lock()
             try {
                 Thread::sleep(10000) // Debounce for 10 seconds
-                if (power_washingmachine.state < 4.5) Washingmachine_OpState.postUpdate(MODE_FINISHED)
+                if (power_washingmachine.state <= 0.5) Washingmachine_OpState.postUpdate(MODE_FINISHED)
             } finally {
                 finishLock.unlock()
             }
@@ -37,8 +39,8 @@ when
 then
     if (Washingmachine_OpState.state == MODE_FINISHED) {
         postUpdate(push_message_text, "Vaskemaskinen er ferdig!")
-        if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
-          sendCommand(washingmachine, OFF)
+        //if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
+          //sendCommand(washingmachine, OFF)
     }
 end
 
@@ -62,6 +64,17 @@ then
                 finishLockDryer.unlock()
             }
         }
+    }
+end
+
+rule "Dryer Notifications"
+when
+    Item dryer_OpState changed
+then
+    if (dryer_OpState.state == MODE_FINISHED) {
+        postUpdate(push_message_text, "Tørketrommelen er ferdig!")
+        //if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
+          //sendCommand(dryer, OFF)
     }
 end
 

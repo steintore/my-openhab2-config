@@ -1,12 +1,13 @@
+import org.eclipse.smarthome.core.library.types.DateTimeType
+import org.eclipse.smarthome.model.script.actions.Timer
 import org.joda.time.DateTime
-import jdk.nashorn.internal.parser.JSONParser
 
 var Timer checkAlarmTimer = null
 
 rule "Set alarm climate items"
-	when 
+	when
 		Time cron "0 0 0/2 1/1 * ? *"
-		or 
+		or
 		Item alarm_climate received update
 then
 		var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm-climate.js", 5000)
@@ -14,33 +15,33 @@ then
         	logInfo("org.openhab.rules.alarm", "Got response from alarm-climate: ["+ json + "]")
         		try {
         			var String climate = json.replace('&#176;', '')
-	
+
 					// TEMPERATURE
 	                var String temp_string = ''
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                postUpdate(alarm_temperature_hall_gf, temp_string)
-	
+
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                postUpdate(alarm_temperature_hall_basement, temp_string)
-	
+
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                postUpdate(alarm_temperature_hall_1st, temp_string)
-	
+
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                postUpdate(alarm_temperature_laundry, temp_string)
-	
+
 					temp_string = transform("JSONPATH", "$.[?(@.location=='KJØKKEN')].temperature", climate).replace('[\"', '').replace('\"]','').replace(',','.')
                 	postUpdate(alarm_temperature_kitchen, temp_string)
-	
+
 	                // HUMIDITY
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                var String[] humidity = temp_string.split('%')
 	                postUpdate(alarm_humidity_hall_gf, humidity.get(0).replace(',', '.'))
-	
+
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='GANG NEDE')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                humidity = temp_string.split('%')
 	                postUpdate(alarm_humidity_hall_basement, humidity.get(0).replace(',', '.'))
-	
+
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='Gang oppe')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                humidity = temp_string.split('%')
 	                postUpdate(alarm_humidity_hall_1st, humidity.get(0).replace(',', '.'))
@@ -57,39 +58,40 @@ then
         }
 end
 
-rule "Check alarm state" 
+rule "Check alarm state"
 when
 	Item alarm_check received update
 then
 	logInfo("org.openhab.rules.alarm", "Item alarm_check received update: " + alarm_check)
 	if (checkAlarmTimer == null) {
 		checkAlarmTimer = createTimer(now.plusSeconds(15)) [|
-			logInfo("org.openhab.rules.alarm", "Timer [checkAlarmTimer] has timed out. Checking status from Alarm")
-            var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
-            logInfo("org.openhab.rules.alarm", "JSON is [" + json + "]")
-            var String alarmstate = null
-            if (json != null) {
-				alarmstate = transform("JSONPATH", "$.status", json)
-				logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
-			}
-			if (alarmstate == null || json == null) {
-				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
-				checkAlarmTimer.reschedule(now.plusSeconds(30))
-			} else {
-				if(checkAlarmTimer != null) {
-					if(checkAlarmTimer.running) {
-						checkAlarmTimer.cancel()
-					}
-					checkAlarmTimer = null
+				logInfo("org.openhab.rules.alarm", "Timer [checkAlarmTimer] has timed out. Checking status from Alarm")
+        var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
+        logInfo("org.openhab.rules.alarm", "JSON is [" + json + "]")
+        var String alarmstate = null
+        if (json != null && json != '') {
+					alarmstate = transform("JSONPATH", "$.status", json)
+					logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
 				}
+			  if (alarmstate == null || json == null) {
+				  logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
+				  if (checkAlarmTimer != null) 
+				  	checkAlarmTimer.reschedule(now.plusSeconds(30))
+			  } else {
+				  if(checkAlarmTimer != null) {
+					  if(checkAlarmTimer.running) {
+						  checkAlarmTimer.cancel()
+					  }
+					  checkAlarmTimer = null
+				  }
 				sendCommand(alarm_alarm, alarmstate)
 			}
-		]	
+		]
 	}
 end
 
 rule "Arming, disarming alarm"
-when 	
+when
 		Item alarm_alarm received command
 then
 	logInfo("org.openhab.rules.alarm", "[Item alarm_alarm received command] Alarm state changed to: " + alarm_alarm.state.toString())
@@ -98,24 +100,24 @@ then
 		postUpdate(alarm_check, ""+ now)
 	} else {
 		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
-		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome") // HOME 
+		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome") // HOME
 		{
 			var DateTime eveningTime = now.withTime(21, 0, 0, 0)
 			var DateTime nightTime = now.withTime(1,0,0,0)
 			var DateTime dayTime = now.withTime(5,0,0,0)
-			
+
 			if(nightTime.afterNow && dayTime.beforeNow) {
 				sendCommand(mode, 0) // HOME
 			} else if (nightTime.beforeNow && dayTime.afterNow) {
 				sendCommand(mode, 1) // NIGHT
 			} else if (nightTime.afterNow || eveningTime.beforeNow) {
 				if (mode.state != 1)
-					sendCommand(mode, 3) // EVENING 
+					sendCommand(mode, 3) // EVENING
 			} else {
 				sendCommand(mode, 0) // HOME
 			}
 		} else if (alarm_alarm.state == "armedaway" || alarm_alarm.state == "armed") // AWAY
-			sendCommand(mode, 2) 
+			sendCommand(mode, 2)
 		else
 			sendNotification("{{stein_email}}","Ukjent alarmstatus: " + alarm_alarm.state.toString)
 	}
@@ -155,7 +157,7 @@ rule "Lock or unlock the door"
 			var result = executeCommandLine(cmd + " unlock", 5000)
 			logInfo("org.openhab.rules.alarm", "result from unlocking the door is: " + result)
 		}
-	}	
+	}
 end
 
 
@@ -173,4 +175,3 @@ rule "Check the status off the door lock"
 		postUpdate(alarm_door_method, transform("JSONPATH", "$..method", result))
 	}
 end
-

@@ -67,17 +67,29 @@ Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperatur
 Number Outdoor_Humidex						"Humidex [%.1f]"					(Weather, gInfluxDB)
 Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
 Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, gHumidity, Weather, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
-DateTime OutdoorTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
+DateTime OutdoorTemperature_LastUpdate		"Sist oppdatert [%1$ta %1$tR]"		<clock> (gInfluxDB)
+
 Number OfficeTemperature					"Temp kontor [%.1f °C]" 			<temperature> 	(gTemperature, Temperature,gFirstFloor, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:temperature" }
 Number OfficeHumidity 						"Luftfuktighet kontor [%.1f %%]"	<temperature> 	(gFirstFloor, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
-DateTime OfficeTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
-Number BasementTemperature					"Kjellerstue [%.1f °C]"					<temperature>	(gTemperature, Temperature,gBasement, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
+DateTime OfficeTemperature_LastUpdate		"Sist oppdatert [%1$ta %1$tR]"		<clock> (gInfluxDB)
+
+Number BasementTemperature					"Kjellerstue [%.1f °C]"				<temperature>	(gTemperature, Temperature,gBasement, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:temperature" }
 Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
-DateTime BasementTemperature_LastUpdate		"Last Update [%1$ta %1$tR]"			<clock>
+DateTime BasementTemperature_LastUpdate		"Sist oppdatert [%1$ta %1$tR]"		<clock> (gInfluxDB)
+
 Number Temperature_Basement_Chart_Period 	"Periode"
+
 Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
 Number LivingRoomHumidity					"Luftfuktighet stue [%.1f %%]" 		<temperature>	(gGF, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:humidity" }
-DateTime LivingRoomTemperature_LastUpdate	"Last Update [%1$ta %1$tR]"			<clock>
+DateTime LivingRoomTemperature_LastUpdate	"Sist oppdatert [%1$ta %1$tR]"		<clock> (gInfluxDB)
+
+Number BathroomGFTemperature				"Temp bad [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF, gInfluxDB)  {channel="rfxcom:temperaturehumidity:usbrfxcom:bathroom_1st_temperature:temperature" }
+Number BathroomGFHumidity					"Luftfuktighet bad [%.1f %%]" 		<temperature>	(gGF, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:bathroom_1st_temperature:humidity" }
+DateTime BathroomGFTemperature_LastUpdate	"Sist oppdatert [%1$ta %1$tR]"		<clock> 		(gInfluxDB)
+Number BathroomGFHeatedFrom 				"Varmt fra kl [%d]" 				<clock> 		(gGF, gInfluxDB)
+Number BathroomGFHeatedTo 					"Varmt til kl [%d]" 				<clock> 		(gGF, gInfluxDB)
+Number BathroomGFTargetTemperature 			"Ønsket temp [%.1f °C]"				<temperature>   (gGF, gInfluxDB)
+Number BathroomGFStandbyPowerLevel			"Regulator av [%d]" 				<energy> 		(gGF, gInfluxDB)
 
 /* Home appliances */
 Group HomeAppliances (Appliance)
@@ -204,7 +216,7 @@ DateTime Moonset_Time   "Månenedgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(A
 DateTime Moon_Full      "Neste fullmåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"<moon>	(Astro) { channel="astro:moon:home:phase#full" }
 DateTime Moon_New     	"Neste nymåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"  <moon>	(Astro) { channel="astro:moon:home:phase#new" }
 String Moon_Phase	"Månefase"					<moon>  (Astro) { channel="astro:moon:home:phase#name" }
-String Season		"Sesong"						(Astro) { channel="astro:sun:home:seasin#name" }
+String Season		"Sesong"						(Astro) { channel="astro:sun:home:season#name" }
 
 
 /* Samsung AC */
