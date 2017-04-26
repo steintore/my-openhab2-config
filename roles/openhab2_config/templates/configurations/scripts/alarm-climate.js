@@ -1,5 +1,5 @@
 var config = {
-username: '{{alarm_username}}',
+username: '{{alarm_login}}',
 password: '{{alarm_password}}'
 };
 

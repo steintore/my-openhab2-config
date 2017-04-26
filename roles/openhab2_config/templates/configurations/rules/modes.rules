@@ -101,6 +101,7 @@ rule "A change of mode"
 				postUpdate(motion_living_room, OFF)
 				sendCommand(alarm_door_lock, ON)
 				sendCommand(screen_pi_reboot, ON)
+				sendCommand(leaf_request_update, OFF)
 			}
 
 			case 2: { //AWAY

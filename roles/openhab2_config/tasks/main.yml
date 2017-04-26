@@ -67,9 +67,9 @@
         - transform/roomba.map
         - transform/roombaStatus.map
         - transform/household-device.map
+        - transform/floorHeating.map
         - services/samsungac.cfg
         - services/http.cfg
-        - services/pushover.cfg
         - services/addons.cfg
         - services/influxdb.cfg
         - services/plex.cfg

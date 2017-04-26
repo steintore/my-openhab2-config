@@ -77,6 +77,9 @@ Number BasementTemperature					"Kjellerstue [%.1f °C]"				<temperature>	(gTempe
 Number BasementHumidity 					"Luftfuktighet kjeller [%.1f %%]"	<temperature>	(gBasement, gHumidity, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:humidity" }
 DateTime BasementTemperature_LastUpdate		"Sist oppdatert [%1$ta %1$tR]"		<clock> (gInfluxDB)
 
+Number BasementStorageTemperature			"Kjellerbod [%.1f °C]"				<temperature>	(gTemperature, Temperature,gBasement, gInfluxDB) {channel="rfxcom:temperature:usbrfxcom:basement_storage_temperature:temperature" }
+Number BasementFreezerTemperature			"Fryser [%.1f °C]"					<temperature> 	(gTemperature, Temperature,gBasement, gInfluxDB) {channel="rfxcom:temperature:usbrfxcom:basement_freezer_temperature:temperature" }
+
 Number Temperature_Basement_Chart_Period 	"Periode"
 
 Number LivingRoomTemperature    			"Temp stue [%.1f °C]"				<temperature>   (gTemperature, Temperature,gGF, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:temperature" }
@@ -89,7 +92,10 @@ DateTime BathroomGFTemperature_LastUpdate	"Sist oppdatert [%1$ta %1$tR]"		<clock
 Number BathroomGFHeatedFrom 				"Varmt fra kl [%d]" 				<clock> 		(gGF, gInfluxDB)
 Number BathroomGFHeatedTo 					"Varmt til kl [%d]" 				<clock> 		(gGF, gInfluxDB)
 Number BathroomGFTargetTemperature 			"Ønsket temp [%.1f °C]"				<temperature>   (gGF, gInfluxDB)
-Number BathroomGFStandbyPowerLevel			"Regulator av [%d]" 				<energy> 		(gGF, gInfluxDB)
+Number BathroomGFStandbyPowerLevel			"Reg standby [%d]" 				<energy> 		(gGF, gInfluxDB)
+Number BathroomGF_OpState					"Varmestatus [MAP(floorHeating.map):%s]" <heater>	(gGF)
+Number BathroomGF_OpState_previous
+String BathroomGF_recalc
 
 /* Home appliances */
 Group HomeAppliances (Appliance)
@@ -108,7 +114,7 @@ Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, g
 
 Number energy_washingmachine 	"Vaskemaskin totalforbruk: [%.2f KWh]"	<energy> 			(Energy, gInfluxDB) 												{channel="zway:zwayDevice:11fb7777:5:sensorMultilevel-ZWayVDev_zway_5-0-50-0"}
 Number power_washingmachine  	"Strøm vaskemaskin	[%.1f W]" 			<energy> 			(gBasement, gPower, HomeAppliances, Power, Power_Chart, gInfluxDB) 	{channel="zway:zwayDevice:11fb7777:5:sensorEnergy-ZWayVDev_zway_5-0-49-4"}
-Switch washingmachine  			"Vaskemaskin"							<washingmachine>	(gFirstFloor, HomeAppliances, gInfluxDB)							{channel="zway:zwayDevice:11fb7777:5:switchPowerOutlet-ZWayVDev_zway_5-0-37"}
+Switch washingmachine  			"Vaskemaskin"							<washingmachine>	(gBasement, HomeAppliances, gInfluxDB)							{channel="zway:zwayDevice:11fb7777:5:switchPowerOutlet-ZWayVDev_zway_5-0-37"}
 Number Washingmachine_OpState 	"Vaskemaskinstatus [MAP(household-device.map):%s]" <washingmachine>
 
 
@@ -124,6 +130,7 @@ Switch garagepi_motion 			"Bevegelse GPI"
 Switch garagecam_motion 		"Bevegelse CAM"
 Number scene_garage_1			"LEAF"
 Number scene_garage_2			"MONDEO"
+String garage_stream_link "{{garagepi_stream_url}}"
 
 /* Switch */
 Switch left_double_switch 	"Venstre knapp" <network> (gGF) {channel="rfxcom:lighting2:usbrfxcom:bedroom_switch_left:command" }
@@ -134,6 +141,8 @@ Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, Bat
 Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, BatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:batteryLevel" }
 Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, BatteryLevel_10) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:batteryLevel" }
 Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:batteryLevel" }
+Number battery_freezer_temp		"Fryser [%f]"		<battery> (gBattery, gBasement, BatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_freezer_temperature:batteryLevel" }
+Number battery_storage_temp		"Bod [%f]"			<battery> (gBattery, gBasement, BatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_storage_temperature:batteryLevel" }
 
 /* Text values */
 String push_message_text "Default message"
@@ -346,7 +355,7 @@ Switch DenonInputAux1       "Input PC"            {denon="denon#SIAUX1"}
 /* Virtual switch to make us turn on the living room lights when we first come down in the morning */
 Switch justMorning
 
-String zWaveStatus "Z-Wave server: [%s]" {http="<[http://{{zwave_ip}}:8083/ZAutomation/api/v1/status:60000:JSONPATH($.message)]"}
+String zWaveStatus "Z-Wave server: [%s]" (gBasement) {http="<[http://{{zwave_ip}}:8083/ZAutomation/api/v1/status:60000:JSONPATH($.message)]"}
 
 
 String habPanel_hallway "Hallway"

@@ -55,6 +55,7 @@ sitemap default label="Huset"
 				Setpoint item=BathroomGFTargetTemperature minValue=16 maxValue=28 step=1 icon="temperature"
 				Setpoint item=BathroomGFHeatedFrom minValue=6 maxValue=23 step=1 icon="clock"
 				Setpoint item=BathroomGFHeatedTo minValue=6 maxValue=23 step=1 icon="clock"
+				Text item=BathroomGF_OpState
     		}
 			Frame label="Rengjøring" {
 				Switch item=scene_roomba mappings=[0='Dock', 1='Clean', 2='Spot'] icon="sofa"
@@ -172,16 +173,18 @@ sitemap default label="Huset"
     			Text item=alarm_temperature_laundry
     			Text item=alarm_humidity_laundry
 
-					Text item=dryer_OpState
-				  Switch item=dryer
-					Text item=power_dryer visibility=[dryer==ON]
+				Text item=dryer_OpState
+				Switch item=dryer
+				Text item=power_dryer visibility=[dryer==ON]
 
-					Text item=Washingmachine_OpState
-					Switch item=washingmachine
-					Text item=power_washingmachine
+				Text item=Washingmachine_OpState
+				Switch item=washingmachine
+				Text item=power_washingmachine
 
-				  Text item=power_freezer
-				  Text item=power_fridge
+				Text item=power_freezer
+				Text item=BasementFreezerTemperature
+				Text item=power_fridge
+				Text item=BasementStorageTemperature
 			}
 			Frame label="Alt" {
 				Group item=gBasement
@@ -208,6 +211,7 @@ sitemap default label="Huset"
 					Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
 					Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne", 2="10"] icon="garagedoor"
 					Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]
+					Text item=garage_stream_link
 					Image url="{{garagepi_screenshot_url}}" refresh=5000
 				}
 				Text label="Leaf" {
@@ -286,6 +290,7 @@ sitemap default label="Huset"
 	}
 
 	Frame label="Status" {
+		Text item=zWaveStatus
 		Text item=smappee_power icon="energy" {
 			Frame {
 				Group item=Energy

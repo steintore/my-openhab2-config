@@ -11,6 +11,9 @@ Bridge rfxcom:bridge:usbrfxcom [ serialPort="/dev/{{rfxcom_tty}}" ] {
 	Thing temperaturehumidity   basement_temperature		[deviceId="{{rfxcom_basement}}", subType="TH1"]
 	Thing temperaturehumidity   bathroom_1st_temperature	[deviceId="{{rfxcom_bathroom_1st}}", subType="TH1"]
 
+	Thing temperature				  basement_storage_temperature	[deviceId="{{rfxcom_basement_storage}}", subType="TEMP7"]
+	Thing temperature   			basement_freezer_temperature	[deviceId="{{rfxcom_basement_freezer}}", subType="TEMP7"]
+
 	Thing lighting2				bedroom_switch_left		[deviceId="{{rfxcom_bedroom_switch_left}}", subType="AC"]
 	Thing lighting2				bedroom_switch_right		[deviceId="{{rfxcom_bedroom_switch_right}}", subType="AC"]
 

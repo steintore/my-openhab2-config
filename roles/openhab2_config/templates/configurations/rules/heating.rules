@@ -1,3 +1,4 @@
+import org.eclipse.smarthome.core.library.types.DateTimeType
 import org.eclipse.smarthome.core.library.types.DecimalType
 import org.eclipse.smarthome.model.script.actions.Timer
 import org.joda.time.DateTime
@@ -354,28 +355,100 @@ then
 	if (timerBathroomGFOn != null) timerBathroomGFOn.cancel()
 	timerBathroomGFOn = createTimer(onTime) [|
 	  	logInfo("org.openhab.rules.heating", "timerBathroomGFOn is doing nothing..")
+	  	sendNotification("{{stein_email}}","BathroomGF should be " + BathroomGFTargetTemperature.state + ", it is:" + BathroomGFTemperature.state)
 		// If not holiday_mode and heating is switched on and temperature is lower than target temperature
 	]
 	
 	var int hoursOff = (BathroomGFHeatedTo.state as DecimalType).intValue()
 	var DateTime offTime = now.withTime(hoursOff, 0, 0, 0)
 
-	if (offTime.beforeNow) onTime = offTime.plusDays(1)
+	if (offTime.beforeNow) {
+		sendCommand(BathroomGF_OpState, 1) //STANDBY
+		onTime = offTime.plusDays(1)
+	} 
 	logInfo("org.openhab.rules", "BathroomGF Scheduling floor OFF for: " + offTime)
 	if (timerBathroomGFOff != null) timerBathroomGFOff.cancel()
 	timerBathroomGFOff = createTimer(onTime) [|
 	  	logInfo("org.openhab.rules.heating", "timerBathroomGFOff is turning heating off")
-		sendCommand(bathroom_gf_floor_power_level, BathroomGFStandbyPowerLevel.state as Number) 
+		sendCommand(BathroomGF_OpState, 1) //STANDBY 
 	]
+	
+	postUpdate(BathroomGF_recalc, "" + now)
 end
 
-rule "Bathroom ground floor temperature changed" 
+rule "Bathroom ground floor heating mode"
 when
-	Item BathroomGFTemperature changed or
-	Item BathroomGFTemperature received update
+	Item BathroomGF_OpState received command
+then
+	if (BathroomGFStandbyPowerLevel.state ==  UNDEF || BathroomGFStandbyPowerLevel == null) {
+		postUpdate(BathroomGFStandbyPowerLevel, 2)
+		logInfo("org.openhab.rules.heating", "BathroomGF Standby Power level was not set, set to 1")
+	}
+	
+	if (BathroomGF_OpState_previous.state != BathroomGF_OpState.state) {
+		logInfo("org.openhab.rules.heating", "BathroomGF_OpState received command " + receivedCommand)
+		switch (receivedCommand) {
+			case 0: {
+				sendCommand(bathroom_gf_floor_power_level, 0)
+			}
+			case 1: {
+				sendCommand(bathroom_gf_floor_power_level, BathroomGFStandbyPowerLevel.state as Number)
+			}
+			case 2: {
+				sendCommand(bathroom_gf_floor_power_level, 9)
+			}
+		}
+		postUpdate(BathroomGF_OpState_previous, BathroomGF_OpState.state)
+	}
+end
+
+rule "Recheck when something changes" 
+when
+	Item BathroomGFStandbyPowerLevel changed or
+	Item BathroomGFTargetTemperature changed
+then
+	logInfo("org.openhab.rules.heating", "BathroomGF recalc because standby power or target temp has changed")
+	postUpdate(BathroomGF_recalc, "" + now)
+end
+
+rule "Bathroom ground floor temperature changed"
+when
+	Item BathroomGFTemperature changed
 then
 	logInfo("org.openhab.rules.heating", "BathroomGF ground floor temperature changed to: " + BathroomGFTemperature.state)
+	postUpdate(BathroomGF_recalc, "" + now)
+end
+
+rule "Bathroom ground floor temperature recevied update" 
+when
+	Item BathroomGFTemperature received update
+then
+	logInfo("org.openhab.rules.heating", "BathroomGF ground floor temperature received update: " + BathroomGFTemperature.state)
 	postUpdate(BathroomGFTemperature_LastUpdate, new DateTimeType())
+	
+	// A timer to make sure that we turn of the heating if no temperature update in the last 2 hours
+	if (timerBathroomGFHeating == null) {
+		timerBathroomGFHeating = createTimer(now.plusHours(2)) [|
+	  		logInfo("org.openhab.rules.heating", "BathroomGF timer is executed, " + now.getDayOfWeek)
+	  		sendCommand(BathroomGF_OpState, 1) //STANDBY
+	  		sendNotification("{{stein_email}}","No temperature update in the last two hours, so we've stopped heating the ground floor bathroom")
+		]
+		logInfo("org.openhab.rules.heating", "BathroomGF  timer created")		
+	} else {
+		if (timerBathroomGFHeating.isRunning()) {
+			timerBathroomGFHeating.cancel()
+		}
+		timerBathroomGFHeating.reschedule(now.plusHours(2))
+		logInfo("org.openhab.rules.heating", "BathroomGF timer is set to now plus 2 hours")
+	}
+end
+
+rule "BathroomGF calculate what to do" 
+	when
+		Item BathroomGF_recalc received update
+then
+	logInfo('org.openhab.rules.heating', "BathroomGF_recalc received update.. checking")
+	
 	if (BathroomGFHeatedFrom.state == UNDEF || BathroomGFHeatedFrom.state == null) {
 		postUpdate(BathroomGFHeatedFrom, 16)
 		logInfo("org.openhab.rules.heating", "BathroomGF Heated from was not defined, set to 16")
@@ -388,49 +461,31 @@ then
 		postUpdate(BathroomGFTargetTemperature, 25)
 		logInfo("org.openhab.rules.heating", "BathroomGF target temp was not set, changed to 25")
 	}
-	if (BathroomGFStandbyPowerLevel.state ==  UNDEF || BathroomGFStandbyPowerLevel == null) {
-		postUpdate(BathroomGFStandbyPowerLevel, 2)
-		logInfo("org.openhab.rules.heating", "BathroomGF Standby Power level was not set, set to 1")
-	}
 		
 	val heatingStart = now.toLocalDate.toDateTimeAtStartOfDay.withHourOfDay((BathroomGFHeatedFrom.state as DecimalType).intValue())
 	val heatingEnd = now.toLocalDate.toDateTimeAtStartOfDay.withHourOfDay((BathroomGFHeatedTo.state as DecimalType).intValue())
 	val tempDiff = (BathroomGFTemperature.state as DecimalType).intValue() - (BathroomGFTargetTemperature.state as DecimalType).intValue()
 	logInfo("org.openhab.rules.heating", "BathroomGF tempDiff is: " + tempDiff)
 	
-	if (now.isAfter(heatingEnd) && bathroom_gf_floor_power_level.state != BathroomGFStandbyPowerLevel.state) {
-		sendCommand(bathroom_gf_floor_power_level, BathroomGFStandbyPowerLevel.state as Number)
-	} else if (now.isAfter(heatingStart) && !now.isBefore(heatingEnd) && tempDiff < 0) {
+	if (BathroomGF_OpState.state == 0) {
+		// DO NOTHING...
+	} else if (tempDiff >= 0 || now.isAfter(heatingEnd)) { // It is warm enough...or we do not need to heat any more
+		sendCommand(BathroomGF_OpState, 1) //STANDBY
+	} else if (now.isAfter(heatingStart) && now.isBefore(heatingEnd) && tempDiff < 0) {
 		logInfo("org.openhab.rules.heating", "BathroomGF Heating is ongoing and temp is lower than target temp")
-		if (BathroomGFStandbyPowerLevel.state != 9 && (!now.plusMinutes(30).isAfter(heatingEnd))) {
+		if (!now.plusMinutes(30).isAfter(heatingEnd)) {
 			logInfo("org.openhab.rules.heating", "BathroomGF More than 30 minutes to heating turns of so we will change power level")
-			sendCommand(bathroom_gf_floor_power_level, 9)
+			sendCommand(BathroomGF_OpState, 2) //HEATING
 		}
-	} else if(now.isBefore(heatingStart) && tempDiff < 0 && bathroom_gf_floor_power_level.state != 9) {
+	} else if(now.isBefore(heatingStart) && tempDiff < 0) {
 		var Duration d = new Duration(now, heatingStart)
 		var untilStart = d.standardHours
-		logInfo("org.openhab.rules.heating", "BathroomGF  There is " + untilStart + " hours until room should be heated")
+		logInfo("org.openhab.rules.heating", "BathroomGF There is " + untilStart + " hours until room should be heated")
 		if (untilStart <= (tempDiff*-1)) {
-			logInfo("org.openhab.rules.heating", "BathroomGF We'll start heating because there is " + untilStart + "hours until start and the tempdiff is: " + (tempDiff*-1))
-			sendCommand(bathroom_gf_floor_power_level, 9)
+			logInfo("org.openhab.rules.heating", "BathroomGF We'll start heating because there is " + untilStart + " hours until start and the tempdiff is: " + (tempDiff*-1))
+			sendCommand(BathroomGF_OpState, 2) //HEATING
 		}
 	} 
-	
-	// A timer to make sure that we turn of the heating if no temperature update in the last 2 hours
-	if (timerBathroomGFHeating == null) {
-		timerBathroomGFHeating = createTimer(now.plusHours(2)) [|
-	  		logInfo("org.openhab.rules.heating", "BathroomGF timer is executed, " + now.getDayOfWeek)
-	  		sendCommand(bathroom_gf_floor_power_level, BathroomGFStandbyPowerLevel.state as Number)
-	  		sendNotification("{{stein_email}}","No temperature update in the last two hours, so we've stopped heating the ground floor bathroom")
-		]
-		logInfo("org.openhab.rules.heating", "BathroomGF  timer created")		
-	} else {
-		if (timerBathroomGFHeating.isRunning()) {
-			timerBathroomGFHeating.cancel()
-		}
-		timerBathroomGFHeating.reschedule(now.plusHours(2))
-		logInfo("org.openhab.rules.heating", "BathroomGF timer is set to now plus 2 hours")
-	}
 end
 
 rule "Make sure the z-wave-api has the configuration values"
