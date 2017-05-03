@@ -244,7 +244,7 @@ then
 				if (garagePiTimer.running)
 					garagePiTimer.cancel()
 				garagePiTimer = null
-				sendNotification("{{stein_email}}", "GaragePi er online igjen")
+				//sendNotification("{{stein_email}}", "GaragePi er online igjen")
 			}
 		}		
 		case OFF: {
@@ -253,7 +253,7 @@ then
 			} else {
 				garagePiTimer = createTimer(now.plusHours(1)) [|
 					sendNotification("{[stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
-					garagePiTimer.reschedule(now.plusHours(12))
+					garagePiTimer.reschedule(now.plusHours(6))
 				]
 				}
 		}

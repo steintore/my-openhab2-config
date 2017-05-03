@@ -1,4 +1,4 @@
-import org.openhab.core.library.types.*
+import org.eclipse.smarthome.core.library.types.DateTimeType
 
 rule "Update max and min temperatures"
 when
@@ -6,7 +6,7 @@ when
         Time cron "1 0 0 * * ?" or
         System started
 then
-        val startOfDay = now.toDateMidnight
+        val startOfDay = now.withTime(0, 0, 0, 0)
         if(Weather_Temperature != null) {
         postUpdate(Weather_Temp_Max, Weather_Temperature.maximumSince(startOfDay).state)
         postUpdate(Weather_Temp_Min, Weather_Temperature.minimumSince(startOfDay).state)

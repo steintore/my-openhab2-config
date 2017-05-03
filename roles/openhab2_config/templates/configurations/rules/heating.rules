@@ -23,7 +23,7 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 		var double tempLivingroom = new Double(LivingRoomTemperature.state.toString())
 
 		if(holiday_mode.state == OFF) {
-			if (tempOutdoor <= 10) {
+			if (tempOutdoor <= 10 && Temp_Max_0.state < 10) {
 				if (gang_panelovn.state == OFF && mode.state == 0) {
 					if (tempOffice < 17) {
 						sendCommand(gang_panelovn, ON)
@@ -42,7 +42,7 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 
 			}
 
-			if (tempOutdoor >= 19 && ac_scene.state == 1) {
+			if (tempOutdoor >= 15 && ac_scene.state == 1) {
 				sendCommand(ac_scene , 0)
 				logInfo("org.openhab.rules,heating", "Switched of air conditioner because outdoor temp is higher than 19.")
 				}
@@ -241,8 +241,10 @@ then
 	if (timerBFWeekendOn != null) timerBFWeekendOn.cancel()
 	timerBFWeekendOn = createTimer(onTime) [|
 		logInfo("org.openhab.rules.heating", "timerBFWeekendOn is running, " + now.getDayOfWeek)
-		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && now.getDayOfWeek > 5 && now.getDayOfWeek <= 7) {
+		if (scene_basement_floor_heating.state == 0) {
+			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 5 && now.getDayOfWeek <= 7) {
+			// Only do this if not HOLIDAY and only on weekdays
 			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
 		}
 	]
@@ -256,7 +258,9 @@ then
 	timerBFWeekendOff = createTimer(onTime) [|
 	  logInfo("org.openhab.rules.heating", "timerBFWeekendOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && now.getDayOfWeek > 4 && now.getDayOfWeek < 7) {
+		if (scene_basement_floor_heating.state == 0) {
+			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 4 && now.getDayOfWeek < 7) {
 			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
 		}
 	]
@@ -271,7 +275,9 @@ then
 	timerBFWeekdaysOff = createTimer(onTime) [|
 		logInfo("org.openhab.rules.heating", "timerBFWeekdaysOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && (now.getDayOfWeek < 5 || now.getDayOfWeek > 6)) {
+		if (scene_basement_floor_heating.state == 0) {
+			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 5 || now.getDayOfWeek > 6)) {
 			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
 		}
 	]
@@ -286,7 +292,9 @@ then
 	timerBFWeekdaysOn = createTimer(onTime) [|
 	  logInfo("org.openhab.rules.heating", "timerBFWeekdaysOn is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
-		if (holiday_mode.state == OFF && (now.getDayOfWeek < 6)) {
+		if (scene_basement_floor_heating.state == 0) {
+			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 6)) {
 			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
 		}
 	]

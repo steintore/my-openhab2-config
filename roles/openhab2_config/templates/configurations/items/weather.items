@@ -53,12 +53,12 @@ Number   Wind_Chill           "Wind chill [%.2f °C]"     {weather="locationId=h
 Number   Wind_Chill_F         "Wind chill [%.2f °F]"     {weather="locationId=home, type=wind, property=chill, unit=fahrenheit"}
 
 // Forecast
-Number   Temp_Max_0   "Max [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=0, type=temperature, property=max, roundingMode=down, scale=0"}
-Number   Temp_Min_0   "Min [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=0, type=temperature, property=min, roundingMode=down, scale=0"}
-Number   Temp_Max_1   "Max [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=1, type=temperature, property=max, roundingMode=down, scale=0"}
-Number   Temp_Min_1   "Min [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=1, type=temperature, property=min, roundingMode=down, scale=0"}
-Number   Temp_Max_2   "Max [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=2, type=temperature, property=max, roundingMode=down, scale=0"}
-Number   Temp_Min_2   "Min [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=2, type=temperature, property=min, roundingMode=down, scale=0"}
+Number   Temp_Max_0   "Max i dag [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=0, type=temperature, property=max, roundingMode=down, scale=0"}
+Number   Temp_Min_0   "Min i dag [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=0, type=temperature, property=min, roundingMode=down, scale=0"}
+Number   Temp_Max_1   "Max i morgen [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=1, type=temperature, property=max, roundingMode=down, scale=0"}
+Number   Temp_Min_1   "Min i morgen [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=1, type=temperature, property=min, roundingMode=down, scale=0"}
+Number   Temp_Max_2   "Max overimorgen [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=2, type=temperature, property=max, roundingMode=down, scale=0"}
+Number   Temp_Min_2   "Min overimorgen [%.2f °C]"   	 (gOutdoor, gWeather)	{weather="locationId=home, forecast=2, type=temperature, property=min, roundingMode=down, scale=0"}
 
 Number	Weather_Chart_Period            "Periode"
 Number  Weather_Humidity_Chart_Period	"Periode"

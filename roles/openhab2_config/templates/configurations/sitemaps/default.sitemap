@@ -219,8 +219,8 @@ sitemap default label="Huset"
 					Text item=leaf_battery
 					Text item=leaf_connected
 					Text item=leaf_charging_status
-					Switch item=leaf_heating mappings=[OFF="Off", ON="On"]
-					Switch item=leaf_request_update mappings=[OFF="Off", ON="On"]
+					Switch item=leaf_heating mappings=[ON="Slå på"] icon="fire"
+					Switch item=leaf_request_update mappings=[ON="Nå"] icon="settings"
 				}
 			}
 			Frame label="Ute" icon="garden" {
@@ -271,12 +271,19 @@ sitemap default label="Huset"
              }
          }
          Text item=Sunrise_Time
-		 	 	 Text item=Sunset_Time
-				 Text item=Moon_Phase
-				 Text item=Season
-         Webview url="http://localhost:8080/weather?locationId=home&layout=weather&iconset=colorful" height=7
-			}
-		}
+		 Text item=Sunset_Time
+		 Text item=Moon_Phase
+		 Text item=Season
+		 }
+		 Frame {
+		 	Text item=Temp_Max_0
+		 	Text item=Temp_Min_0
+		 	Text item=Temp_Max_1
+		 	Text item=Temp_Min_1
+		 	Text item=Temp_Max_2
+		 	Text item=Temp_Min_2
+		 }
+	  }
 	}
 
 	Frame label="Tilstedeværelse" {
