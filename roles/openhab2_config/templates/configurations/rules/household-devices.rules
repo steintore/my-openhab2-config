@@ -39,8 +39,8 @@ when
 then
     if (Washingmachine_OpState.state == MODE_FINISHED) {
         postUpdate(push_message_text, "Vaskemaskinen er ferdig!")
-        //if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
-          //sendCommand(washingmachine, OFF)
+        if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
+          sendCommand(washingmachine, OFF)
     }
 end
 
@@ -73,8 +73,8 @@ when
 then
     if (dryer_OpState.state == MODE_FINISHED) {
         postUpdate(push_message_text, "Tørketrommelen er ferdig!")
-        //if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
-          //sendCommand(dryer, OFF)
+        if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
+          sendCommand(dryer, OFF)
     }
 end
 
@@ -127,4 +127,21 @@ then
 		logInfo('org.openhab.rules.household', "Sending message about freezer because: (" + w + " < 5 || (" + w + " < 70 && " + maxLastHour + "< 70 ))")
 		sendNotification("{{stein_email}}","Fryseren drar plutselig mindre strøm enn vanlig, nå kun: " + w + " watt og maks siste time er: " + maxLastHour)
 	}
+end
+
+rule "Water sensor alarm"
+when
+	Item flood_sensor_kitchen_alarm received command
+then
+	switch (receivedCommand) {
+		case ON:
+			{
+				postUpdate(push_message_text, "Vannsensor under vasken på kjøkkenet har blitt utløst, sjekk det med en gang!")
+			}
+		case OFF:
+			{
+				postUpdate(push_message_text, "Vannsensor under vasken på kjøkkenet piper ikke lenger, men sjekk den uansett!")
+			}
+	}
+	
 end

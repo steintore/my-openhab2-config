@@ -359,3 +359,19 @@ String zWaveStatus "Z-Wave server: [%s]" (gBasement) {http="<[http://{{zwave_ip}
 
 
 String habPanel_hallway "Hallway"
+
+/* Flood sensor kitchen */
+Number flood_sensor_kitchen_temperature "Vannsensortemp: [%.1f °C]" 		<temperature> 	(gGF, gInfluxDB) 					{channel="zway:zwayDevice:11fb7777:29:sensorTemperature-ZWayVDev_zway_29-2-49-1"}
+Number flood_sensor_kitchen_battery 	"Vannsensor: [%s %%]"				<battery>		(gGF, gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:29:battery-ZWayVDev_zway_29-0-128"}
+String flood_sensor_kitchen_alarm 		"Vannsensoralarm: [%s]"								(gGF, gInfluxDB) 					{channel="zway:zwayDevice:11fb7777:29:sensorBinary-ZWayVDev_zway_29-0-156-5-A"}
+Switch flood_sensor_kitchen				"Vannsensor [MAP(no.map):%s]"		<garagedoor>  	(gGF)								{channel="zway:zwayDevice:11fb7777:29:sensorMotion-ZWayVDev_zway_29-0-48-1"}
+
+/* Basement motion detector */
+Number basement_hall_motion_temp 		 	"Temp [%.1f °C]" 					<temperature> 	(Motion, gBasement, gInfluxDB) 					{channel="zway:zwayDevice:11fb7777:30:sensorTemperature-ZWayVDev_zway_30-0-49-1"}
+Number basement_hall_motion_humidity 	 	"Luftfuktighet [%.1f %%]"			<temperature> 	(Motion, gBasement, gInfluxDB) 					{channel="zway:zwayDevice:11fb7777:30:sensorHumidity-ZWayVDev_zway_30-0-49-5"}
+Number basement_hall_motion_ultraviolet		"Ultraviolet [%.1f]"								(Motion, gBasement, gInfluxDB) 					{channel="zway:zwayDevice:11fb7777:30:sensorUltraviolet-ZWayVDev_zway_30-0-49-27"}
+Number basement_hall_motion_lux 		 	"Lys    [%.0f Lux]" 				<sun>			(Motion, gBasement, gInfluxDB) 					{channel="zway:zwayDevice:11fb7777:30:sensorLuminosity-ZWayVDev_zway_30-0-49-3"}
+Switch basement_hall_motion 				"Kjellergang [MAP(motion.map):%s]" 	<present>		(Motion, gBasement) 							{channel="zway:zwayDevice:11fb7777:30:sensorMotion-ZWayVDev_zway_30-0-48-1"}
+Switch basement_hall_motion_tamper			"Kjellergang tamper [%s]"							(Motion, gBasement)								{channel="zway:zwayDevice:11fb7777:30:sensorBinary-ZWayVDev_zway_30-0-113-7-3-A"}
+Number basement_hall_motion_battery 	 	"Bev.sensor, kjellergang [%s %%]"	<battery>		(Motion, gBattery, BatteryLevel_100, gBasement)	{channel="zway:zwayDevice:11fb7777:30:battery-ZWayVDev_zway_30-0-128"}
+Switch basement_hall_motion_burglard		"Innbrudsalarm [%s]"				<alarm>			(Motion, gBasement)								{channel="zway:zwayDevice:11fb7777:30:sensorBinary-ZWayVDev_zway_30-0-113-7-254-A"}

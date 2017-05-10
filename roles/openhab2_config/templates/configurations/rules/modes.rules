@@ -64,6 +64,9 @@ rule "A change of mode"
 					habPanel_hallway.postUpdate("Weather")
 				else
 					habPanel_hallway.postUpdate("Hallway")
+					
+				sendCommand(washingmachine, ON)
+				sendCommand(dryer, ON)
 			}
 
 			case 1: { // NIGHT
@@ -102,6 +105,7 @@ rule "A change of mode"
 				sendCommand(alarm_door_lock, ON)
 				sendCommand(screen_pi_reboot, ON)
 				sendCommand(leaf_request_update, OFF)
+				sendCommand(alarm_door_lock, ON)
 			}
 
 			case 2: { //AWAY
