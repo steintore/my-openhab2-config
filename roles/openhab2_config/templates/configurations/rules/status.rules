@@ -1,6 +1,5 @@
 import org.eclipse.smarthome.core.library.types.DateTimeType
 import org.eclipse.smarthome.core.library.types.DecimalType
-import org.eclipse.smarthome.model.script.actions.Timer
 
 rule "Startup"
 	when
@@ -125,9 +124,6 @@ rule "Send a status message at 22 if anything is NOT ok"
 		}
 		if (boss_lan.state == OFF && !boss_lan.changedSince(now.minusHours(12))) {
 			sendNotification("{{stein_email}}",'Boss is not responding, and has been off for 12 hours (' + boss_lan.lastUpdate.toString + ')')
-		}
-		if (nas_lan.state == OFF && !nas_lan.changedSince(now.minusHours(12))) {
-			sendNotification("{{stein_email}}",'NAS is not responding, and has been off for too long(' + nas_lan.lastUpdate.toString + ')')
 		}
 		if (mode.state != 0 && mode.state != 3 && tv_power.state == ON) {
 			postUpdate(push_message_text, 'TV-en står på, men du har enten lagt deg eller er borte..')
