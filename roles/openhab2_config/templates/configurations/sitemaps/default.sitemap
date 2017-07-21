@@ -107,9 +107,12 @@ sitemap default label="Huset"
     			Switch item=light_bathroom_mirror
     		}
     		Frame label="Kontor"{
+    			Switch item=scene_office_light mappings=[0="Av", 1="Relax", 2="Jobbe", 3="Normal"]
+    			Slider item=gOfficeLightsDimmer icon="slider"
     			Text item=OfficeTemperature
     			Text item=OfficeHumidity
-					Text item=OfficeTemperature_LastUpdate visibility=[OfficeTemperature_LastUpdate>1800] valuecolor=[OfficeTemperature_LastUpdate>120="orange", OfficeTemperature_LastUpdate>300="red"]
+				Text item=OfficeTemperature_LastUpdate visibility=[OfficeTemperature_LastUpdate>1800] valuecolor=[OfficeTemperature_LastUpdate>120="orange", OfficeTemperature_LastUpdate>300="red"]
+					
     		}
     		Frame label="Varme" {
     			Switch item=Heating
@@ -288,6 +291,7 @@ sitemap default label="Huset"
 
 	Frame label="Tilstedeværelse" {
 		Text item=alarm_alarm icon="alarm"
+		Text item=alarm_door_locked_state icon="alarm"
     	Text label="Moduser" icon="present" {
 			Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
 

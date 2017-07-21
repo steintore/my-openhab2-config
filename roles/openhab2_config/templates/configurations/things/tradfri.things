@@ -1,0 +1,5 @@
+Bridge tradfri:gateway:mygateway [ host="{{tradfri_ip}}", code="{{tradfri_code}}" ] {
+    0220 officeRoof       [ id=65537 ]
+    0220 officeLeftDesk   [ id=65538 ]
+    0220 officeRightDesk  [ id=65539 ]
+}

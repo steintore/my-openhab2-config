@@ -15,6 +15,7 @@ rule "A change of mode"
 	if (mode.state != previous_mode.state) {
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
+		postUpdate(alarm_door_lock_check, now.toString)
 
 		var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 		switch (receivedCommand) {
@@ -75,6 +76,7 @@ rule "A change of mode"
 				sendCommand(light_basement_power, OFF)
 				sendCommand(scene_light_hall, 2) // NIGHT
 				sendCommand(scene_light_basement, 0)
+				sendCommand(scene_office_light, 0)
 
 				if (Washingmachine_OpState.state == 2) {
 					postUpdate(push_message_text, "Tørketrommelen tørker, strømmen blir skrudd av når den er ferdig")
@@ -102,7 +104,6 @@ rule "A change of mode"
 				alarm_check.postUpdate(""+ now)
 
 				postUpdate(motion_living_room, OFF)
-				sendCommand(alarm_door_lock, ON)
 				sendCommand(screen_pi_reboot, ON)
 				sendCommand(leaf_request_update, OFF)
 				sendCommand(alarm_door_lock, ON)
@@ -143,6 +144,7 @@ rule "A change of mode"
 				sendCommand(DenonPower, OFF)
 				sendCommand(scene_light_hall_gf, 2) // AUTO
 				sendCommand(light_hall_ground_floor, OFF)
+				sendCommand(scene_office_light, 0)
 				if (ac_scene.state > 1) {
 					sendCommand(ac_scene, 0)
 				}
@@ -152,6 +154,8 @@ rule "A change of mode"
 
 				sendCommand(scene_roomba, 1) // Start vacuuming
 				habPanel_hallway.postUpdate("Hallway")
+				
+				sendCommand(alarm_door_lock, ON)
 			}
 
 			case 3: { // EVENING MODE

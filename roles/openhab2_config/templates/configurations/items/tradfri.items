@@ -1,0 +1,11 @@
+Dimmer office_roof_light "Taklys [%d %%]"				<light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{ channel="tradfri:0220:mygateway:officeRoof:brightness" }
+Dimmer office_roof_light_color "Taklystemp [%d %%]"		<hue> 	(gFirstFloor) 			{ channel="tradfri:0220:mygateway:officeRoof:color_temperature" }
+Dimmer office_left_light "Venstre kontorpult [%d %%]"	<light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{ channel="tradfri:0220:mygateway:officeLeftDesk:brightness" }
+Dimmer office_left_light_color "Venstre temp [%d %%]"	<hue> 	(gFirstFloor) 			{ channel="tradfri:0220:mygateway:officeLeftDesk:color_temperature" }
+Dimmer office_right_light "Høyre kontorpult [%d %%]" 	<light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{ channel="tradfri:0220:mygateway:officeRightDesk:brightness" }
+Dimmer office_right_light_color "Høyre temp [%d %%]" 	<hue> 	(gFirstFloor) 			{ channel="tradfri:0220:mygateway:officeRightDesk:color_temperature" }
+
+Number scene_office_light  "Kontorlys [%s]" <light> (gFirstFloor)
+
+Group:Switch:AND(ON, OFF) 	gOfficeLights	"Lys [(%d)]"  		<light> 
+Group:Dimmer				gOfficeLightsDimmer "Lys [%d %%]" 	<light>

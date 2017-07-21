@@ -252,6 +252,21 @@ rule "lights in basement hall changed from other source"
 	}
 end
 
+rule "Basement hall motion detector"
+	when
+		Item basement_hall_motion changed
+	then
+	logInfo('org.openhab.rules.lights', 'Motion sensor in the basement changed to: ' + basement_hall_motion.state)
+	switch (basement_hall_motion.state as OnOffType) {
+		case ON: {
+			sendCommand(scene_light_basement, 1)		
+		}
+		case OFF: {
+			sendCommand(scene_light_basement, 0)
+		}
+	}
+end
+
 rule "Motion detector in basement wants to turn on the lights"
         when
                 Item motion_detector_basement received command or
@@ -279,14 +294,14 @@ rule "Motion detector in basement wants to turn on the lights"
 
                         timerBasement = createTimer(now.plusSeconds(seconds)) [|
                             logInfo("org.openhab.rules.lights", "Basement light timer created by ON-signal, state for motion: " + motion_detector_basement.state)
-                            sendCommand(scene_light_basement, 0)
+                            //sendCommand(scene_light_basement, 0)
                             postUpdate(motion_detector_basement, OFF)
                         ]
                 }
                 case OFF: {
                        	timerBasement = createTimer(now.plusSeconds(120)) [|
                         	logInfo("org.openhab.rules.lights", "Basement light timer created by OFF-signal timed out, state for motion: " + motion_detector_basement.state)
-                            sendCommand(scene_light_basement, 0)
+                            //sendCommand(scene_light_basement, 0)
                             postUpdate(motion_detector_basement, OFF)
                         ]
                 }
@@ -364,3 +379,51 @@ rule "Sunset"
  			}
  		]	
  end
+ 
+ rule "office light Changed from remote" 
+ 	when
+ 		Item gOfficeLights changed or
+ 		Item office_left_light_color changed or
+ 		Item office_right_light_color changed or
+ 		Item office_roof_light_color changed
+ 	then
+ 	
+ 	if (gOfficeLights.state == OFF) {
+ 		postUpdate(scene_office_light, 0)
+ 	} else if (office_roof_light_color.state == 0) {
+ 		postUpdate(scene_office_light, 2)
+ 	} else if (office_roof_light_color.state == 100) {
+ 		postUpdate(scene_office_light, 1)
+ 	} else {
+ 		postUpdate(scene_office_light, 3)
+ 	}
+end
+ 
+ rule "Office light"
+ 	when
+ 		Item scene_office_light received command
+ 	then
+ 	switch (scene_office_light.state) {
+ 		case 0: { // OFF
+ 			sendCommand(gOfficeLights, OFF)
+ 		}
+ 		case 1: { // RELAX
+ 			sendCommand(gOfficeLights, ON)
+ 			sendCommand(office_left_light_color, 100)
+ 			sendCommand(office_right_light_color, 100)
+ 			sendCommand(office_roof_light_color, 100)
+ 		}
+ 		case 2: { // WORK
+ 			sendCommand(gOfficeLights, ON)
+ 			sendCommand(office_left_light_color, 0)
+ 			sendCommand(office_right_light_color, 0)
+ 			sendCommand(office_roof_light_color, 0)
+ 		}
+ 		case 3: { // NORMAL
+ 			sendCommand(gOfficeLights, ON)
+ 			sendCommand(office_left_light_color, 50)
+ 			sendCommand(office_right_light_color, 50)
+ 			sendCommand(office_roof_light_color, 50)
+ 		}
+ 	}
+end
