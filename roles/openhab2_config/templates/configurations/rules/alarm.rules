@@ -146,6 +146,7 @@ rule "Lock or unlock the door"
 	then
 	logInfo("org.openhab.rules.alarm", "Item alarm_door_lock received command " + alarm_door_lock + " state of door lock is " + alarm_door_locked_state)
 	var String cmd = "vsure {{alarm_login}} {{alarm_password}} set lock {{alarm_key}} '{{alarm_lock_id}}'"
+	logInfo("org.openhab.rules.alarm", "The cmd will be: " + cmd)
 	switch (receivedCommand) {
 		case ON: {
 			// Lock door
@@ -158,6 +159,7 @@ rule "Lock or unlock the door"
 			logInfo("org.openhab.rules.alarm", "result from unlocking the door is: " + result)
 		}
 	}
+	postUpdate(alarm_door_lock_check, now.toString)
 end
 
 

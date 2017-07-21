@@ -160,7 +160,7 @@ Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, Living_Room_Lig
 Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights)  {channel="zway:zwayDevice:11fb7777:21:switchPowerOutlet-ZWayVDev_zway_21-0-37"}
 
 Switch light_dining_table           "Taklys"        <light> (gGF, gLight, Living_Room_Lights)  {channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
-Number light_dining_table_dimmer	"Taklys [%s]"   <light> (gGF, gLight) 						{channel="zway:zwayDevice:11fb7777:22:switchMultilevel-ZWayVDev_zway_22-0-38"}
+Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight) 						{channel="zway:zwayDevice:11fb7777:22:switchMultilevel-ZWayVDev_zway_22-0-38"}
 
 Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 			{channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
 
@@ -374,4 +374,4 @@ Number basement_hall_motion_lux 		 	"Lys    [%.0f Lux]" 				<sun>			(Motion, gBa
 Switch basement_hall_motion 				"Kjellergang [MAP(motion.map):%s]" 	<present>		(Motion, gBasement) 							{channel="zway:zwayDevice:11fb7777:30:sensorMotion-ZWayVDev_zway_30-0-48-1"}
 Switch basement_hall_motion_tamper			"Kjellergang tamper [%s]"							(Motion, gBasement)								{channel="zway:zwayDevice:11fb7777:30:sensorBinary-ZWayVDev_zway_30-0-113-7-3-A"}
 Number basement_hall_motion_battery 	 	"Bev.sensor, kjellergang [%s %%]"	<battery>		(Motion, gBattery, BatteryLevel_100, gBasement)	{channel="zway:zwayDevice:11fb7777:30:battery-ZWayVDev_zway_30-0-128"}
-Switch basement_hall_motion_burglard		"Innbrudsalarm [%s]"				<alarm>			(Motion, gBasement)								{channel="zway:zwayDevice:11fb7777:30:sensorBinary-ZWayVDev_zway_30-0-113-7-254-A"}
+Switch basement_hall_motion_burglar			"Innbrudsalarm [%s]"				<alarm>			(Motion, gBasement)								{channel="zway:zwayDevice:11fb7777:30:sensorBinary-ZWayVDev_zway_30-0-113-7-254-A"}

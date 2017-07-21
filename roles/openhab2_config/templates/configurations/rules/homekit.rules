@@ -1,4 +1,18 @@
 
+rule "Homekit wants to open garage door"
+	when
+		Item homekit_garagedoor_open received command ON
+	then
+	sendCommand(scene_garage_1, 1)
+end
+
+rule "Homekit wants to close garage door"
+	when
+		Item homekit_garagedoor_close received command ON 
+	then
+	sendCommand(scene_garage_1, 1)
+end
+
 rule "Homekit wants to turn living room lights on or OFF"
 	when
 		Item homekit_livingroom_light received command
