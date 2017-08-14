@@ -13,6 +13,8 @@ var Timer timerBathroomGFHeating = null
 var Timer timerBathroomGFOn = null
 var Timer timerBathroomGFOff = null
 
+var String logString = "org.openhab.rules.heating"
+
 rule "If the room is too cold and we are home, then heat it up, but only if it is less than 10 degrees outside"
 	when
 		Time cron "0 0/20 * * * ?"
@@ -44,7 +46,7 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 
 			if (tempOutdoor >= 15 && ac_scene.state == 1) {
 				sendCommand(ac_scene , 0)
-				logInfo("org.openhab.rules,heating", "Switched of air conditioner because outdoor temp is higher than 19.")
+				logInfo(logString, "Switched of air conditioner because outdoor temp is higher than 19.")
 				}
 
 		} else {
@@ -72,7 +74,7 @@ rule "AC scenes"
 	when
 		Item ac_scene received command
 then
-	logInfo('org.openhab', 'AC received state:' + ac_scene.state)
+	logInfo(logString, 'AC received state:' + ac_scene.state)
 	switch (receivedCommand) {
 		case 0: { // OFF
 			if (ac_power.state == ON)
@@ -196,7 +198,7 @@ rule "Adjust basement floor heating"
 	when
 	  Item scene_basement_floor_heating received command
 	then
-	logInfo("org.openhab.rules.heating", "Adjusting basement floor heating with command: " + receivedCommand)
+	logInfo(logString, "Adjusting basement floor heating with command: " + receivedCommand)
 	switch(receivedCommand) {
 		case 0: { // OFF
 			sendCommand(tv_room_basement_floor_power_level, 0)
@@ -237,29 +239,29 @@ then
 	var DateTime onTime = now.withTime(hours, 0, 0, 0)
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
-	logInfo("org.openhab.rules", "Scheduling basement floor ON (weekend) for: " + onTime)
+	logInfo(logString, "Scheduling basement floor ON (weekend) for: " + onTime)
 	if (timerBFWeekendOn != null) timerBFWeekendOn.cancel()
 	timerBFWeekendOn = createTimer(onTime) [|
-		logInfo("org.openhab.rules.heating", "timerBFWeekendOn is running, " + now.getDayOfWeek)
+		logInfo(logString, "timerBFWeekendOn is running, " + now.getDayOfWeek)
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 5 && now.getDayOfWeek <= 7) {
 			// Only do this if not HOLIDAY and only on weekdays
 			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
 		}
 	]
 
-  hours = (basementFloorWeekendOFF.state as DecimalType).intValue()
+  	hours = (basementFloorWeekendOFF.state as DecimalType).intValue()
 	onTime = now.withTime(hours, 0, 0, 0)
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
-	logInfo("org.openhab.rules", "Scheduling basement floor OFF (weekend) for: " + onTime)
+	logInfo(logString, "Scheduling basement floor OFF (weekend) for: " + onTime)
 	if (timerBFWeekendOff != null) timerBFWeekendOff.cancel()
 	timerBFWeekendOff = createTimer(onTime) [|
-	  logInfo("org.openhab.rules.heating", "timerBFWeekendOff is running, " + now.getDayOfWeek)
+	  logInfo(logString, "timerBFWeekendOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 4 && now.getDayOfWeek < 7) {
 			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
 		}
@@ -270,13 +272,13 @@ then
 	onTime = now.withTime(hours, 0, 0, 0)
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
-	logInfo("org.openhab.rules", "Scheduling basement floor OFF for: " + onTime)
+	logInfo(logString, "Scheduling basement floor OFF for: " + onTime)
 	if (timerBFWeekdaysOff != null) timerBFWeekdaysOff.cancel()
 	timerBFWeekdaysOff = createTimer(onTime) [|
-		logInfo("org.openhab.rules.heating", "timerBFWeekdaysOff is running, " + now.getDayOfWeek)
+		logInfo(logString, "timerBFWeekdaysOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 5 || now.getDayOfWeek > 6)) {
 			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
 		}
@@ -287,13 +289,13 @@ then
 	onTime = now.withTime(hours, 0, 0, 0)
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
-	logInfo("org.openhab.rules", "Scheduling basement floor ON for: " + onTime)
+	logInfo(logString, "Scheduling basement floor ON for: " + onTime)
 	if (timerBFWeekdaysOn != null) timerBFWeekdaysOn.cancel()
 	timerBFWeekdaysOn = createTimer(onTime) [|
-	  logInfo("org.openhab.rules.heating", "timerBFWeekdaysOn is running, " + now.getDayOfWeek)
+	  logInfo(logString, "timerBFWeekdaysOn is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug("org.openhab.rules.heating", "Basement floor heating is OFF, doing nothing")
+			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 6)) {
 			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
 		}
@@ -358,11 +360,11 @@ then
 	var DateTime onTime = now.withTime(hours, 0, 0, 0)
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
-	logInfo("org.openhab.rules", "BathroomGF Scheduling floor ON for: " + onTime)
+	logInfo(logString, "BathroomGF Scheduling floor ON for: " + onTime)
 	
 	if (timerBathroomGFOn != null) timerBathroomGFOn.cancel()
 	timerBathroomGFOn = createTimer(onTime) [|
-	  	logInfo("org.openhab.rules.heating", "timerBathroomGFOn is doing nothing..")
+	  	logInfo(logString, "timerBathroomGFOn is doing nothing..")
 	  	sendNotification("{{stein_email}}","BathroomGF should be " + BathroomGFTargetTemperature.state + ", it is:" + BathroomGFTemperature.state)
 		// If not holiday_mode and heating is switched on and temperature is lower than target temperature
 	]
@@ -372,12 +374,12 @@ then
 
 	if (offTime.beforeNow) {
 		sendCommand(BathroomGF_OpState, 1) //STANDBY
-		onTime = offTime.plusDays(1)
+		offTime = offTime.plusDays(1)
 	} 
-	logInfo("org.openhab.rules", "BathroomGF Scheduling floor OFF for: " + offTime)
+	logInfo(logString, "BathroomGF Scheduling floor OFF for: " + offTime)
 	if (timerBathroomGFOff != null) timerBathroomGFOff.cancel()
-	timerBathroomGFOff = createTimer(onTime) [|
-	  	logInfo("org.openhab.rules.heating", "timerBathroomGFOff is turning heating off")
+	timerBathroomGFOff = createTimer(offTime) [|
+	  	logInfo(logString, "timerBathroomGFOff is turning heating off")
 		sendCommand(BathroomGF_OpState, 1) //STANDBY 
 	]
 	
@@ -390,11 +392,11 @@ when
 then
 	if (BathroomGFStandbyPowerLevel.state ==  UNDEF || BathroomGFStandbyPowerLevel == null) {
 		postUpdate(BathroomGFStandbyPowerLevel, 2)
-		logInfo("org.openhab.rules.heating", "BathroomGF Standby Power level was not set, set to 1")
+		logInfo(logString, "BathroomGF Standby Power level was not set, set to 1")
 	}
 	
 	if (BathroomGF_OpState_previous.state != BathroomGF_OpState.state) {
-		logInfo("org.openhab.rules.heating", "BathroomGF_OpState received command " + receivedCommand)
+		logInfo(logString, "BathroomGF_OpState received command " + receivedCommand)
 		switch (receivedCommand) {
 			case 0: {
 				sendCommand(bathroom_gf_floor_power_level, 0)
@@ -415,7 +417,7 @@ when
 	Item BathroomGFStandbyPowerLevel changed or
 	Item BathroomGFTargetTemperature changed
 then
-	logInfo("org.openhab.rules.heating", "BathroomGF recalc because standby power or target temp has changed")
+	logInfo(logString, "BathroomGF recalc because standby power or target temp has changed")
 	postUpdate(BathroomGF_recalc, "" + now)
 end
 
@@ -423,7 +425,7 @@ rule "Bathroom ground floor temperature changed"
 when
 	Item BathroomGFTemperature changed
 then
-	logInfo("org.openhab.rules.heating", "BathroomGF ground floor temperature changed to: " + BathroomGFTemperature.state)
+	logInfo(logString, "BathroomGF ground floor temperature changed to: " + BathroomGFTemperature.state)
 	postUpdate(BathroomGF_recalc, "" + now)
 end
 
@@ -431,23 +433,23 @@ rule "Bathroom ground floor temperature recevied update"
 when
 	Item BathroomGFTemperature received update
 then
-	logInfo("org.openhab.rules.heating", "BathroomGF ground floor temperature received update: " + BathroomGFTemperature.state)
+	logInfo(logString, "BathroomGF ground floor temperature received update: " + BathroomGFTemperature.state)
 	postUpdate(BathroomGFTemperature_LastUpdate, new DateTimeType())
 	
 	// A timer to make sure that we turn of the heating if no temperature update in the last 2 hours
 	if (timerBathroomGFHeating == null) {
 		timerBathroomGFHeating = createTimer(now.plusHours(2)) [|
-	  		logInfo("org.openhab.rules.heating", "BathroomGF timer is executed, " + now.getDayOfWeek)
+	  		logInfo(logString, "BathroomGF timer is executed, " + now.getDayOfWeek)
 	  		sendCommand(BathroomGF_OpState, 1) //STANDBY
 	  		sendNotification("{{stein_email}}","No temperature update in the last two hours, so we've stopped heating the ground floor bathroom")
 		]
-		logInfo("org.openhab.rules.heating", "BathroomGF  timer created")		
+		logInfo(logString, "BathroomGF  timer created")		
 	} else {
 		if (timerBathroomGFHeating.isRunning()) {
 			timerBathroomGFHeating.cancel()
 		}
 		timerBathroomGFHeating.reschedule(now.plusHours(2))
-		logInfo("org.openhab.rules.heating", "BathroomGF timer is set to now plus 2 hours")
+		logInfo(logString, "BathroomGF timer is set to now plus 2 hours")
 	}
 end
 
@@ -455,42 +457,44 @@ rule "BathroomGF calculate what to do"
 	when
 		Item BathroomGF_recalc received update
 then
-	logInfo('org.openhab.rules.heating', "BathroomGF_recalc received update.. checking")
+	logInfo(logString, "BathroomGF_recalc received update.. checking")
 	
 	if (BathroomGFHeatedFrom.state == UNDEF || BathroomGFHeatedFrom.state == null) {
 		postUpdate(BathroomGFHeatedFrom, 16)
-		logInfo("org.openhab.rules.heating", "BathroomGF Heated from was not defined, set to 16")
+		logInfo(logString, "BathroomGF Heated from was not defined, set to 16")
 	}
 	if (BathroomGFHeatedTo.state == UNDEF || BathroomGFHeatedTo.state == null) {
 		postUpdate(BathroomGFHeatedTo, 20)
-		logInfo("org.openhab.rules.heating", "BathroomGF  Heated to was not defined, set to 20")
+		logInfo(logString, "BathroomGF Heated to was not defined, set to 20")
 	}
 	if (BathroomGFTargetTemperature.state == UNDEF || BathroomGFTargetTemperature == null) {
 		postUpdate(BathroomGFTargetTemperature, 25)
-		logInfo("org.openhab.rules.heating", "BathroomGF target temp was not set, changed to 25")
+		logInfo(logString, "BathroomGF target temp was not set, changed to 25")
 	}
 		
 	val heatingStart = now.toLocalDate.toDateTimeAtStartOfDay.withHourOfDay((BathroomGFHeatedFrom.state as DecimalType).intValue())
 	val heatingEnd = now.toLocalDate.toDateTimeAtStartOfDay.withHourOfDay((BathroomGFHeatedTo.state as DecimalType).intValue())
 	val tempDiff = (BathroomGFTemperature.state as DecimalType).intValue() - (BathroomGFTargetTemperature.state as DecimalType).intValue()
-	logInfo("org.openhab.rules.heating", "BathroomGF tempDiff is: " + tempDiff)
+	logInfo(logString, "BathroomGF tempDiff is: " + tempDiff)
 	
-	if (BathroomGF_OpState.state == 0) {
+	if (holiday_mode.state == ON && BathroomGF_OpState.state > 1) {
+		sendCommand(BathroomGF_OpState, 1) //STANDBY
+	} else if (BathroomGF_OpState.state == 0) {
 		// DO NOTHING...
 	} else if (tempDiff >= 0 || now.isAfter(heatingEnd)) { // It is warm enough...or we do not need to heat any more
 		sendCommand(BathroomGF_OpState, 1) //STANDBY
 	} else if (now.isAfter(heatingStart) && now.isBefore(heatingEnd) && tempDiff < 0) {
-		logInfo("org.openhab.rules.heating", "BathroomGF Heating is ongoing and temp is lower than target temp")
+		logInfo(logString, "BathroomGF Heating is ongoing and temp is lower than target temp")
 		if (!now.plusMinutes(30).isAfter(heatingEnd)) {
-			logInfo("org.openhab.rules.heating", "BathroomGF More than 30 minutes to heating turns of so we will change power level")
+			logInfo(logString, "BathroomGF More than 30 minutes to heating turns of so we will change power level")
 			sendCommand(BathroomGF_OpState, 2) //HEATING
 		}
 	} else if(now.isBefore(heatingStart) && tempDiff < 0) {
 		var Duration d = new Duration(now, heatingStart)
 		var untilStart = d.standardHours
-		logInfo("org.openhab.rules.heating", "BathroomGF There is " + untilStart + " hours until room should be heated")
+		logInfo(logString, "BathroomGF There is " + untilStart + " hours until room should be heated")
 		if (untilStart <= (tempDiff*-1)) {
-			logInfo("org.openhab.rules.heating", "BathroomGF We'll start heating because there is " + untilStart + " hours until start and the tempdiff is: " + (tempDiff*-1))
+			logInfo(logString, "BathroomGF We'll start heating because there is " + untilStart + " hours until start and the tempdiff is: " + (tempDiff*-1))
 			sendCommand(BathroomGF_OpState, 2) //HEATING
 		}
 	} 
@@ -519,6 +523,6 @@ when
 	Item bathroom_1st_floor_mode received command
 then
 	var String htp = "http://{{zwave_ip}}:8083/ZWaveAPI/Run/devices%5B24%5D.ThermostatMode.Set("+ receivedCommand.toString + ")"
-	logInfo("org.openhab.rules.heating.floorheating", "Sending request to set thermostat to : " + receivedCommand.toString + " , like this: [" + htp + "]")
+	logInfo(logString, "Sending request to set thermostat to : " + receivedCommand.toString + " , like this: [" + htp + "]")
 	sendHttpGetRequest(htp)
 end
