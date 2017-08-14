@@ -36,6 +36,7 @@
         - items/homekit.items
         - items/networkupstools.items
         - items/tradfri.items
+        - items/alexa.items
         - persistence/rrd4j.persist
         - persistence/influxdb.persist
         - rules/homekit.rules
@@ -55,6 +56,7 @@
         - rules/speedtest.rules
         - rules/habpanel.rules
         - rules/household-devices.rules
+        - rules/alexa.rules
         - scripts/pushMessages.script
         - scripts/alarm-climate.js
         - scripts/alarm.js
