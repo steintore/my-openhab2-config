@@ -6,7 +6,9 @@ var Timer garageDoorOpenMondeo = null
 var Timer garageDoorOpen1Timed = null
 var Timer garageDoorOpen2Timed = null
 
-var Timer garagePiTimer =null
+var Timer garagePiTimer = null
+
+var Boolean isGarageMessageSent = false
 
 rule "Send a message if garage door LEAF has been open for 15 minutes"
 	when
@@ -28,7 +30,9 @@ rule "Send a message if garage door LEAF has been open for 15 minutes"
 				logInfo("org.openhab.rules", t)
 				if (message_received.state == OFF) { 
 					postUpdate(push_message_text, t)
+					isGarageMessageSent = true
 				}
+				habPanel_hallway.postUpdate("Garasjen")
 				garageDoorOpenLeaf.reschedule(now.plusSeconds(1200))
 			}			
 		]
@@ -55,7 +59,9 @@ rule "Send a message if garage door MONDEO has been open for 15 minutes"
 				logInfo("org.openhab.rules", t)
 				if (message_received.state == OFF) { 
 					postUpdate(push_message_text, t)
+					isGarageMessageSent = true
 				}
+				habPanel_hallway.postUpdate("Garasjen")
 				garageDoorOpenMondeo.reschedule(now.plusSeconds(1200))
 			}			
 		]
@@ -78,6 +84,7 @@ rule "Reset timer if someone closes the garage door, and both is closed"
 		} else {
 			postUpdate(scene_garage_1, 1)
 			garageDoorOpenLeaf.reschedule(now.plusSeconds(1200))
+			habPanel_hallway.postUpdate("Garasjen")
 		}
 		 
 		if (garage_door_2.state == OFF) {
@@ -89,10 +96,16 @@ rule "Reset timer if someone closes the garage door, and both is closed"
 		} else {
 			postUpdate(scene_garage_2, 1)
 			garageDoorOpenMondeo.reschedule(now.plusSeconds(1200))
+			habPanel_hallway.postUpdate("Garasjen")
 		}	
 		
-		if (garage_door_1.state == OFF && garage_door_2.state == OFF)
+		if (garage_door_1.state == OFF && garage_door_2.state == OFF) {
 			habPanel_hallway.postUpdate("Hallway")
+			if (isGarageMessageSent) {
+				postUpdate(push_message_text, "Begge garasjeporter er nå lukket!")
+				isGarageMessageSent = false
+			}
+		}
 end
 
 rule "Send a message after 7 minutes if garage door is open and nobody is home"
@@ -102,6 +115,7 @@ rule "Send a message after 7 minutes if garage door is open and nobody is home"
 		if (mode.state == 2 && (garage_door_1.state == ON || garage_door_2.state == ON)) {
 			if (message_received.state == OFF && !garage_door_1.changedSince(now.minusMinutes(8)) && !garage_door_2.changedSince(now.minusMinutes(8))) {
 				postUpdate(push_message_text, "Tydeligvis ingen hjemme, men garasjeporten er ÅPEN")
+				isGarageMessageSent = true
 			}
 		}
 		if (garage_door_1.state == null || garage_door_1.state == NULL) {
@@ -125,8 +139,6 @@ then
 				sendCommand(garage_door_1_relay, ON)
 				Thread::sleep(500)
 				sendCommand(garage_door_1_relay, OFF)
-			} else {
-				sendNotification("{{stein_email}}","Garage door 1 is already closed")
 			}
 		}
 		case 1: { // OPEN
@@ -134,8 +146,6 @@ then
 				sendCommand(garage_door_1_relay, ON)
 				Thread::sleep(500)
 				sendCommand(garage_door_1_relay, OFF)
-			} else {
-				sendNotification("{{stein_email}}","Garage door 1 is already open")
 			}	
 		}
 		case 2: { // OPEN FOR 10 MINUTES
@@ -162,9 +172,7 @@ then
 						}
 					}			
 				]
-			} else {
-				sendNotification("{{stein_email}}","Garage door 1 is already open")
-			}	
+			} 
 		}
 	}	
 	logInfo('org.openhab', 'scene_garage_1 updated to: ' + scene_garage_1.state)
@@ -181,8 +189,6 @@ then
 				sendCommand(garage_door_2_relay, ON)
 				Thread::sleep(500)
 				sendCommand(garage_door_2_relay, OFF)
-			} else {
-				sendNotification("{{stein_email}}","Garage door 2 is already closed")
 			}
 		}
 		case 1: { // OPEN
@@ -190,8 +196,6 @@ then
 				sendCommand(garage_door_2_relay, ON)
 				Thread::sleep(500)
 				sendCommand(garage_door_2_relay, OFF)
-			} else {
-				sendNotification("{{stein_email}}","Garage door 2 is already open")
 			}	
 		}
 		case 2: { // OPEN FOR 10 MINUTES
@@ -218,8 +222,6 @@ then
 						}
 					}			
 				]
-			} else {
-				sendNotification("{{stein_email}}","Garage door 2 is already open")
 			}	
 		}
 	}	
@@ -252,7 +254,7 @@ then
 				garagePiTimer.reschedule(now.plusHours(1))
 			} else {
 				garagePiTimer = createTimer(now.plusHours(1)) [|
-					sendNotification("{[stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
+					sendNotification("{{stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
 					garagePiTimer.reschedule(now.plusHours(6))
 				]
 				}
