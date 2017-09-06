@@ -197,7 +197,7 @@ rule "Switch OFF the computer in the hallway"
 		Item screen_pi received command OFF
 	then
 	logInfo('org.openhab.rules.status.shutdown', "Item screen_pi received command OFF")
-	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@sudo shutdown -h now", 5000)
+	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@pkill chromium;sleep 5;sudo shutdown -h now", 5000)
 	if (result != null && result.length() > 0)
 		logInfo("org.openhab.status.shutdown", result)
 end
@@ -207,7 +207,7 @@ rule "Reboot computer in the hallway"
 		Item screen_pi_reboot received command ON
 	then
 	logInfo('org.openhab.rules.status.reboot', "Item screen_pi_reboot received command ON")
-	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@sudo shutdown -r now", 5000)
+	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@pkill chromium;sleep 5;sudo shutdown -r now", 5000)
 	if (result != null && result.length() > 0)
 		logInfo("org.openhab.status.reboot", result)
 end
