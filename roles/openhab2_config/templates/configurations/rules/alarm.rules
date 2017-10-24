@@ -100,7 +100,7 @@ then
 		postUpdate(alarm_check, ""+ now)
 	} else {
 		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
-		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome") // HOME
+		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome" && mode.state == 2) // Someone came home...
 		{
 			var DateTime eveningTime = now.withTime(21, 0, 0, 0)
 			var DateTime nightTime = now.withTime(1,0,0,0)

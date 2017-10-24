@@ -11,8 +11,8 @@ rule "A change of mode"
 	when
 		Item mode received command
 	then
-	logInfo('org.openhab.rules.modes', 'mode received state:' + mode.state + ' previous state was: ' + previous_mode.state)
-	if (mode.state != previous_mode.state) {
+	logInfo('org.openhab.rules.modes', 'mode received state:' + receivedCommand + ' previous state was: ' + previous_mode.state)
+	if (receivedCommand != previous_mode.state) {
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
 		postUpdate(alarm_door_lock_check, now.toString)
@@ -58,8 +58,8 @@ rule "A change of mode"
 
 				sendCommand(leaf_request_update, ON)
 
-				if (motion_living_room.state == ON)
-					sendCommand(scene_light_livingroom, 1)
+				sendCommand(scene_light_livingroom, 1)
+				sendCommand(scene_light_hall, 1)
 
 				if (justMorning.state == ON)
 					habPanel_hallway.postUpdate("Weather")
@@ -186,7 +186,7 @@ end
  */
 rule "Switch to evening mode in the evening"
 	when
-		Time cron "0 0 21 ? * *"
+		Time cron "0 30 21 ? * *"
 	then
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 0) {
@@ -239,7 +239,7 @@ end
  */
 rule "Return to day mode during the week"
 	when
-		Time cron "0 0 5 ? * MON-FRI"
+		Time cron "0 30 5 ? * MON-FRI"
 	then
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 1) {
@@ -254,7 +254,7 @@ end
 
 rule "Return to day mode during weekend"
 	when
-		Time cron "0 0 6 ? * SAT-SUN"
+		Time cron "0 30 6 ? * SAT-SUN"
 	then
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 1) {

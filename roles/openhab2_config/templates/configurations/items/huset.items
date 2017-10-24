@@ -275,7 +275,7 @@ Switch holiday_mode "Feriemodus [%s]"	<present>
 
 /* Bathroom 1st floor */
 Switch light_bathroom		 "Taklys"						<light>			(gLight, gFirstFloor) 								{channel="zway:zwayDevice:11fb7777:14:switchPowerOutlet-ZWayVDev_zway_14-0-37"}
-Number light_bathroom_dimmer "Dimmer [%s]" 					<light> 		(gFirstFloor)										{channel="zway:zwayDevice:11fb7777:14:switchMultilevel-ZWayVDev_zway_14-0-38"}
+Dimmer light_bathroom_dimmer "Dimmer [%s]" 					<light> 		(gFirstFloor)										{channel="zway:zwayDevice:11fb7777:14:switchMultilevel-ZWayVDev_zway_14-0-38"}
 Number bathroom_temp 		 "Temp [%.1f °C]" 				<temperature> 	(Motion, gFirstFloor, gInfluxDB) 								{channel="zway:zwayDevice:11fb7777:15:sensorTemperature-ZWayVDev_zway_15-0-49-1"}
 Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>			(Motion, gFirstFloor, gInfluxDB) 								{channel="zway:zwayDevice:11fb7777:15:sensorLuminosity-ZWayVDev_zway_15-0-49-3"}
 DateTime bathroom_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gFirstFloor)

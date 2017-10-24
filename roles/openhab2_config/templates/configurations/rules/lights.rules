@@ -380,50 +380,48 @@ rule "Sunset"
  		]	
  end
  
- rule "office light Changed from remote" 
- 	when
- 		Item gOfficeLights changed or
- 		Item office_left_light_color changed or
- 		Item office_right_light_color changed or
- 		Item office_roof_light_color changed
- 	then
- 	
- 	if (gOfficeLights.state == OFF) {
- 		postUpdate(scene_office_light, 0)
- 	} else if (office_roof_light_color.state == 0) {
- 		postUpdate(scene_office_light, 2)
- 	} else if (office_roof_light_color.state == 100) {
- 		postUpdate(scene_office_light, 1)
- 	} else {
- 		postUpdate(scene_office_light, 3)
- 	}
-end
  
  rule "Office light"
  	when
  		Item scene_office_light received command
  	then
- 	switch (scene_office_light.state) {
+ 	logInfo("org.openhab.rules.lights", 'Scene office light received command: ' + receivedCommand)
+ 	switch (receivedCommand) {
  		case 0: { // OFF
  			sendCommand(gOfficeLights, OFF)
  		}
  		case 1: { // RELAX
  			sendCommand(gOfficeLights, ON)
+ 			Thread::sleep(600)
  			sendCommand(office_left_light_color, 100)
+ 			Thread::sleep(600)
  			sendCommand(office_right_light_color, 100)
+ 			Thread::sleep(600)
  			sendCommand(office_roof_light_color, 100)
+ 			Thread::sleep(600)
+ 			sendCommand(gOfficeLightsDimmer, 30)
  		}
  		case 2: { // WORK
  			sendCommand(gOfficeLights, ON)
+ 			Thread::sleep(600)
  			sendCommand(office_left_light_color, 0)
+ 			Thread::sleep(600)
  			sendCommand(office_right_light_color, 0)
+ 			Thread::sleep(600)
  			sendCommand(office_roof_light_color, 0)
+ 			Thread::sleep(600)
+ 			sendCommand(gOfficeLightsDimmer, 100)
  		}
  		case 3: { // NORMAL
  			sendCommand(gOfficeLights, ON)
+ 			Thread::sleep(600)
  			sendCommand(office_left_light_color, 50)
+ 			Thread::sleep(600)
  			sendCommand(office_right_light_color, 50)
+ 			Thread::sleep(600)
  			sendCommand(office_roof_light_color, 50)
+ 			Thread::sleep(600)
+ 			sendCommand(gOfficeLightsDimmer, 80)
  		}
  	}
 end
