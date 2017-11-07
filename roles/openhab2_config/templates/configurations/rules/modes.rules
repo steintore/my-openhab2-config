@@ -124,17 +124,16 @@ rule "A change of mode"
 					camera_timer.reschedule(now.plusSeconds(360))
 				}  else {
 					camera_timer = createTimer(now.plusSeconds(360)) [|
-							if (mode.state == 2) {
-								logInfo('org.openhab.rules.modes', "Enabling cameras")
-								sendCommand(activate_cameras, ON)
-							}
+						if (mode.state == 2) {
+							logInfo('org.openhab.rules.modes', "Enabling cameras")
+							sendCommand(activate_cameras, ON)
+						}
 
-							if(camera_timer!=null) {
-								if(camera_timer.running) {
-									camera_timer.cancel()
-								}
-								camera_timer = null
+						if(camera_timer!=null) {
+							if(camera_timer.running) {
+								camera_timer.cancel()
 							}
+							camera_timer = null
 						}
 					]
 				}

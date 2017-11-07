@@ -39,7 +39,6 @@
         - items/alexa.items
         - persistence/rrd4j.persist
         - persistence/influxdb.persist
-        - persistence/myopenhab.persist
         - rules/homekit.rules
         - rules/leaf.rules
         - rules/garage.rules
@@ -83,6 +82,7 @@
         - services/addons.cfg
         - services/homekit.cfg
         - services/networkupstools.cfg
+        - services/openhabcloud.cfg
         - things/astro.things
         - things/systeminfo.things
         - things/samsungtv.things

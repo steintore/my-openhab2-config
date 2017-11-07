@@ -117,10 +117,10 @@ then
 			} else {
 				sendCommand(mode, 0) // HOME
 			}
-		} else if (alarm_alarm.state == "armedaway" || alarm_alarm.state == "armed") // AWAY
+		} else if (alarm_alarm.state == "armedaway" || alarm_alarm.state == "armed") {// AWAY
 			sendCommand(mode, 2)
 			sendCommand(activate_cameras, ON)
-		else
+		} else
 			sendNotification("{{stein_email}}","Ukjent alarmstatus: " + alarm_alarm.state.toString)
 	}
 end
