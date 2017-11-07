@@ -29,3 +29,5 @@ String alarm_door_method (gGF, gAlarm)
 String alarm_check
 
 String alarm_code
+
+Switch activate_cameras "Overvåkning:" (gGF, gAlarm, gMyOpenHAB)

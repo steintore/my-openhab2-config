@@ -39,6 +39,7 @@
         - items/alexa.items
         - persistence/rrd4j.persist
         - persistence/influxdb.persist
+        - persistence/myopenhab.persist
         - rules/homekit.rules
         - rules/leaf.rules
         - rules/garage.rules

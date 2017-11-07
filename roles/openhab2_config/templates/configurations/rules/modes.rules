@@ -6,6 +6,7 @@ import org.eclipse.smarthome.model.script.actions.Timer
 var Map stored_states = null
 var Map stored_heating_states = null
 var Timer night_timer = null
+var Timer camera_timer = null
 
 rule "A change of mode"
 	when
@@ -20,6 +21,12 @@ rule "A change of mode"
 		var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 		switch (receivedCommand) {
 			case 0: { // HOME
+				if (camera_timer != null) {
+					if(camera_timer.running)
+						camera_timer.cancel()
+					camera_timer = null
+				} 
+			 	sendCommand(activate_cameras, OFF)
 				logInfo('org.openhab.rules.modes', 'HOME MODE')
 				restoreStates(stored_states)
 				restoreStates(stored_heating_states)
@@ -58,13 +65,14 @@ rule "A change of mode"
 
 				sendCommand(leaf_request_update, ON)
 
-				sendCommand(scene_light_livingroom, 1)
-				sendCommand(scene_light_hall, 1)
 
-				if (justMorning.state == ON)
+				if (justMorning.state == ON) {
 					habPanel_hallway.postUpdate("Weather")
-				else
+				} else {
+					sendCommand(scene_light_livingroom, 1)
+					sendCommand(scene_light_hall, 1)
 					habPanel_hallway.postUpdate("Hallway")
+				}
 					
 				sendCommand(washingmachine, ON)
 				sendCommand(dryer, ON)
@@ -72,6 +80,7 @@ rule "A change of mode"
 
 			case 1: { // NIGHT
 				logInfo('org.openhab.rules.modes', 'NIGHT MODE')
+				sendCommand(activate_cameras, ON)
 				sendCommand(scene_light_livingroom, 0)
 				sendCommand(light_basement_power, OFF)
 				sendCommand(scene_light_hall, 2) // NIGHT
@@ -111,6 +120,24 @@ rule "A change of mode"
 
 			case 2: { //AWAY
 				logInfo('org.openhab.rules.modes', 'AWAY MODE')
+				if (camera_timer != null) {
+					camera_timer.reschedule(now.plusSeconds(360))
+				}  else {
+					camera_timer = createTimer(now.plusSeconds(360)) [|
+							if (mode.state == 2) {
+								logInfo('org.openhab.rules.modes', "Enabling cameras")
+								sendCommand(activate_cameras, ON)
+							}
+
+							if(camera_timer!=null) {
+								if(camera_timer.running) {
+									camera_timer.cancel()
+								}
+								camera_timer = null
+							}
+						}
+					]
+				}
 				var t = ""
 				stored_states = storeStates(away_group)
 				if (tv_power.state == ON) {
@@ -174,6 +201,12 @@ rule "A change of mode"
 				}
 				sendCommand(justMorning, OFF)
 				sendCommand(leaf_request_update, ON)
+				sendCommand(activate_cameras, OFF)
+				if (camera_timer != null) {
+					if(camera_timer.running)
+						camera_timer.cancel()
+					camera_timer = null
+				} 
 			}
 		}
 		postUpdate(previous_mode, mode.state.toString)

@@ -251,10 +251,14 @@ then
 		}		
 		case OFF: {
 			if (garagePiTimer != null) {
+				if (garagePiTimer.running)
+					garagePiTimer.cancel()
 				garagePiTimer.reschedule(now.plusHours(1))
 			} else {
-				garagePiTimer = createTimer(now.plusHours(1)) [|
+				garagePiTimer = createTimer(now.plusHours(12)) [|
 					sendNotification("{{stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
+					if (garagePiTimer.running)
+						garagePiTimer.cancel()
 					garagePiTimer.reschedule(now.plusHours(6))
 				]
 				}

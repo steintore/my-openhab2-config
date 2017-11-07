@@ -1,0 +1,6 @@
+Strategies {
+    default = everyChange
+}
+Items {
+     gMyOpenHAB* : strategy = everyChange
+}

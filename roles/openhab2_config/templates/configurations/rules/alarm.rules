@@ -102,6 +102,7 @@ then
 		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
 		if (alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome" && mode.state == 2) // Someone came home...
 		{
+			sendCommand(activate_cameras, OFF)
 			var DateTime eveningTime = now.withTime(21, 0, 0, 0)
 			var DateTime nightTime = now.withTime(1,0,0,0)
 			var DateTime dayTime = now.withTime(5,0,0,0)
@@ -118,6 +119,7 @@ then
 			}
 		} else if (alarm_alarm.state == "armedaway" || alarm_alarm.state == "armed") // AWAY
 			sendCommand(mode, 2)
+			sendCommand(activate_cameras, ON)
 		else
 			sendNotification("{{stein_email}}","Ukjent alarmstatus: " + alarm_alarm.state.toString)
 	}

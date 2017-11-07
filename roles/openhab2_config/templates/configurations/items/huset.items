@@ -12,6 +12,7 @@ Group gTemperature  (All)
 Group gHumidity		(All)
 Group gPower 		(All)
 Group gInfluxDB
+Group gMyOpenHAB
 
 /* NTP binding demo item */
 DateTime Date	"[%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
@@ -269,7 +270,7 @@ Switch hall_gf_motion 		"Gang [MAP(motion.map):%s]" 	<present>		(Motion, gGF) 		
 Number hall_gf_battery 		"Bev.sensor, gang [%s %%]"		<energy>		(Motion, gGF, gBattery, BatteryLevel_100)	{channel="zway:zwayDevice:11fb7777:16:battery-ZWayVDev_zway_16-0-128"}
 
 /* Modes 0=HOME, 1=NIGHT, 2=AWAY */
-Number mode "Modus:" <present>
+Number mode "Modus:" <present> (gMyOpenHAB)
 Number previous_mode
 Switch holiday_mode "Feriemodus [%s]"	<present>
 
