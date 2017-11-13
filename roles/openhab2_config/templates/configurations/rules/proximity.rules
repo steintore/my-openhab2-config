@@ -83,4 +83,6 @@ when
 	Item Mobile_Stein_Wlan changed from OFF to ON
 then
 	sendCommand(screen_pi_screen, ON)
+	logInfo("proximity.rules", "Deactivating cameras as someone is coming home.")
+	sendCommand(activate_cameras, OFF)
 end

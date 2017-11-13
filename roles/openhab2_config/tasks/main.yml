@@ -60,6 +60,7 @@
         - scripts/pushMessages.script
         - scripts/alarm-climate.js
         - scripts/alarm.js
+        - scripts/restartHomeKitBundle.sh
         - sitemaps/default.sitemap
         - transform/en.map
         - transform/getValValue.js

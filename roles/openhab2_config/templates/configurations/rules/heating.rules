@@ -500,6 +500,23 @@ then
 	} 
 end
 
+rule "Make sure standby mode changes the heating power"
+ 	when
+ 		Time cron "0 0/20 * * * ?"
+ 	then
+ 		if (BathroomGF_OpState.state == 0 && bathroom_gf_floor_power_level.state != 0) {
+			sendCommand(bathroom_gf_floor_power_level, 0)	
+			logInfo(logString, "Should be off, but was not")
+		 } else if (BathroomGF_OpState.state == 1 && bathroom_gf_floor_power_level.state != BathroomGFStandbyPowerLevel.state) {
+			sendCommand(bathroom_gf_floor_power_level, BathroomGFStandbyPowerLevel.state as Number)
+			logInfo(logString, "Standby-mode was using power")
+			sendNotification("{{stein_email}}","Har justert standby-modus til riktig nivå")
+		 } else if (BathroomGF_OpState.state == 2 && bathroom_gf_floor_power_level.state != 9) {
+			sendCommand(bathroom_gf_floor_power_level, 9)
+			logInfo(logString, "Was not heating with correct power, updating")
+		 }
+end
+
 rule "Make sure the z-wave-api has the configuration values"
 	when
 		Time cron "0 0/40 * * * ?"

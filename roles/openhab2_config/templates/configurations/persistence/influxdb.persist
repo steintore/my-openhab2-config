@@ -1,8 +1,9 @@
 Strategies {
-    everyMinute : "0 * * * * ?"
-    default = everyMinute
+    everyHour : "0 0 * * * ?"
+    everyDay  : "0 0 0 * * ?"
+    default = everyChange
 }
 
 Items {
-    gInfluxDB* : strategy = everyChange, everyMinute
+    gInfluxDB* : strategy = everyChange, everyHour, everyDay
 }
