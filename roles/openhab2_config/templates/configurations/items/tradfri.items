@@ -9,3 +9,6 @@ Number scene_office_light  "Kontorlys [%s]" <light> (gFirstFloor)
 
 Group:Switch:AND(ON, OFF) 	gOfficeLights	"Lys [(%d)]"  		<light> 
 Group:Dimmer				gOfficeLightsDimmer "Lys [%d %%]" 	<light>
+
+Dimmer bathroom_basement "Toalett kjeller [%d %%]" 	            <light> (gLight, gBasement) 	{ channel="tradfri:0100:mygateway:bathroomBasement:brightness" }
+Dimmer bathroom_basement_color "Toalett kjeller temp [%d %%]" 	<hue> 	(gBasement) 			{ channel="tradfri:0100:mygateway:bathroomBasement:color_temperature" }
