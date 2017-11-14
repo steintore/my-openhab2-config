@@ -131,10 +131,9 @@ rule "Restart the HomeKit bundle"
 	then
 		logInfo("homekit.rules", "Going to restart the HomeKit-bundle")
 		var String result = null
-		result = executeCommandLine("ssh@@openhab@localhost -p 8101@@bundle:list | grep -e \"^[0-9]{3}.*HomeKit\" | cut -c 1-3", 5000)
-		logInfo("homekit.rules", "Result of listing bundles is: " + result)
+		result = executeCommandLine("ssh@@openhab@localhost@@-p 8101@@bundle:list | grep -e \"^[0-9]{3}.*HomeKit\" | cut -c 1-3", 5000)
 		if (result != null && result.length() == 3) {
-			result = executeCommandLine("ssh@@openhab@localhost -p 8101@@bundle:restart " + result, 5000)
+			result = executeCommandLine("ssh@@openhab@localhost@@-p 8101@@bundle:restart " + result, 5000)
 			logInfo("homekit.rules", "Tried to restart bundle, got result: " + result)
 		} else {
 			logError("homekit.rules", "Result was not correct: " + result)
