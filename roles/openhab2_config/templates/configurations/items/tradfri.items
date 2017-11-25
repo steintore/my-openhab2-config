@@ -12,3 +12,9 @@ Group:Dimmer				gOfficeLightsDimmer "Lys [%d %%]" 	<light>
 
 Dimmer bathroom_basement "Toalett kjeller [%d %%]" 	            <light> (gLight, gBasement) 	{ channel="tradfri:0100:mygateway:bathroomBasement:brightness" }
 Dimmer bathroom_basement_color "Toalett kjeller temp [%d %%]" 	<hue> 	(gBasement) 			{ channel="tradfri:0100:mygateway:bathroomBasement:color_temperature" }
+
+Dimmer livingroom_oslo          "Oslo-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLights)  { channel="tradfri:0220:mygateway:livingRoomOslo:brightness" }
+Dimmer livingroom_oslo_color    "Oslo-lampe temp [%d %%]"   <light> (gGF)          { channel="tradfri:0220:mygateway:livingRoomOslo:color_temperature" }
+
+Dimmer livingroom_window          "Vindu-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLights)  { channel="tradfri:0220:mygateway:livingRoomWindow:brightness" }
+Dimmer livingroom_window_color    "Vindu-lampe temp [%d %%]"   <light> (gGF)          { channel="tradfri:0220:mygateway:livingRoomWindow:color_temperature" }

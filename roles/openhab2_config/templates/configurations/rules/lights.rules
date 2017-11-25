@@ -98,12 +98,12 @@ then
 	logInfo('org.openhab.rules.lights', 'scene_light_livingroom received state:' + receivedCommand)
 	switch (receivedCommand) {
 		case 0: { // OFF
-			sendCommand(Living_Room_Lights, OFF)
+			sendCommand(gLivingRoomLights, OFF)
 			sendCommand(light_dining_table_dimmer, 0)
 			postUpdate(homekit_livingroom_light, OFF)
 		}
 		case 1: { // ON
-			sendCommand(Living_Room_Lights, ON)
+			sendCommand(gLivingRoomLights, ON)
 			sendCommand(light_dining_table_dimmer, 100)
 			postUpdate(homekit_livingroom_light, ON)
 		}

@@ -150,17 +150,18 @@ String push_message_text "Default message"
 String push_message_url ""
 
 /* Lighting */
-Group:Switch:OR(ON, OFF) 		Living_Room_Lights 		"Lys [(%d)]" <light>
-Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, Living_Room_Lights) {channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
-Switch remote_light_living_room_corner 															{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
-Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, Living_Room_Lights) {channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
-Switch remote_light_living_room_window 															{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
-Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, Living_Room_Lights)  	{channel="zway:zwayDevice:11fb7777:13:switchPowerOutlet-ZWayVDev_zway_13-0-37"}
-Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, Living_Room_Lights)
+Group:Switch:OR(ON, OFF) 		gLivingRoomLights 		"Lys [(%d)]" <light>
+//Switch light_living_room_corner "Stue hjørnet"		<light> (gGF,gLight, gLivingRoomLights) {channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
+//Switch remote_light_living_room_corner 															{channel="rfxcom:lighting2:usbrfxcom:living_room_floor:command" }
+//Switch light_living_room_window "Stue hvit vindu" 	<light> (gGF,gLight, gLivingRoomLights) {channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
+//Switch remote_light_living_room_window 															{channel="rfxcom:lighting2:usbrfxcom:living_room_window:command" }
+Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, gLivingRoomLights)  	{channel="zway:zwayDevice:11fb7777:13:switchPowerOutlet-ZWayVDev_zway_13-0-37"}
 
-Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, Living_Room_Lights)  {channel="zway:zwayDevice:11fb7777:21:switchPowerOutlet-ZWayVDev_zway_21-0-37"}
+Number scene_light_livingroom "Lys stue"			<sofa>  (gGF, gLight, gLivingRoomLights)
 
-Switch light_dining_table           "Taklys"        <light> (gGF, gLight, Living_Room_Lights)  {channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
+Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, gLivingRoomLights)  {channel="zway:zwayDevice:11fb7777:21:switchPowerOutlet-ZWayVDev_zway_21-0-37"}
+
+Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)  {channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
 Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight) 						{channel="zway:zwayDevice:11fb7777:22:switchMultilevel-ZWayVDev_zway_22-0-38"}
 
 Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 			{channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
