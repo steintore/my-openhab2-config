@@ -166,13 +166,6 @@ Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight) 						
 
 Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 			{channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
 
-Switch light_basement_power 		"Av/På"						<light> (gBasement, gLight) 	{channel="rfxcom:lighting2:usbrfxcom:basement_roof:command" }
-Switch remote_light_basement_power 																{channel="rfxcom:lighting2:usbrfxcom:basement_roof:command" }
-Dimmer light_basement_dimmer 		"Tak kjellerstue [%d %%]"			(gBasement, gLight) 	{channel="rfxcom:lighting2:usbrfxcom:basement_roof:dimmerLevel" }
-Switch light_basement_window 		"Av/På"						<light> (gBasement, gLight) 	{channel="rfxcom:lighting2:usbrfxcom:basement_window:command" }
-Switch remote_light_basement_window 															{channel="rfxcom:lighting2:usbrfxcom:basement_window:command" }
-
-
 
 /* Philips HUE */
 Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
@@ -206,7 +199,7 @@ Dimmer ct_kid_room_1            "Ivers rom"                     <hue> (gLight, g
 Switch motion_detector_basement "Bevegelse gang nede"   <switch> (gBasement, Motion) {channel="rfxcom:lighting2:usbrfxcom:basement_motion:command" }
 
 Group:Switch:AND(ON, OFF)               gBasementLights "Lys [(%d)]"     <light>
-Number scene_light_basement "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
+Number scene_light_basement_hall "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
 Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)  {channel="hue:0100:hue1:9:color"}
 Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:10:color"}
 Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:7:color"}
@@ -293,7 +286,6 @@ Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)
 
 /* Smoke detector */
 String smoke_detector "Røykvarsler" {channel="rfxcom:security1:usbrfxcom:smoke_detector:status" }
-Number smoke_detector_battery	"Røyvarsler [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{channel="rfxcom:security1:usbrfxcom:smoke_detector:batteryLevel" }
 
 /* Plex */
 Switch PlexXBoxPower      "Power"         <video>     {plex="{{plex_id_xbox}}#power"}

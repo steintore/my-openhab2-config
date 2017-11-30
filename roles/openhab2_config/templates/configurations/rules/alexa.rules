@@ -36,10 +36,10 @@ rule "alexa wants to turn basement lights on or off"
 	then
 	switch (receivedCommand) {
 		case ON: {
-			sendCommand(scene_light_basement, 1)
+			sendCommand(scene_light_basement_hall, 1)
 		}
 		case OFF: {
-			sendCommand(scene_light_basement, 0)
+			sendCommand(scene_light_basement_hall, 0)
 		}
 	}
 end

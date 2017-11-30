@@ -82,9 +82,10 @@ rule "A change of mode"
 				logInfo('org.openhab.rules.modes', 'NIGHT MODE')
 				sendCommand(activate_cameras, ON)
 				sendCommand(scene_light_livingroom, 0)
-				sendCommand(light_basement_power, OFF)
+				sendCommand(scene_basement_room_light, 0)
+				sendCommand(scene_light_laundry, 0)
 				sendCommand(scene_light_hall, 2) // NIGHT
-				sendCommand(scene_light_basement, 0)
+				sendCommand(scene_light_basement_hall, 0)
 				sendCommand(scene_office_light, 0)
 
 				if (Washingmachine_OpState.state == 2) {
@@ -158,11 +159,12 @@ rule "A change of mode"
 				}
 
 				sendCommand(guest_home, OFF)
-				sendCommand(light_basement_power, OFF)
+				sendCommand(scene_basement_room_light, 0)
+				sendCommand(scene_light_laundry, 0)
 				sendCommand(gang_panelovn, OFF)
 				sendCommand(scene_light_livingroom, 0)
 				sendCommand(scene_light_hall, 0)
-				sendCommand(scene_light_basement, 0)
+				sendCommand(scene_light_basement_hall, 0)
 				sendCommand(light_bathroom, OFF)
 				sendCommand(color_bedroom, OFF)
 				sendCommand(color_kid_room_1, OFF)

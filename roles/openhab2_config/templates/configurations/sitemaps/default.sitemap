@@ -63,7 +63,7 @@ sitemap default label="Huset"
 				Group item=roomba label="Roomba" icon="sofa"
 			}
 			Frame label="Tempdetaljer" {
-				Image refresh=120000 url="{{grafana_base_url}}?from=now-48h&to=now&panelId=3&theme=light&width=700&height=350"
+				Image url="{{grafana_base_url}}?from=now-48h&to=now&panelId=3&theme=light&width=700&height=350" refresh=120000
 			}
 			Frame label="TV" visibility=[tv_power==ON] {
 				Group item=TV icon="television"
@@ -129,8 +129,11 @@ sitemap default label="Huset"
 					Text item=BasementTemperature_LastUpdate visibility=[BasementTemperature_LastUpdate>1800] valuecolor=[BasementTemperature_LastUpdate>120="orange", BasementTemperature_LastUpdate>300="red"]
 			}
     		Frame label="Lys"{
-    			Switch item=scene_light_basement mappings=[0="Av", 1="På", 2="Natt"]
-    			Switch item=light_basement_power label="Kjellerstue" mappings=[OFF='Av',ON='På']
+    			Switch item=scene_light_basement_hall mappings=[0="Av", 1="På", 2="Natt"]
+				Switch item=scene_basement_room_light mappings=[0="Av", 1="Relax", 2="Fokus", 3="Normal"]
+    			Slider item=gBasementRoomLightsDimmer icon="slider"
+				Switch item=scene_light_laundry mappings=[0="Av", 1="Fokus", 3="Normal"]
+    			Slider item=gLaundryLightsDimmer icon="slider"
     		}
     		Frame label="Plex Xbox" visibility=[xbox==ON] {
     			Text label="Plex" {

@@ -207,9 +207,9 @@ end
 
 rule "light in basement hall"
 	when
-		Item scene_light_basement received command
+		Item scene_light_basement_hall received command
 	then
-	logDebug('org.openhab.rules.lights', "Item scene_light_basement received command " + receivedCommand)
+	logDebug('org.openhab.rules.lights', "Item scene_light_basement_hall received command " + receivedCommand)
 	switch (receivedCommand) {
 		case 0:  { //OFF 
 			sendCommand(light_basement_1, 0)
@@ -244,11 +244,11 @@ rule "lights in basement hall changed from other source"
 	then
 	logDebug('org.openhab.rules.lights', "Lights in basement hall changed from other source")
 	if (light_basement_1.state == 0 && light_basement_2.state == 0 && light_basement_3.state == 0 && light_basement_4.state == 0) {
-		postUpdate(scene_light_basement, 0)
+		postUpdate(scene_light_basement_hall, 0)
 	} else if (light_basement_1.state == 100 && light_basement_2.state == 100 && light_basement_3.state == 100 && light_basement_4.state == 100) {
-		postUpdate(scene_light_basement, 1)
+		postUpdate(scene_light_basement_hall, 1)
 	} else {
-		postUpdate(scene_light_basement, 2)
+		postUpdate(scene_light_basement_hall, 2)
 	}
 end
 
@@ -259,10 +259,10 @@ rule "Basement hall motion detector"
 	logInfo('org.openhab.rules.lights', 'Motion sensor in the basement changed to: ' + basement_hall_motion.state)
 	switch (basement_hall_motion.state as OnOffType) {
 		case ON: {
-			sendCommand(scene_light_basement, 1)		
+			sendCommand(scene_light_basement_hall, 1)		
 		}
 		case OFF: {
-			sendCommand(scene_light_basement, 0)
+			sendCommand(scene_light_basement_hall, 0)
 		}
 	}
 end
@@ -283,10 +283,10 @@ rule "Motion detector in basement wants to turn on the lights"
                 case ON: {
                 		var int seconds = 10800
                         if (mode.state == 0) // HOME
-                                sendCommand(scene_light_basement, 1) // ON
+                                sendCommand(scene_light_basement_hall, 1) // ON
                         else if (mode.state == 1 || mode.state == 3) { // NIGHT OR EVENING MODE
                         		seconds = 1800;
-                                sendCommand(scene_light_basement, 2) // NIGHT MODE
+                                sendCommand(scene_light_basement_hall, 2) // NIGHT MODE
                         } else { //AWAY
                         		seconds = 900
                                 sendNotification("{{stein_email}}",'Bevegelse i kjelleren...')
@@ -294,14 +294,14 @@ rule "Motion detector in basement wants to turn on the lights"
 
                         timerBasement = createTimer(now.plusSeconds(seconds)) [|
                             logInfo("org.openhab.rules.lights", "Basement light timer created by ON-signal, state for motion: " + motion_detector_basement.state)
-                            //sendCommand(scene_light_basement, 0)
+                            //sendCommand(scene_light_basement_hall, 0)
                             postUpdate(motion_detector_basement, OFF)
                         ]
                 }
                 case OFF: {
                        	timerBasement = createTimer(now.plusSeconds(120)) [|
                         	logInfo("org.openhab.rules.lights", "Basement light timer created by OFF-signal timed out, state for motion: " + motion_detector_basement.state)
-                            //sendCommand(scene_light_basement, 0)
+                            //sendCommand(scene_light_basement_hall, 0)
                             postUpdate(motion_detector_basement, OFF)
                         ]
                 }
@@ -416,6 +416,95 @@ rule "Sunset"
  			sendCommand(office_roof_light_color, 50)
  			Thread::sleep(600)
  			sendCommand(gOfficeLightsDimmer, 80)
+ 		}
+ 	}
+end
+
+rule "Scene basement room light changed"
+ 	when
+ 		Item scene_basement_room_light received command
+ 	then
+ 	logInfo("org.openhab.rules.lights", 'Scene basement room light received command: ' + receivedCommand)
+ 	switch (receivedCommand) {
+ 		case 0: { // OFF
+ 			sendCommand(gBasementRoomLights, OFF)
+ 		}
+ 		case 1: { // RELAX
+ 			sendCommand(gBasementRoomLights, ON)
+ 			Thread::sleep(600)
+ 			sendCommand(basement_room_roof_1_color, 100)
+ 			sendCommand(basement_room_roof_2_color, 100)
+ 			sendCommand(basement_room_roof_3_color, 100)
+			sendCommand(basement_room_roof_4_color, 100)
+			sendCommand(basement_room_roof_5_color, 100)
+			sendCommand(basement_room_oslo_color, 100)
+			sendCommand(basement_room_bar_color, 100)
+			sendCommand(basement_room_canvas_color, 100)
+ 			Thread::sleep(600)
+ 			sendCommand(gBasementRoomLightsDimmer, 30)
+ 		}
+ 		case 2: { // WORK
+ 			sendCommand(gBasementRoomLights, ON)
+ 			Thread::sleep(600)
+ 			sendCommand(basement_room_roof_1_color, 30)
+ 			sendCommand(basement_room_roof_2_color, 30)
+ 			sendCommand(basement_room_roof_3_color, 30)
+			sendCommand(basement_room_roof_4_color, 30)
+			sendCommand(basement_room_roof_5_color, 30)
+			sendCommand(basement_room_oslo_color, 30)
+			sendCommand(basement_room_bar_color, 30)
+			sendCommand(basement_room_canvas_color, 30)
+ 			Thread::sleep(600)
+ 			sendCommand(gBasementRoomLightsDimmer, 100)
+ 		}
+ 		case 3: { // NORMAL
+ 			sendCommand(gBasementRoomLights, ON)
+ 			Thread::sleep(600)
+ 			sendCommand(basement_room_roof_1_color, 50)
+ 			sendCommand(basement_room_roof_2_color, 50)
+ 			sendCommand(basement_room_roof_3_color, 50)
+			sendCommand(basement_room_roof_4_color, 50)
+			sendCommand(basement_room_roof_5_color, 50)
+			sendCommand(basement_room_oslo_color, 50)
+			sendCommand(basement_room_bar_color, 50)
+			sendCommand(basement_room_canvas_color, 50)
+ 			Thread::sleep(600)
+ 			sendCommand(gBasementRoomLightsDimmer, 80)
+ 		}
+ 	}
+end
+
+rule "Scene basement room light changed"
+ 	when
+ 		Item scene_light_laundry received command
+ 	then
+ 	logInfo("org.openhab.rules.lights", 'Scene basement room light received command: ' + receivedCommand)
+	 //0="Av", 1="Fokus", 3="Normal"
+ 	switch (receivedCommand) {
+ 		case 0: { // OFF
+ 			sendCommand(gLaundryRoomLights, OFF)
+ 		}
+ 		case 1: { // WORK
+ 			sendCommand(gLaundryRoomLights, ON)
+ 			Thread::sleep(600)
+ 			sendCommand(laundry_room_roof_1_color, 30)
+ 			sendCommand(laundry_room_roof_2_color, 30)
+ 			sendCommand(laundry_room_roof_3_color, 30)
+			sendCommand(laundry_room_roof_4_color, 30)
+			sendCommand(laundry_room_roof_5_color, 30)
+ 			Thread::sleep(600)
+ 			sendCommand(gLaundryLightsDimmer, 100)
+ 		}
+ 		case 3: { // NORMAL
+ 			sendCommand(gLaundryRoomLights, ON)
+ 			Thread::sleep(600)
+ 			sendCommand(laundry_room_roof_1_color, 50)
+ 			sendCommand(laundry_room_roof_2_color, 50)
+ 			sendCommand(laundry_room_roof_3_color, 50)
+			sendCommand(laundry_room_roof_4_color, 50)
+			sendCommand(laundry_room_roof_5_color, 50)
+ 			Thread::sleep(600)
+ 			sendCommand(gLaundryLightsDimmer, 80)
  		}
  	}
 end

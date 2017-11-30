@@ -1,7 +1,4 @@
 Bridge rfxcom:bridge:usbrfxcom [ serialPort="/dev/{{rfxcom_tty}}" ] {
-	Thing lighting2				basement_window				[deviceId="{{rfxcom_basement_window}}", subType="AC"]
-	Thing lighting2				basement_roof	 			[deviceId="{{rfxcom_basement_roof}}", subType="AC"]
-
 	Thing lighting2				living_room_floor 			[deviceId="{{rfxcom_living_room_floor}}", subType="AC"]
 	Thing lighting2				living_room_window 			[deviceId="{{rfxcom_living_room_window}}", subType="AC"]
 

@@ -18,3 +18,40 @@ Dimmer livingroom_oslo_color    "Oslo-lampe temp [%d %%]"   <light> (gGF)       
 
 Dimmer livingroom_window          "Vindu-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLights)  { channel="tradfri:0220:mygateway:livingRoomWindow:brightness" }
 Dimmer livingroom_window_color    "Vindu-lampe temp [%d %%]"   <light> (gGF)          { channel="tradfri:0220:mygateway:livingRoomWindow:color_temperature" }
+
+Number scene_basement_room_light  "Kjellerstue lys [%s]" <light> (gBasement)
+
+Group:Switch:AND(ON, OFF) 	gBasementRoomLights	"Lys [(%d)]"  		<light> 
+Group:Dimmer				gBasementRoomLightsDimmer "Lys [%d %%]" 	<light>
+
+Dimmer basement_room_roof_1     "Taklampe #1 [%d %%]"        <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementRoof1:brightness" }
+Dimmer basement_room_roof_1_color     "Taklampe #1 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementRoof1:color_temperature" }
+Dimmer basement_room_roof_2     "Taklampe #2 [%d %%]"        <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementRoof2:brightness" }
+Dimmer basement_room_roof_2_color     "Taklampe #2 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementRoof2:color_temperature" }
+Dimmer basement_room_roof_3     "Taklampe #3 [%d %%]"        <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementRoof3:brightness" }
+Dimmer basement_room_roof_3_color     "Taklampe #3 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementRoof3:color_temperature" }
+Dimmer basement_room_roof_4     "Taklampe #4 [%d %%]"        <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementRoof4:brightness" }
+Dimmer basement_room_roof_4_color     "Taklampe #4 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementRoof4:color_temperature" }
+Dimmer basement_room_roof_5     "Taklampe #5 [%d %%]"        <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementRoof5:brightness" }
+Dimmer basement_room_roof_5_color     "Taklampe #5 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementRoof5:color_temperature" }
+Dimmer basement_room_oslo         "Oslo-lampe [%d %%]"       <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementOslo:brightness" }
+Dimmer basement_room_oslo_color   "Oslo-lampe temp [%d %%]"  <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementOslo:color_temperature" }
+Dimmer basement_room_bar          "Barlampe [%d %%]"         <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementBar:brightness" }
+Dimmer basement_room_bar_color    "Barlampe temp [%d %%]"    <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementBar:color_temperature" }
+Dimmer basement_room_canvas       "Bak lerret [%d %%]"       <light> (gLight, gBasement, gBasementRoomLights)   { channel="tradfri:0220:mygateway:basementCanvas:brightness" }
+Dimmer basement_room_canvas_color "Bak lerret temp [%d %%]"  <light> (gBasement)                                { channel="tradfri:0220:mygateway:basementCanvas:color_temperature" }
+
+Number scene_light_laundry  "Vaskerom lys [%s]" <light> (gBasement)
+Group:Switch:AND(ON, OFF) 	gLaundryRoomLights	"Lys [(%d)]"  		<light> 
+Group:Dimmer				gLaundryLightsDimmer "Lys [%d %%]" 	<light>
+
+Dimmer laundry_roof_1     "Taklampe #1 [%d %%]"        <light> (gLight, gBasement, gLaundryRoomLights)   { channel="tradfri:0220:mygateway:laundryRoof1:brightness" }
+Dimmer laundry_roof_1_color     "Taklampe #1 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:laundryRoof1:color_temperature" }
+Dimmer laundry_roof_2     "Taklampe #2 [%d %%]"        <light> (gLight, gBasement, gLaundryRoomLights)   { channel="tradfri:0220:mygateway:laundryRoof2:brightness" }
+Dimmer laundry_roof_2_color     "Taklampe #2 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:laundryRoof2:color_temperature" }
+Dimmer laundry_roof_3     "Taklampe #3 [%d %%]"        <light> (gLight, gBasement, gLaundryRoomLights)   { channel="tradfri:0220:mygateway:laundryRoof3:brightness" }
+Dimmer laundry_roof_3_color     "Taklampe #3 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:laundryRoof3:color_temperature" }
+Dimmer laundry_roof_4     "Taklampe #4 [%d %%]"        <light> (gLight, gBasement, gLaundryRoomLights)   { channel="tradfri:0220:mygateway:laundryRoof4:brightness" }
+Dimmer laundry_roof_4_color     "Taklampe #4 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:laundryRoof4:color_temperature" }
+Dimmer laundry_roof_5     "Taklampe #5 [%d %%]"        <light> (gLight, gBasement, gLaundryRoomLights)   { channel="tradfri:0220:mygateway:laundryRoof5:brightness" }
+Dimmer laundry_roof_5_color     "Taklampe #5 temp [%d %%]"   <light> (gBasement)                                { channel="tradfri:0220:mygateway:laundryRoof5:color_temperature" }
