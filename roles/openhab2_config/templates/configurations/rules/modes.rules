@@ -7,6 +7,7 @@ var Map stored_states = null
 var Map stored_heating_states = null
 var Timer night_timer = null
 var Timer camera_timer = null
+var Timer habPanelTimer = null
 
 rule "A change of mode"
 	when
@@ -68,6 +69,18 @@ rule "A change of mode"
 
 				if (justMorning.state == ON) {
 					habPanel_hallway.postUpdate("Weather")
+					habPanelTimer = createTimer(now.plusMinutes(90)) [|
+						if (habPanel_hallway.state == "Weather") {
+							habPanel_hallway.postUpdate("Hallway")
+						}
+
+						if(habPanelTimer!=null) {
+							if(habPanelTimer.running) {
+								habPanelTimer.cancel()
+							}
+							habPanelTimer = null
+						}
+					]
 				} else {
 					sendCommand(scene_light_livingroom, 1)
 					sendCommand(scene_light_hall, 1)
