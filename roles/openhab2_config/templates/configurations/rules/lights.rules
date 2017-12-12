@@ -87,6 +87,7 @@ then
 		}
 		case OFF: {
 			sendCommand(light_hall_ground_floor, OFF)
+			postUpdate(screen_pi_screen, OFF)
 		}
 	}
 end

@@ -120,7 +120,6 @@ rule "A change of mode"
 
 				sendCommand(gang_panelovn, OFF)
 
-				sendCommand(screen_pi_screen, OFF)
 				sendCommand(justMorning, OFF)
 				sendCommand(roombaDock, OFF)
 
@@ -189,7 +188,6 @@ rule "A change of mode"
 				if (ac_scene.state > 1) {
 					sendCommand(ac_scene, 0)
 				}
-				sendCommand(screen_pi_screen, OFF)
 				sendCommand(justMorning, OFF)
 				sendCommand(screen_pi_reboot, ON)
 

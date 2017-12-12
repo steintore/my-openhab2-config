@@ -182,12 +182,13 @@ rule "Switch ON or OFF the screen in the hall way"
 	var String result = null
 	switch (receivedCommand) {
 		case ON: {
-			result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@export DISPLAY=:0;xset dpms force on", 5000)
+			result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@xscreensaver-command -deactivate", 5000)
 		}
 		case OFF: {
-			result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@export DISPLAY=:0;xset dpms force off", 5000)
+			result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@xscreensaver-command -activate", 5000)
 		}
 	}
+	postUpdate(screen_pi_screen, OFF)
 	if (result != null && result.length() > 0)
 		logInfo("org.openhab.status.screenpi", result)
 end
