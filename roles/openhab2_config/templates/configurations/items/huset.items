@@ -44,10 +44,9 @@ Switch guest_home 			"Guests @ Home" 			<present>	(Home, gInfluxDB)
 Group:Switch:OR(ON, OFF) proximity (All)
 Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity, gInfluxDB) {channel="network:device:mobileStein:online"}
 Switch Mobile_Anette_Wlan	"Anettes iPhone Wlan" 	<present> 		(proximity, gInfluxDB) {channel="network:device:mobileAnette:online"}
-Switch time_capsule_lan 	"Time capsule"			<present>		(proximity, gInfluxDB) {channel="network:device:timeCapsule:online"}
+Switch router_lan 	        "Router"    			<present>		(proximity, gInfluxDB) {channel="network:device:router:online"}
 Switch home_away_lan		"Hjemme/borte"			<present>		(proximity, gInfluxDB) {channel="network:device:homeAway:online"}
 Switch boss_lan				"Boss server"       	<present>       (proximity, gInfluxDB) {channel="network:device:boss:online"}
-Switch nas_lan				"NAS"					<present>		(proximity, gInfluxDB) {channel="network:device:nas:online"}
 Switch zwave_lan			"Z-Wave"				<present>		(proximity, gInfluxDB) {channel="network:device:zwave:online"}
 Switch roomba_lan			"Roomba"				<present>		(proximity, gInfluxDB) {channel="network:device:roomba:online"}
 Switch garage_pi			"GaragePi"				<present>		(proximity, gInfluxDB) {channel="network:device:garagePi:online"}
