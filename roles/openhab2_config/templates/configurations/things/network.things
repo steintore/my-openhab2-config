@@ -1,6 +1,6 @@
 network:device:mobileStein [ hostname="{{stt_ip}}", port="0", retry="1", timeout="5000", refresh_interval="60000", use_system_ping="true", dhcplisten="true" ]
 network:device:mobileAnette [ hostname="{{anette_ip}}", port="0", retry="1", timeout="5000", refresh_interval="60000", use_system_ping="true", dhcplisten="true" ]
-network:device:timeCapsule [ hostname="{{time_capsule_ip}}", port="0", retry="1", timeout="5000", refresh_interval="60000", use_system_ping="true", dhcplisten="true" ]
+network:device:router [ hostname="{{router_ip}}", port="0", retry="1", timeout="5000", refresh_interval="60000", use_system_ping="true", dhcplisten="true" ]
 network:device:homeAway [ hostname="{{home_away_ip}}", port="0", retry="1", timeout="5000", refresh_interval="60000", use_system_ping="true", dhcplisten="true" ]
 network:device:boss [ hostname="{{boss_ip}}", port="0", retry="1", timeout="5000", refresh_interval="60000", use_system_ping="true", dhcplisten="true" ]
 network:device:zwave [ hostname="{{zwave_ip}}", port="0", retry="1", timeout="5000", refresh_interval="60000", use_system_ping="true", dhcplisten="true" ]
