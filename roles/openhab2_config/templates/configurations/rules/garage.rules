@@ -234,7 +234,7 @@ then
 	postUpdate(garagepi_motion, OFF)
 end
 
-rule "Garagepi is offline or offline"
+rule "Garagepi is offline or online"
 when
 	Item garage_pi changed
 then
@@ -246,21 +246,23 @@ then
 					garagePiTimer.cancel()
 				garagePiTimer = null
 			}
-			logInfo('garage.rules', "GaragePiTimer is now (should always be null): {}", garagePiTimer)
+			logInfo('garage.rules', "GaragePiTimer is now (should always be null): " + garagePiTimer)
 		}		
 		case OFF: {
 			if (garagePiTimer != null) {
 				if (garagePiTimer.running)
 					garagePiTimer.cancel()
 				garagePiTimer.reschedule(now.plusHours(12))
-				logInfo('garage.rules', "GaragePiTimer has been reschudled to: {}", now.plusHours(12))
+				logInfo('garage.rules', "GaragePiTimer has been rescheduled to: " + now.plusHours(12))
 			} else {
+				logInfo('garage.rules', "creating new GaragePiTimer has scheduled to run at: " + now.plusHours(12))
 				garagePiTimer = createTimer(now.plusHours(12)) [|
-					sendNotification("{{stein_email}}", "GaragePi har vært offline siden: {}", garage_pi.lastUpdate)
+					logInfo('garage.rules', "GaragePiTimer executing " + garagePiTimer.running)
+					sendNotification("{{stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
 					if (garagePiTimer.running)
 						garagePiTimer.cancel()
-					garagePiTimer.reschedule(now.plusHours(6))
-					logInfo('garage.rules', 'GarageTimer has been rescheduled to {}', now.plusHours(6))
+					garagePiTimer = null
+					logInfo('garage.rules', 'GarageTimer has been rescheduled to ' + now.plusHours(6))
 				]
 				}
 		}
