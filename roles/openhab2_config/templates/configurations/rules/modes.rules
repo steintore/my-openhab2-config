@@ -125,7 +125,6 @@ rule "A change of mode"
 
 				alarm_check.postUpdate(""+ now)
 
-				postUpdate(motion_living_room, OFF)
 				sendCommand(screen_pi_reboot, ON)
 				sendCommand(leaf_request_update, OFF)
 				sendCommand(alarm_door_lock, ON)
@@ -219,6 +218,17 @@ rule "A change of mode"
 						camera_timer.cancel()
 					camera_timer = null
 				} 
+			}
+
+			case 99: { // PARTY
+				logInfo("modes.rules", "PARTY MODE")
+				scene_light_hall.sendCommand(1)
+				scene_office_light.sendCommand(1)
+				scene_basement_room_light.sendCommand(1)
+				sendCommand(activate_cameras, OFF)
+				scene_light_hall_gf.sendCommand(1)
+				scene_light_livingroom.sendCommand(1)
+				scene_light_basement_hall.sendCommand(1)
 			}
 		}
 		postUpdate(previous_mode, mode.state.toString)

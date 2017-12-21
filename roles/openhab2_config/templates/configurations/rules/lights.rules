@@ -86,8 +86,10 @@ then
 			}				
 		}
 		case OFF: {
-			sendCommand(light_hall_ground_floor, OFF)
-			postUpdate(screen_pi_screen, OFF)
+			if (mode.state != 99) {
+				sendCommand(light_hall_ground_floor, OFF)
+				postUpdate(screen_pi_screen, OFF)
+			}
 		}
 	}
 end
@@ -263,102 +265,10 @@ rule "Basement hall motion detector"
 			sendCommand(scene_light_basement_hall, 1)		
 		}
 		case OFF: {
-			sendCommand(scene_light_basement_hall, 0)
+			if (mode.state != 99)
+				sendCommand(scene_light_basement_hall, 0)
 		}
 	}
-end
-
-rule "Motion detector in basement wants to turn on the lights"
-        when
-                Item motion_detector_basement received command or
-                Item motion_detector_basement changed
-        then
-        	logDebug('org.openhab.rules.lights', "Motion detector in basement wants to turn on the lights " + motion_detector_basement)
-                if (timerBasement != null) {
-                        if(timerBasement.running) {
-                                timerBasement.cancel()
-                        }
-                        timerBasement = null
-                }
-                switch (motion_detector_basement.state as OnOffType) {
-                case ON: {
-                		var int seconds = 10800
-                        if (mode.state == 0) // HOME
-                                sendCommand(scene_light_basement_hall, 1) // ON
-                        else if (mode.state == 1 || mode.state == 3) { // NIGHT OR EVENING MODE
-                        		seconds = 1800;
-                                sendCommand(scene_light_basement_hall, 2) // NIGHT MODE
-                        } else { //AWAY
-                        		seconds = 900
-                                sendNotification("{{stein_email}}",'Bevegelse i kjelleren...')
-                        }
-
-                        timerBasement = createTimer(now.plusSeconds(seconds)) [|
-                            logInfo("org.openhab.rules.lights", "Basement light timer created by ON-signal, state for motion: " + motion_detector_basement.state)
-                            //sendCommand(scene_light_basement_hall, 0)
-                            postUpdate(motion_detector_basement, OFF)
-                        ]
-                }
-                case OFF: {
-                       	timerBasement = createTimer(now.plusSeconds(120)) [|
-                        	logInfo("org.openhab.rules.lights", "Basement light timer created by OFF-signal timed out, state for motion: " + motion_detector_basement.state)
-                            //sendCommand(scene_light_basement_hall, 0)
-                            postUpdate(motion_detector_basement, OFF)
-                        ]
-                }
-        }
-end
-
-rule "Motion detector in living room wants to turn on the lights"
-        when
-                Item motion_living_room received command or
-                Item motion_living_room changed
-        then
-                switch (motion_living_room.state as OnOffType) {
-                case ON: {
-                        sendCommand(scene_light_livingroom, 1)
-                }
-                case OFF: {
-                	if(mode.state == 1 || mode.state == 2) // NIGHT MODE
-                		sendCommand(scene_light_livingroom, 0)
-                }
-        }
-end
-
-rule "Remote in living room"
-	when
-        Item scene_remote_livingroom changed or
-        Item scene_remote_livingroom received update
-    then
-	    switch (scene_remote_livingroom.state) {
-	    	case 0: {
-	    		// NOTHING
-	    	}
-            case 1:  { // LIGHTS ON
-	            sendCommand(scene_light_livingroom, 1)
-            }
-            case 2: { // ++ Heat up if not heating, otherwise turn AC off
-            	if (ac_scene.state != 1)
-            		sendCommand(ac_scene, 1)
-            	else
-            		sendCommand(ac_scene, 0)
-            }
-            case 3: { // LIGHTS OFF
-                sendCommand(scene_light_livingroom, 0)
-            }
-            case 4: { // -- Let it be colder please
-            	if (ac_scene.state != 2)
-                	sendCommand(ac_scene, 2)
-                else
-                	sendCommand(ac_scene, 0)
-            } 
-            default: {
-            	sendNotification("{{stein_email}}",'Fikk en rar update fra fjernkontrollen: ' + scene_remote_livingroom.state.toString)
-            }
-    }
-    // Set it to 0, so that all changes are considered
-    if (scene_remote_livingroom.state != 0)
-    	postUpdate(scene_remote_livingroom, 0)
 end
 
 rule "Sunset"

@@ -1,7 +1,7 @@
 sitemap default label="Huset"
 {
 	Frame label="Quick" {
-		Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
+		Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte", 99="PARTY"]
 		Switch item=holiday_mode visibility=[mode==2]
 		Switch item=ac_scene mappings=[0="Av", 1="Varm", 2="Kjøl", 3="Luft"]
 		Setpoint item=ac_set_temp minValue=16 maxValue=28 step=1 icon="temperature" visibility=[ac_power==ON]

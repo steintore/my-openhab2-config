@@ -163,8 +163,6 @@ Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, gLivingRoomLi
 Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)  {channel="zway:zwayDevice:11fb7777:22:switchPowerOutlet-ZWayVDev_zway_22-0-37"}
 Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight) 						{channel="zway:zwayDevice:11fb7777:22:switchMultilevel-ZWayVDev_zway_22-0-38"}
 
-Switch motion_living_room 		"Bevegelse stue" 		<switch> (gGF, Motion) 		 			{channel="rfxcom:lighting2:usbrfxcom:living_room_motion:command" }
-
 
 /* Philips HUE */
 Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
@@ -194,8 +192,6 @@ Color  color_kid_room_1         "Ivers rom"             <hue> (gLight, gFirstFlo
 Dimmer dimmer_kid_room_1        "Ivers rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color"}
 Dimmer ct_kid_room_1            "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color_temperature"}
 
-/* Motion detector */
-Switch motion_detector_basement "Bevegelse gang nede"   <switch> (gBasement, Motion) {channel="rfxcom:lighting2:usbrfxcom:basement_motion:command" }
 
 Group:Switch:AND(ON, OFF)               gBasementLights "Lys [(%d)]"     <light>
 Number scene_light_basement_hall "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
@@ -278,7 +274,6 @@ Number bathroom_battery 	 "Bev.sensor, bad [%s %%]"		<battery>		(Motion, gBatter
 Switch light_bathroom_mirror "Speillys"						<light>			(gLight, gFirstFloor)								{channel="zway:zwayDevice:11fb7777:19:switchPowerOutlet-ZWayVDev_zway_19-0-37"}
 Number scene_bathroom_light
 
-Number scene_remote_livingroom
 
 Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF) {channel="zway:zwayDevice:11fb7777:20:switchPowerOutlet-ZWayVDev_zway_20-0-37"}
 Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)
