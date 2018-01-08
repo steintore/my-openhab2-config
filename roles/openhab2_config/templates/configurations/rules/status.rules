@@ -29,7 +29,6 @@ when
   Item OutdoorTemperature received update
 then
   postUpdate(OutdoorTemperature_LastUpdate, new DateTimeType())
-	postUpdate(alexa_outdoor_temperature, OutdoorTemperature.state)
 end
 
 rule "Records last office temperature update time"
