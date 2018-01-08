@@ -15,7 +15,7 @@ rule "motion detected in the bathroom"
 	switch (bathroom_motion.state as OnOffType) {
 		case ON: {
 			if (mode.state != 2) {
-				if (mode.state == 0) { //HOME
+				if (mode.state == 0 || mode.state == 99) { //HOME OR PARTY
 					sendCommand(scene_bathroom_light, 2) //DAY
 				} else {
 					sendCommand(scene_bathroom_light, 1) // NIGHT
@@ -82,7 +82,7 @@ then
 			sendCommand(screen_pi_screen, ON)
 			if (mode.state == 2) {
 				logDebug('org.openhab.rules.lights', 'Item hall_gf_motion changed want alarm status to be checked')
-				postUpdate(alarm_check, "" + now)
+				postUpdate(alarm_check_now, "" + now)
 			}				
 		}
 		case OFF: {

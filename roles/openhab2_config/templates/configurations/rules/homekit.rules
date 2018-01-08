@@ -117,6 +117,15 @@ rule "Homekit good bye"
 		postUpdate(homekit_goodbye, OFF)
 end
 
+rule "Homekit PARTY"
+	when
+		Item homekit_party received command ON
+	then
+		if (mode.state != 99 && mode.state != 2)
+			sendCommand(mode, 99)
+		postUpdate(homekit_party, OFF)
+end
+
 rule "Homekit coming home"
 	when
 		Item homekit_cominghome received command ON

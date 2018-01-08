@@ -27,6 +27,7 @@ String alarm_door_motor_jam (gGF, gAlarm)
 String alarm_door_method (gGF, gAlarm)
 
 String alarm_check
+String alarm_check_now
 
 String alarm_code
 

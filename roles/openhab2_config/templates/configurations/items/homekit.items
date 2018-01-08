@@ -9,6 +9,7 @@ Switch homekit_tv					"TV"	<tv> (homekit) [ "Switchable" ]
 Switch homekit_goodnight 		"God natt" 		(homekit) 	[ "Switchable" ]
 Switch homekit_goodmorning 		"God morgen" 	(homekit) 	[ "Switchable" ]
 Switch homekit_goodbye 			"Ha det bra" 	(homekit) 	[ "Switchable" ]
+Switch homekit_party 			"PARTY"      	(homekit) 	[ "Switchable" ]
 Switch homekit_cominghome		"Hello" 		(homekit)	[ "Switchable" ]
 
 Switch homekit_garagedoor_open 	"Åpne garasjeporten" (homekit) [ "Switchable"]
