@@ -11,7 +11,7 @@ rule "Set alarm climate items"
 		Item alarm_climate received update
 then
 		var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm-climate.js", 5000)
-        if (json != null) {
+        if (json != null && json != "") {
         	logInfo("org.openhab.rules.alarm", "Got response from alarm-climate: ["+ json + "]")
         		try {
         			var String climate = json.replace('&#176;', '')
@@ -88,11 +88,11 @@ then
         	var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
         	logInfo("org.openhab.rules.alarm", "JSON is [" + json + "]")
         	var String alarmstate = null
-        	if (json != null && json != '') {
+        	if (json != null && json != '' && !json.contains("Error")) {
 				alarmstate = transform("JSONPATH", "$.status", json)
 				logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
 			}
-			if (alarmstate == null || json == null) {
+			if (alarmstate == null || json == null || alarmState.contains("Error")) {
 				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
 				if (checkAlarmTimer != null) 
 				checkAlarmTimer.reschedule(now.plusSeconds(30))
@@ -119,7 +119,7 @@ then
 		postUpdate(alarm_check, ""+ now)
 	} else {
 		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
-		if ((alarm_alarm.state == "unarmed" || alarm_alarm.state == "armedhome") && mode.state == 2) // Someone came home...
+		if ((alarm_alarm.state.toString() == "unarmed" || alarm_alarm.state.toString() == "armedhome") && mode.state == 2) // Someone came home...
 		{
 			sendCommand(activate_cameras, OFF)
 			var DateTime eveningTime = now.withTime(21, 0, 0, 0)
@@ -136,11 +136,15 @@ then
 			} else {
 				sendCommand(mode, 0) // HOME
 			}
-		} else if (alarm_alarm.state == "armedaway" || alarm_alarm.state == "armed") {// AWAY
+		} else if (alarm_alarm.state.toString() == "armedaway" || alarm_alarm.state.toString() == "armed") {// AWAY
 			sendCommand(mode, 2)
 			sendCommand(activate_cameras, ON)
+		} else if (alarm_alarm.state.toString() == "unarmed") {
+			logInfo("org.openhab.rules.alarm", "Nothing done after alarm state check")
 		} else
-			sendNotification("{{stein_email}}","Ukjent alarmstatus: " + alarm_alarm.state.toString)
+			postUpdate(alarm_alarm, null)
+			logInfo("org.openhab.rules.alarm", "Ukjent alarmstatus: " + alarm_alarm.state.toString())
+			sendNotification("{{stein_email}}","Ukjent alarmstatus: " + alarm_alarm.state.toString())
 	}
 end
 
