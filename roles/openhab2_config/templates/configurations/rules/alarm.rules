@@ -92,7 +92,7 @@ then
 				alarmstate = transform("JSONPATH", "$.status", json)
 				logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
 			}
-			if (alarmstate == null || json == null || alarmState.contains("Error")) {
+			if (alarmstate == null || json == null || alarmstate.contains("Error")) {
 				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
 				if (checkAlarmTimer != null) 
 				checkAlarmTimer.reschedule(now.plusSeconds(30))
