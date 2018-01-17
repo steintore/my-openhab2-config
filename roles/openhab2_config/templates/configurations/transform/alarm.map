@@ -3,3 +3,5 @@ armedhome=Delsikret
 armedaway=Helsikret
 armed=Tilkoblet
 -=Ukjent
+UNLOCKED=Åpen
+LOCKED=Låst

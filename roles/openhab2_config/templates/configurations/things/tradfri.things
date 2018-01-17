@@ -18,4 +18,9 @@ Bridge tradfri:gateway:mygateway [ host="{{tradfri_ip}}", code="{{tradfri_code}}
     0220 laundryRoof3       [ id=65548 ]
     0220 laundryRoof4       [ id=65550 ]
     0220 laundryRoof5       [ id=65551 ]
+    0107 bathroomOccupancy  [ id=65540 ]
+    0107 laundryOccupancy   [ id=65549 ]
+    0830 basementRemote     [ id=65536 ]
+    0830 livingRoomRemote   [ id=65542 ]
+    0830 officeRemote       [ id=65536 ]
 }

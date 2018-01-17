@@ -64,15 +64,16 @@ when
 then
 	logInfo("org.openhab.rules.alarm", "Checking status from alarm NOW")
 	var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
+	logInfo("org.openhab.rules.alarm", "JSON is [" + json + "]")
 	var String alarmstate = null
 	if (json != null && json != '') {
 		alarmstate = transform("JSONPATH", "$.status", json)
 		logInfo("org.openhab.rules.alarm", "Alarm state is now [" +  alarmstate + "]")
+		if (alarmstate != null)
+			alarm_alarm.sendCommand(alarmstate)
 	}
-	if (json != null && alarmstate != null) { 
-		sendCommand(alarm_alarm, alarmstate)
-	} else {
-		logInfo("org.openhab.rules.alarm", "Result from checking alarm was null, so we will check again in 15 seconds or so...")
+	if (json == null || alarmstate == null) { 
+		logInfo("org.openhab.rules.alarm", "Result from checking alarm was [" + json + "] - [" + alarmstate + "], so we will check again in 15 seconds or so...")
 		postUpdate(alarm_check, "" + now)
 	}
 end
@@ -92,10 +93,10 @@ then
 				alarmstate = transform("JSONPATH", "$.status", json)
 				logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
 			}
-			if (alarmstate == null || json == null || alarmstate.contains("Error")) {
+			if (alarmstate == null || alarmstate.contains("Error")) {
 				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
 				if (checkAlarmTimer != null) 
-				checkAlarmTimer.reschedule(now.plusSeconds(30))
+					checkAlarmTimer.reschedule(now.plusSeconds(30))
 			} else {
 				if(checkAlarmTimer != null) {
 					if(checkAlarmTimer.running) {
@@ -103,7 +104,7 @@ then
 					}
 					checkAlarmTimer = null
 				}
-				sendCommand(alarm_alarm, alarmstate)
+				alarm_alarm.sendCommand(alarmstate)
 			}
 		]
 	}
@@ -118,33 +119,35 @@ then
 		logInfo("org.openhab.rules.alarm", "Alarm state is null, trying to fetch state again...")
 		postUpdate(alarm_check, ""+ now)
 	} else {
-		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString())
-		if ((alarm_alarm.state.toString() == "unarmed" || alarm_alarm.state.toString() == "armedhome") && mode.state == 2) // Someone came home...
+		logInfo("org.openhab.rules.alarm", "Alarm state changed to: " + alarm_alarm.state.toString() + " mode is: " + mode.state)
+		if ((alarm_alarm.state.toString() == "unarmed" || alarm_alarm.state.toString() == "armedhome") && mode.state == 2) 
 		{
-			sendCommand(activate_cameras, OFF)
+			logInfo("org.openhab.rules.alarm", "Looks like someone came home...")
+			activate_cameras.sendCommand(OFF)
 			var DateTime eveningTime = now.withTime(21, 0, 0, 0)
 			var DateTime nightTime = now.withTime(1,0,0,0)
 			var DateTime dayTime = now.withTime(5,0,0,0)
 
 			if(nightTime.afterNow && dayTime.beforeNow) {
-				sendCommand(mode, 0) // HOME
+				mode.sendCommand(0)// HOME
 			} else if (nightTime.beforeNow && dayTime.afterNow) {
-				sendCommand(mode, 1) // NIGHT
+				mode.sendCommand(1)// NIGHT
 			} else if (nightTime.afterNow || eveningTime.beforeNow) {
 				if (mode.state != 1)
-					sendCommand(mode, 3) // EVENING
+					mode.sendCommand(3)// EVENING
 			} else {
-				sendCommand(mode, 0) // HOME
+				mode.sendCommand(0)// HOME
 			}
 		} else if (alarm_alarm.state.toString() == "armedaway" || alarm_alarm.state.toString() == "armed") {// AWAY
-			sendCommand(mode, 2)
-			sendCommand(activate_cameras, ON)
+			mode.sendCommand(2)
+			activate_cameras.sendCommand(ON)
 		} else if (alarm_alarm.state.toString() == "unarmed") {
-			logInfo("org.openhab.rules.alarm", "Nothing done after alarm state check")
-		} else
-			postUpdate(alarm_alarm, null)
+			logInfo("org.openhab.rules.alarm", "Nothing done after alarm state check, mode is: " + mode.state.toString)
+		} else {
+			alarm_alarm.postUpdate(null)
 			logInfo("org.openhab.rules.alarm", "Ukjent alarmstatus: " + alarm_alarm.state.toString())
 			sendNotification("{{stein_email}}","Ukjent alarmstatus: " + alarm_alarm.state.toString())
+		}
 	}
 end
 
@@ -190,15 +193,17 @@ end
 
 rule "Check the status off the door lock"
 	when
-		Item alarm_door_lock_check received update or
-		Item alarm_door_lock_check received command
+		Item alarm_door_lock_check received update
 	then
 	var result = executeCommandLine("vsure {{alarm_login}} {{alarm_password}} overview doorLockStatusList", 5000)
 	logDebug("org.openhab.rules.alarm", "Door lock state is now: " + result)
 	if (result != null) {
-		postUpdate(alarm_door_locked_state, transform("JSONPATH", "$..lockedState", result))
-		postUpdate(alarm_door_current_lock_state, transform("JSONPATH", "$..currentLockState", result))
-		postUpdate(alarm_door_motor_jam, transform("JSONPATH", "$..motorJam", result))
-		postUpdate(alarm_door_method, transform("JSONPATH", "$..method", result))
+		postUpdate(alarm_door_locked_state, transform("JSONPATH", "$..lockedState", result).replace('[\"', '').replace('\"]','').replace(',','.'))
+		postUpdate(alarm_door_current_lock_state, transform("JSONPATH", "$..currentLockState", result).replace('[\"', '').replace('\"]','').replace(',','.'))
+		postUpdate(alarm_door_motor_jam, transform("JSONPATH", "$..motorJam", result).replace('[\"', '').replace('\"]','').replace(',','.'))
+		postUpdate(alarm_door_method, transform("JSONPATH", "$..method", result).replace('[\"', '').replace('\"]','').replace(',','.'))
+	}
+	if (mode.state == 1 && alarm_door_locked_state.state.toString() == 'UNLOCKED') {
+		push_message_text.postUpdate("Husk å låse døra når du legger deg...")
 	}
 end

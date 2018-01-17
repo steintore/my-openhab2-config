@@ -21,10 +21,10 @@ DateTime alarm_time_changed
 
 Switch alarm_door_lock
 String alarm_door_lock_check
-String alarm_door_locked_state "Dørlås: [%s]" (gGF, gAlarm)
-String alarm_door_current_lock_state (gGF, gAlarm)
-String alarm_door_motor_jam (gGF, gAlarm)
-String alarm_door_method (gGF, gAlarm)
+String alarm_door_locked_state "Dørlås: [%s]"                   (gGF, gAlarm)
+String alarm_door_current_lock_state  "Current doorlock: [%s]"  (gGF, gAlarm)
+String alarm_door_motor_jam "Motor jam: [%s]"                   (gGF, gAlarm)
+String alarm_door_method "Door method: [%s]"                    (gGF, gAlarm)
 
 String alarm_check
 String alarm_check_now

@@ -5,6 +5,9 @@ OPEN=apen
 ON=Apen
 undefined=ukjent
 
+UNLOCKED=Åpen
+LOCKED=Låst
+
 thunder=thunderstorm
 storm=storm
 rain-and-snow=mixed rain and snow

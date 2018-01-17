@@ -17,17 +17,18 @@ rule "A change of mode"
 	if (receivedCommand != previous_mode.state) {
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
-		postUpdate(alarm_door_lock_check, now.toString)
+		postUpdate(alarm_door_lock_check, "" + now)
 
 		var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 		switch (receivedCommand) {
 			case 0: { // HOME
+				logInfo('org.openhab.rules.modes', 'HOME MODE')
+			 	sendCommand(activate_cameras, OFF)
 				if (camera_timer != null) {
 					if(camera_timer.running)
 						camera_timer.cancel()
 					camera_timer = null
 				} 
-			 	sendCommand(activate_cameras, OFF)
 				logInfo('org.openhab.rules.modes', 'HOME MODE')
 				restoreStates(stored_states)
 				restoreStates(stored_heating_states)
@@ -89,6 +90,7 @@ rule "A change of mode"
 					
 				sendCommand(washingmachine, ON)
 				sendCommand(dryer, ON)
+				logInfo('org.openhab.rules.modes', 'Home MODE activated')
 			}
 
 			case 1: { // NIGHT
@@ -128,6 +130,7 @@ rule "A change of mode"
 				sendCommand(screen_pi_reboot, ON)
 				sendCommand(leaf_request_update, OFF)
 				sendCommand(alarm_door_lock, ON)
+				logInfo('org.openhab.rules.modes', 'Night MODE activated')
 			}
 
 			case 2: { //AWAY
@@ -194,6 +197,9 @@ rule "A change of mode"
 				habPanel_hallway.postUpdate("Hallway")
 				
 				sendCommand(alarm_door_lock, ON)
+				sendCommand(stein_home, OFF)
+				sendCommand(anette_home, OFF)
+				logInfo('org.openhab.rules.modes', 'Away MODE activated')
 			}
 
 			case 3: { // EVENING MODE
@@ -218,6 +224,7 @@ rule "A change of mode"
 						camera_timer.cancel()
 					camera_timer = null
 				} 
+				logInfo('org.openhab.rules.modes', 'Evening MODE activated')
 			}
 
 			case 99: { // PARTY
@@ -229,6 +236,7 @@ rule "A change of mode"
 				scene_light_hall_gf.sendCommand(1)
 				scene_light_livingroom.sendCommand(1)
 				scene_light_basement_hall.sendCommand(1)
+				logInfo('org.openhab.rules.modes', 'Party MODE activated')
 			}
 		}
 		postUpdate(previous_mode, mode.state.toString)
@@ -297,7 +305,7 @@ rule "Return to day mode during the week"
 		Time cron "0 30 5 ? * MON-FRI"
 	then
 		alarm_check.postUpdate(""+ now)
-		if (mode.state == 1) {
+		if (mode.state == 1 || mode.state == 99) {
 			logInfo('org.openhab.rules.modes', "Switching to day mode because it is time")
 			sendCommand(justMorning, ON)
 			sendCommand(mode, 0)
@@ -312,7 +320,7 @@ rule "Return to day mode during weekend"
 		Time cron "0 30 6 ? * SAT-SUN"
 	then
 		alarm_check.postUpdate(""+ now)
-		if (mode.state == 1) {
+		if (mode.state == 1 || mode.state == 99) {
 			logInfo('org.openhab.rules.modes', "Switching to day mode because it is time")
 			sendCommand(justMorning, ON)
 			sendCommand(mode, 0)

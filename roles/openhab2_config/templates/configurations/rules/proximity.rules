@@ -79,8 +79,8 @@ end
 rule "When someone comes home"
 when
 	Item Home changed from OFF to ON or
-	Item Mobile_Anette_Wlan changed from OFF to ON or
-	Item Mobile_Stein_Wlan changed from OFF to ON
+	Item anette_home changed from OFF to ON or
+	Item stein_home changed from OFF to ON
 then
 	sendCommand(activate_cameras, OFF)
 	logInfo("proximity.rules", "Deactivating cameras as someone is coming home.")

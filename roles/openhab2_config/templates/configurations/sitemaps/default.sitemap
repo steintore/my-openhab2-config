@@ -7,8 +7,8 @@ sitemap default label="Huset"
 		Switch item=ac_scene mappings=[0="Av", 1="Varm", 2="Kjøl", 3="Luft"]
 		Setpoint item=ac_set_temp minValue=16 maxValue=28 step=1 icon="temperature" visibility=[ac_power==ON]
 		Switch item=ac_mode mappings=[0="Off", 1="Quiet", 5="TurboMode"] visibility=[tv_power==ON, ac_power==ON]
-		Switch item=scene_light_livingroom mappings=[0="Av", 1="På"]
-		Slider item=light_dining_table_dimmer icon="slider" visibility=[scene_light_livingroom==1]
+		Switch item=scene_light_livingroom mappings=[0="Av", 1="På", 2="Cozy"]
+		Slider item=gLivingRoomLightsDimmer icon="slider" visibility=[scene_light_livingroom==1, scene_light_livingroom==2]
 		Switch item=scene_garage_1 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
 		Switch item=scene_garage_2 mappings=[0="Lukk", 1="Åpne"] icon="garagedoor"
 		Switch item=message_received mappings=[ON="Ja"] icon="network" visibility=[garage_door_1==ON, garage_door_2==ON]

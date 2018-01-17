@@ -259,7 +259,7 @@ then
 				garagePiTimer = createTimer(now.plusHours(12)) [|
 					logInfo('garage.rules', "GaragePiTimer executing " + garagePiTimer.running)
 					sendNotification("{{stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
-					if (garagePiTimer.running)
+					if (garagePiTimer !== null && garagePiTimer.running)
 						garagePiTimer.cancel()
 					garagePiTimer = null
 					logInfo('garage.rules', 'GarageTimer has been rescheduled to ' + now.plusHours(6))

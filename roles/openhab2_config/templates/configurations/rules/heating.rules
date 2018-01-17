@@ -28,18 +28,18 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 			if (tempOutdoor <= 10 && Temp_Max_0.state < 10) {
 				if (gang_panelovn.state == OFF && mode.state == 0) {
 					if (tempOffice < 17) {
-						sendCommand(gang_panelovn, ON)
+						gang_panelovn.sendCommand(ON)
 					}
 				}
 				if (tempBasement < 16 && BasementTemperature.maximumSince(now.minusMinutes(21)).state >= 78) {
 					sendNotification("{{stein_email}}",'Kjellertemp er nå: ' + tempBasement + " - den har gått fra " + BasementTemperature.maximumSince(now.minusMinutes(21)).state + " de siste 20 minuttene")
 				}
 				if (tempLivingroom < (new Double(ac_heat_temp.state.toString()) - 2) && mode.state == 0 && ac_scene.state != 1) {
-					sendCommand(ac_scene, 1)
+					ac_scene.sendCommand(1)
 				} else if (tempLivingroom < (new Double(ac_night_temp.state.toString()) -1) && mode.state == 1 && ac_scene.state != 1) {
-					sendCommand(ac_scene, 1)
+					ac_scene.sendCommand(1)
 				} else if (tempLivingroom < (new Double(ac_night_temp.state.toString()) -2) && mode.state == 2 && ac_scene.state != 1) {
-					sendCommand(ac_scene, 1)
+					ac_scene.sendCommand(1)
 				}
 
 			}
@@ -53,10 +53,10 @@ rule "If the room is too cold and we are home, then heat it up, but only if it i
 			if (tempBasement < 12 || tempLivingroom < 12 || tempOffice < 12) {
 				sendNotification("{{stein_email}}","En eller annen temperatur er under 12 grader: [Stue: " + tempLivingroom + ", kontor: " + tempOffice + ", kjeller: " + tempBasement + "]")
 				if (tempLivingroom < 12)
-					sendCommand(ac_scene, 1)
+					ac_scene.sendCommand(1)
 				if (tempOffice < 12) {
 					sendNotification("{{stein_email}}","Kontortemperaturen er veldig lav: " + tempOffice)
-					//sendCommand(gang_panelovn, ON)
+					//gang_panelovn.sendCommand(ON)
 				}
 			}
 		}
@@ -78,26 +78,26 @@ then
 	switch (receivedCommand) {
 		case 0: { // OFF
 			if (ac_power.state == ON)
-				sendCommand(ac_power, OFF)
+				ac_power.sendCommand(OFF)
 		}
 		case 1: { // HEATING
 			var double tempOutdoor = new Double(OutdoorTemperature.state.toString())
 			var double lowerTempThreshold = new Double(AC_lower_temp_threshold.state.toString())
 			var double additionalDegrees = new Double(AC_additional_degrees.state.toString())
 			if (ac_power.state == OFF)
-				sendCommand(ac_power, ON)
+				ac_power.sendCommand(ON)
 
 			// Set to heating if not already set
 			if (ac_op_mode.state != 4)
-				sendCommand(ac_op_mode, 4)
+				ac_op_mode.sendCommand(4)
 
 			// set direction to fixed
 			if (ac_direction.state != 3)
-				sendCommand(ac_direction, 3)
+				ac_direction.sendCommand(3)
 
 			// windlevel
 			if (ac_windlevel.state != 0)
-				sendCommand(ac_windlevel, 0)
+				ac_windlevel.sendCommand(0)
 
 			// correct temperature
 			if (mode.state == 0 || mode.state == 3) { //HOME
@@ -118,37 +118,37 @@ then
 			}
 
 			if (tempOutdoor < lowerTempThreshold && mode.state == 0) {
-				sendCommand(ac_mode, 5) // TURBO MODE
+				ac_mode.sendCommand(5) // TURBO MODE
 			} else {
 				// Set to Off if tv is off, otherwise to QUIET
 				if (tv_power.state == OFF || ac_mode.state != 0)
-					sendCommand(ac_mode, 0)
+					ac_mode.sendCommand(0)
 				else if (tv_power.state == ON && ac_mode.state != 1)
-					sendCommand(ac_mode, 1) // QUIET
+					ac_mode.sendCommand(1) // QUIET
 			}
 
 		}
 		case 2: { // COOLING
 			if (ac_power.state == OFF)
-				sendCommand(ac_power, ON)
+				ac_power.sendCommand(ON)
 
 			// Set to Off if tv is off, otherwise to QUIET
 			if (tv_power.state == OFF && ac_mode.state != 0)
-				sendCommand(ac_mode, 0)
+				ac_mode.sendCommand(0)
 			else if (tv_power.state == ON && ac_mode.state != 1)
-				sendCommand(ac_mode, 1) // QUIET
+				ac_mode.sendCommand(1) // QUIET
 
 			// Set to cooling if not already set
 			if (ac_op_mode.state != 1)
-				sendCommand(ac_op_mode, 1)
+				ac_op_mode.sendCommand(1)
 
 			// set direction to fixed
 			if (ac_direction.state != 3)
-				sendCommand(ac_direction, 3)
+				ac_direction.sendCommand(3)
 
 			// windlevel
 			if (ac_windlevel.state != 0)
-				sendCommand(ac_windlevel, 0)
+				ac_windlevel.sendCommand(0)
 
 			// correct temperature
 			if (ac_set_temp.state != ac_cool_temp.state)
@@ -156,20 +156,20 @@ then
 		}
 		case 3: { // AIR
 			if (ac_power.state == OFF)
-				sendCommand(ac_power, ON)
-			sendCommand(ac_mode, 5)
+				ac_power.sendCommand(ON)
+			ac_mode.sendCommand(5)
 
 			// Set to wind if not already set
 			if (ac_op_mode.state != 3)
-				sendCommand(ac_op_mode, 3)
+				ac_op_mode.sendCommand(3)
 
 			// set direction
 			if (ac_direction.state != 2)
-				sendCommand(ac_direction, 2)
+				ac_direction.sendCommand(2)
 
 			// windlevel
 			if (ac_windlevel.state != 4)
-				sendCommand(ac_windlevel, 4)
+				ac_windlevel.sendCommand(4)
 
 			// correct temperature
 			if (ac_set_temp.state != ac_cool_temp.state)
@@ -201,9 +201,9 @@ rule "Adjust basement floor heating"
 	logInfo(logString, "Adjusting basement floor heating with command: " + receivedCommand)
 	switch(receivedCommand) {
 		case 0: { // OFF
-			sendCommand(tv_room_basement_floor_power_level, 0)
-			sendCommand(laundry_basement_floor_power_level, 0)
-			sendCommand(hall_basement_floor_power_level, 0)
+			tv_room_basement_floor_power_level.sendCommand(0)
+			laundry_basement_floor_power_level.sendCommand(0)
+			hall_basement_floor_power_level.sendCommand(0)
 			sendNotification("{{stein_email}}","Basement floor heating switched off")
 		}
 		case 1: { // NIGHT/LOW
@@ -247,7 +247,7 @@ then
 			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 5 && now.getDayOfWeek <= 7) {
 			// Only do this if not HOLIDAY and only on weekdays
-			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
+			scene_basement_floor_heating.sendCommand(2) // DAY MODE
 		}
 	]
 
@@ -263,7 +263,7 @@ then
 		if (scene_basement_floor_heating.state == 0) {
 			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 4 && now.getDayOfWeek < 7) {
-			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
+			scene_basement_floor_heating.sendCommand(1) // NIGHT MODE
 		}
 	]
 
@@ -280,7 +280,7 @@ then
 		if (scene_basement_floor_heating.state == 0) {
 			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 5 || now.getDayOfWeek > 6)) {
-			sendCommand(scene_basement_floor_heating, 1) // NIGHT MODE
+			scene_basement_floor_heating.sendCommand(1) // NIGHT MODE
 		}
 	]
 
@@ -297,7 +297,7 @@ then
 		if (scene_basement_floor_heating.state == 0) {
 			logDebug(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 6)) {
-			sendCommand(scene_basement_floor_heating, 2) // DAY MODE
+			scene_basement_floor_heating.sendCommand(2) // DAY MODE
 		}
 	]
 end
@@ -309,7 +309,7 @@ then
 	switch(receivedCommand) {
 		case ON: {
 			if (scene_basement_floor_heating.state > 0)
-				sendCommand(scene_basement_floor_heating, 3)
+				scene_basement_floor_heating.sendCommand(3)
 			if (hall_gf_floor_power_level.state > 0 && hall_gf_floor_power_level.state != floor_holiday_power_level.state)
 				sendCommand(hall_gf_floor_power_level, floor_holiday_power_level.state.toString)
 			if (bathroom_gf_floor_power_level.state > 0 && bathroom_gf_floor_power_level.state != floor_holiday_power_level.state)
@@ -318,18 +318,18 @@ then
 				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_set_temp.state)
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 			} else if(ac_scene.state != 0) { // switch of air conditioner if not heating
-				sendCommand(ac_scene, 0)
+				ac_scene.sendCommand(0)
 			}
 			if (!bathroom_1st_floor_mode.state.toString.equalsIgnoreCase('OFF'))
 				sendCommand(bathroom_1st_floor_mode, 'ECO') //ECO MODE
 
-			sendCommand(screen_pi, OFF)
-			sendCommand(roombaDock, OFF)
-			sendCommand(washingmachine, OFF)
+			screen_pi.sendCommand(OFF)
+			roombaDock.sendCommand(OFF)
+			washingmachine.sendCommand(OFF)
 		}
 		case OFF: {
 			if (scene_basement_floor_heating.state > 0)
-				sendCommand(scene_basement_floor_heating, 2)
+				scene_basement_floor_heating.sendCommand(2)
 			if (hall_gf_floor_power_level.state > 0 && hall_gf_floor_power_level.state != floor_day_power_level.state)
 				sendCommand(hall_gf_floor_power_level, floor_day_power_level.state.toString)
 			if (bathroom_gf_floor_power_level.state > 0 && bathroom_gf_floor_power_level.state != floor_day_power_level.state)
@@ -341,10 +341,10 @@ then
 					sendCommand(ac_set_temp, ac_heat_temp.state.toString)
 			}
 			if (screen_pi.state == ON)
-				sendCommand(screen_pi_screen, ON)
+				screen_pi_screen.sendCommand(ON)
 			else
 				sendNotification("{{stein_email}}",'ScreenPi is switched off...')
-			sendCommand(roombaDock, ON)
+			roombaDock.sendCommand(ON)
 		}
 	}
 end
@@ -372,14 +372,14 @@ then
 	var DateTime offTime = now.withTime(hoursOff, 0, 0, 0)
 
 	if (offTime.beforeNow) {
-		sendCommand(BathroomGF_OpState, 1) //STANDBY
+		BathroomGF_OpState.sendCommand(1) //STANDBY
 		offTime = offTime.plusDays(1)
 	} 
 	logInfo(logString, "BathroomGF Scheduling floor OFF for: " + offTime)
 	if (timerBathroomGFOff != null) timerBathroomGFOff.cancel()
 	timerBathroomGFOff = createTimer(offTime) [|
 	  	logInfo(logString, "timerBathroomGFOff is turning heating off")
-		sendCommand(BathroomGF_OpState, 1) //STANDBY 
+		BathroomGF_OpState.sendCommand(1) //STANDBY 
 	]
 	
 	postUpdate(BathroomGF_recalc, "" + now)
@@ -398,13 +398,13 @@ then
 		logInfo(logString, "BathroomGF_OpState received command " + receivedCommand)
 		switch (receivedCommand) {
 			case 0: {
-				sendCommand(bathroom_gf_floor_power_level, 0)
+				bathroom_gf_floor_power_level.sendCommand(0)
 			}
 			case 1: {
 				sendCommand(bathroom_gf_floor_power_level, BathroomGFStandbyPowerLevel.state as Number)
 			}
 			case 2: {
-				sendCommand(bathroom_gf_floor_power_level, 9)
+				bathroom_gf_floor_power_level.sendCommand(9)
 			}
 		}
 		postUpdate(BathroomGF_OpState_previous, BathroomGF_OpState.state)
@@ -439,7 +439,7 @@ then
 	if (timerBathroomGFHeating == null) {
 		timerBathroomGFHeating = createTimer(now.plusHours(2)) [|
 	  		logInfo(logString, "BathroomGF timer is executed, " + now.getDayOfWeek)
-	  		sendCommand(BathroomGF_OpState, 1) //STANDBY
+	  		BathroomGF_OpState.sendCommand(1) //STANDBY
 	  		sendNotification("{{stein_email}}","No temperature update in the last two hours, so we've stopped heating the ground floor bathroom")
 		]
 		logInfo(logString, "BathroomGF  timer created")		
@@ -477,16 +477,16 @@ then
 	logInfo(logString, "BathroomGF tempDiff is: " + tempDiff)
 	
 	if (holiday_mode.state == ON && BathroomGF_OpState.state > 1) {
-		sendCommand(BathroomGF_OpState, 1) //STANDBY
+		BathroomGF_OpState.sendCommand(1) //STANDBY
 	} else if (BathroomGF_OpState.state == 0) {
 		// DO NOTHING...
 	} else if (tempDiff >= 0 || now.isAfter(heatingEnd)) { // It is warm enough...or we do not need to heat any more
-		sendCommand(BathroomGF_OpState, 1) //STANDBY
+		BathroomGF_OpState.sendCommand(1) //STANDBY
 	} else if (now.isAfter(heatingStart) && now.isBefore(heatingEnd) && tempDiff < 0) {
 		logInfo(logString, "BathroomGF Heating is ongoing and temp is lower than target temp")
 		if (!now.plusMinutes(30).isAfter(heatingEnd)) {
 			logInfo(logString, "BathroomGF More than 30 minutes to heating turns of so we will change power level")
-			sendCommand(BathroomGF_OpState, 2) //HEATING
+			BathroomGF_OpState.sendCommand(2) //HEATING
 		}
 	} else if(now.isBefore(heatingStart) && tempDiff < 0) {
 		var Duration d = new Duration(now, heatingStart)
@@ -494,7 +494,7 @@ then
 		logInfo(logString, "BathroomGF There is " + untilStart + " hours until room should be heated")
 		if (untilStart <= (tempDiff*-1)) {
 			logInfo(logString, "BathroomGF We'll start heating because there is " + untilStart + " hours until start and the tempdiff is: " + (tempDiff*-1))
-			sendCommand(BathroomGF_OpState, 2) //HEATING
+			BathroomGF_OpState.sendCommand(2) //HEATING
 		}
 	} 
 end
@@ -504,14 +504,14 @@ rule "Make sure standby mode changes the heating power"
  		Time cron "0 0/20 * * * ?"
  	then
  		if (BathroomGF_OpState.state == 0 && bathroom_gf_floor_power_level.state != 0) {
-			sendCommand(bathroom_gf_floor_power_level, 0)	
+			bathroom_gf_floor_power_level.sendCommand(0)	
 			logInfo(logString, "Should be off, but was not")
 		 } else if (BathroomGF_OpState.state == 1 && bathroom_gf_floor_power_level.state != BathroomGFStandbyPowerLevel.state) {
 			sendCommand(bathroom_gf_floor_power_level, BathroomGFStandbyPowerLevel.state as Number)
 			logInfo(logString, "Standby-mode was using power")
 			sendNotification("{{stein_email}}","Har justert standby-modus til riktig nivå")
 		 } else if (BathroomGF_OpState.state == 2 && bathroom_gf_floor_power_level.state != 9) {
-			sendCommand(bathroom_gf_floor_power_level, 9)
+			bathroom_gf_floor_power_level.sendCommand(9)
 			logInfo(logString, "Was not heating with correct power, updating")
 		 }
 end
