@@ -74,7 +74,8 @@ then
 			if (justMorning.state == ON) {
 				logDebug('org.openhab.rules.lights', 'Item hall_gf_motion changed runs the morning routine.. good morning!')
 				scene_light_livingroom.sendCommand(1)
-				justMorning.sendCommand(OFF)
+				justMorning.postUpdate(OFF)
+				Thread::sleep(100)
 				if (alarm_alarm.state == 'armedhome') {
 					postUpdate(push_message_text, "Husk å skru av alarmen!")
 				}

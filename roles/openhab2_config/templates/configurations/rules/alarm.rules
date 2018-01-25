@@ -114,7 +114,8 @@ rule "Arming, disarming alarm"
 when
 		Item alarm_alarm received command
 then
-	logInfo("org.openhab.rules.alarm", "[Item alarm_alarm received command] Alarm state changed to: " + alarm_alarm.state.toString())
+	Thread::sleep(100)
+	logInfo("org.openhab.rules.alarm", "[Item alarm_alarm received command] Alarm state changed to: " + alarm_alarm.state.toString() + " receivedCommand:" + receivedCommand)
 	if (alarm_alarm.state == null) {
 		logInfo("org.openhab.rules.alarm", "Alarm state is null, trying to fetch state again...")
 		postUpdate(alarm_check, ""+ now)

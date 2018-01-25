@@ -29,7 +29,6 @@ rule "A change of mode"
 						camera_timer.cancel()
 					camera_timer = null
 				} 
-				logInfo('org.openhab.rules.modes', 'HOME MODE')
 				restoreStates(stored_states)
 				restoreStates(stored_heating_states)
 				// 	If we're coming home it is no longer a holiday..
@@ -67,8 +66,9 @@ rule "A change of mode"
 
 				sendCommand(leaf_request_update, ON)
 
-
+				logInfo('org.openhab.rules.modes', "JustMorning is: " + justMornin.state.toString)
 				if (justMorning.state == ON) {
+					logInfo('org.openhab.rules.modes', 'Good morning..')
 					habPanel_hallway.postUpdate("Weather")
 					habPanelTimer = createTimer(now.plusMinutes(90)) [|
 						if (habPanel_hallway.state == "Weather") {
@@ -122,7 +122,7 @@ rule "A change of mode"
 
 				sendCommand(gang_panelovn, OFF)
 
-				sendCommand(justMorning, OFF)
+				postUpdate(justMorning, OFF)
 				sendCommand(roombaDock, OFF)
 
 				alarm_check.postUpdate(""+ now)
@@ -190,7 +190,7 @@ rule "A change of mode"
 				if (ac_scene.state > 1) {
 					sendCommand(ac_scene, 0)
 				}
-				sendCommand(justMorning, OFF)
+				postUpdate(justMorning, OFF)
 				sendCommand(screen_pi_reboot, ON)
 
 				sendCommand(scene_roomba, 1) // Start vacuuming
@@ -216,7 +216,7 @@ rule "A change of mode"
 							sendCommand(item, floor_night_power_level.state as Number)
 					]
 				}
-				sendCommand(justMorning, OFF)
+				postUpdate(justMorning, OFF)
 				sendCommand(leaf_request_update, ON)
 				sendCommand(activate_cameras, OFF)
 				if (camera_timer != null) {
@@ -307,7 +307,8 @@ rule "Return to day mode during the week"
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 1 || mode.state == 99) {
 			logInfo('org.openhab.rules.modes', "Switching to day mode because it is time")
-			sendCommand(justMorning, ON)
+			postUpdate(justMorning, ON)
+			Thread::sleep(100)
 			sendCommand(mode, 0)
 		}
 		postUpdate(left_double_switch, UNDEF)
@@ -322,7 +323,8 @@ rule "Return to day mode during weekend"
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 1 || mode.state == 99) {
 			logInfo('org.openhab.rules.modes', "Switching to day mode because it is time")
-			sendCommand(justMorning, ON)
+			postUpdate(justMorning, ON)
+			Thread::sleep(100)
 			sendCommand(mode, 0)
 		}
 		postUpdate(left_double_switch, UNDEF)

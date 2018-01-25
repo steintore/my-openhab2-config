@@ -54,6 +54,7 @@ Switch xbox					"XBox"					<present>		(proximity, gInfluxDB) {channel="network:p
 Switch appletv				"Apple Tv"				<present>		(proximity, gInfluxDB) {channel="network:pingdevice:appleTv:online"}
 Switch denon_receiver		"Denon receiver"		<present>		(proximity, gInfluxDB) {channel="network:pingdevice:denon:online"}
 Switch screen_pi			"ScreenPi"				<present>		(proximity, gInfluxDB) {channel="network:pingdevice:screenPi:online"}
+Switch pi_hole_lan          "Pi Hole"               <present>       (proximity, gInfluxDB) {channel="network:pingdevice:piHole:online"}
 
 Switch screen_pi_screen		"Monitor screenPi" 		(gGF, gInfluxDB)
 Switch screen_pi_reboot
@@ -163,38 +164,38 @@ Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight, gLivin
 /* Philips HUE */
 Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
 Number scene_light_hall "Lys gang" 			<hue> 	(gLight, gHallLights, gFirstFloor)
-Switch light_hall_1_switch "Left bulb"          <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:5:color"}
-Switch light_hall_2_switch "Right bulb"         <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:6:color"}
-Switch light_hall_3_switch "Left bulb 2"        <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:3:color"}
-Switch light_hall_4_switch "Right bulb 2"       <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:4:color"}
+Switch light_hall_1_switch "Left bulb"          <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:5:brightness"}
+Switch light_hall_2_switch "Right bulb"         <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:6:brightness"}
+Switch light_hall_3_switch "Left bulb 2"        <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:3:brightness"}
+Switch light_hall_4_switch "Right bulb 2"       <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:4:brightness"}
 
-Dimmer light_hall_1     "Left bulb [%d %%]"    {channel="hue:0100:hue1:5:color"}
-Dimmer light_hall_2     "Right bulb [%d %%]"   {channel="hue:0100:hue1:6:color"}
-Dimmer light_hall_3     "Left bulb2 [%d %%]"    {channel="hue:0220:hue1:3:color"}
-Dimmer light_hall_4     "Right bulb2 [%d %%]"   {channel="hue:0220:hue1:4:color"}
+Dimmer light_hall_1     "Left bulb [%d %%]"    {channel="hue:0100:hue1:5:brightness"}
+Dimmer light_hall_2     "Right bulb [%d %%]"   {channel="hue:0100:hue1:6:brightness"}
+Dimmer light_hall_3     "Left bulb2 [%d %%]"    {channel="hue:0220:hue1:3:brightness"}
+Dimmer light_hall_4     "Right bulb2 [%d %%]"   {channel="hue:0220:hue1:4:brightness"}
 
-Switch light_bedroom    "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:color"}
-Color color_bedroom     "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:color"}
-Dimmer dimmer_bedroom   "Soverom [%d %%]"       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:color"}
-Dimmer CT_dimm_bedroom  "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:color"}
+Switch light_bedroom    "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
+Color color_bedroom     "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
+Dimmer dimmer_bedroom   "Soverom [%d %%]"       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
+Dimmer CT_dimm_bedroom  "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
 
-Switch light_kid_room_2         "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:color"}
-Color color_kid_room_2          "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:color"}
-Dimmer dimmer_kid_room_2        "Maris rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:color"}
+Switch light_kid_room_2         "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
+Color color_kid_room_2          "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
+Dimmer dimmer_kid_room_2        "Maris rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
 Dimmer ct_kid_room_2            "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:color_temperature"}
 
-Switch light_kid_room_1         "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color"}
-Color  color_kid_room_1         "Ivers rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color"}
-Dimmer dimmer_kid_room_1        "Ivers rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color"}
+Switch light_kid_room_1         "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:brightness"}
+Color  color_kid_room_1         "Ivers rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:brightness"}
+Dimmer dimmer_kid_room_1        "Ivers rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:brightness"}
 Dimmer ct_kid_room_1            "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color_temperature"}
 
 
 Group:Switch:AND(ON, OFF)               gBasementLights "Lys [(%d)]"     <light>
 Number scene_light_basement_hall "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
-Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)  {channel="hue:0100:hue1:9:color"}
-Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:10:color"}
-Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:7:color"}
-Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:8:color"}
+Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)  {channel="hue:0100:hue1:9:brightness"}
+Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:10:brightness"}
+Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:7:brightness"}
+Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:8:brightness"}
 
 /* Living room TV */
 Group TV <tv>

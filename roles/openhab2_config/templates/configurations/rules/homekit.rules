@@ -102,7 +102,8 @@ rule "Homekit good morning"
 		Item homekit_goodmorning received command ON
 	then
 	if (mode.state != 2) {
-		sendCommand(justMorning, ON)
+		postUpdate(justMorning, ON)
+		Thread::sleep(100)
 		sendCommand(mode, 0)
 	}
 	postUpdate(homekit_goodmorning, OFF)
