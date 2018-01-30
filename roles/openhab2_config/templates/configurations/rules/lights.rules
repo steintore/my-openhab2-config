@@ -11,7 +11,7 @@ rule "motion detected in the bathroom"
 	when
 		Item bathroom_motion changed
 	then
-	logInfo('org.openhab.rules.lights', 'Motion sensor in the bathroom changed to: ' + bathroom_motion.state)
+	logInfo("org.openhab.rules.lights", "Motion sensor in the bathroom changed to: " + bathroom_motion.state)
 	switch (bathroom_motion.state as OnOffType) {
 		case ON: {
 			if (mode.state != 2) {
@@ -22,7 +22,7 @@ rule "motion detected in the bathroom"
 				}	
 				if (timerBathroom == null) {
 					timerBathroom = createTimer(now.plusSeconds(240)) [|
-						logInfo("org.openhab", "Bathroom dimmer timer timed out, state for motion: " + bathroom_motion.state)
+						logInfo("org.openhab.rules.lights", "Bathroom dimmer timer timed out, state for motion: " + bathroom_motion.state)
 						if (bathroom_motion.state == ON) {
 							timerBathroom.reschedule(now.plusSeconds(240))
 						} else {
@@ -68,6 +68,7 @@ rule "Motion in hall"
 when
 	Item hall_gf_motion changed
 then
+	logInfo('org.openhab.rules.lights', 'Item hall_gf_motion changed')
 	switch (hall_gf_motion.state as OnOffType) {
 		case ON: {
 			light_hall_ground_floor.sendCommand(ON)
@@ -102,11 +103,13 @@ then
 	logInfo('org.openhab.rules.lights', 'scene_light_livingroom received state:' + receivedCommand)
 	switch (receivedCommand) {
 		case 0: { // OFF
+			living_room_lights.sendCommand(OFF)
 			gLivingRoomLights.sendCommand(OFF)
 			gLivingRoomLightsDimmer.sendCommand(0)
 			postUpdate(homekit_livingroom_light, OFF)
 		}
 		case 1: { // ON
+			living_room_lights.sendCommand(ON)
 			gLivingRoomLights.sendCommand(ON)
 			postUpdate(homekit_livingroom_light, ON)
 			gLivingRoomLightsDimmer.sendCommand(100)
@@ -430,3 +433,26 @@ rule "Scene basement room light changed"
  		}
  	}
 end
+
+rule "Remote living received command"
+	when
+		Item remote_living_room received command
+	then
+	logInfo("org.openhab.rules.lights", "Remote living room received command " + receivedCommand)
+	switch (receivedCommand.toString) {
+		case "10": { // Living room lights on
+			scene_light_livingroom.sendCommand(1)
+		}
+		case "20": {
+			// ??? 
+		}
+		case "30": { // Living room lights off
+			scene_light_livingroom.sendCommand(0)
+		}
+		case "40": {
+			// Less light.. Cozy
+			scene_light_livingroom.sendCommand(2)
+		}
+	}
+end
+

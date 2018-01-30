@@ -62,6 +62,7 @@
         - sitemaps/default.sitemap
         - transform/en.map
         - transform/getValValue.js
+        - transform/toUpperCase.js
         - transform/motion.map
         - transform/no.map
         - transform/floor.map

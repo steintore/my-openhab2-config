@@ -66,7 +66,7 @@ rule "A change of mode"
 
 				sendCommand(leaf_request_update, ON)
 
-				logInfo('org.openhab.rules.modes', "JustMorning is: " + justMornin.state.toString)
+				logInfo('org.openhab.rules.modes', "JustMorning is: " + justMorning.state.toString)
 				if (justMorning.state == ON) {
 					logInfo('org.openhab.rules.modes', 'Good morning..')
 					habPanel_hallway.postUpdate("Weather")

@@ -70,7 +70,7 @@ rule "Fetching data from Roomba"
 			if(roombaTimer.running) {
 					roombaTimer.cancel()
 				}
-				roombaTimer= null
+			roombaTimer= null
 		}
 	}
 end
