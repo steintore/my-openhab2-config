@@ -124,7 +124,7 @@ Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(g
 Switch garage_door_2    		"Garasjedør MONDEO [MAP(no.map):%s]"    <garagedoor>  	(gOutdoor)						{mqtt="<[broker:zway/Garage/GarageGalaxy:state:on:ON], <[broker:zway/Garage/GarageGalaxy:state:off:OFF]"}
 Switch message_received 		"Garasjedørmelding er mottatt"			<garagedoor>	(gOutdoor)
 Number garage_door_1_battery 	"Leaf [%s %%]"							<battery>		(gBattery, gBatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Vision Security Battery (7.0):state:default]"}
-Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, gBatteryLevel_100)	{{mqtt="<[broker:zway/globalRoom/Vision Security Battery (8.0):state:default]"}
+Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, gBatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Vision Security Battery (8.0):state:default]"}
 Switch garage_door_1_relay 		"Releet Leaf" 																			{http=">[ON:POST:{{garagepi_leaf_url}}function/OUT] >[OFF:POST:{{garagepi_leaf_url}}function/IN]"}
 Switch garage_door_2_relay 		"Releet Mondeo" 																		{http=">[ON:POST:{{garagepi_mondeo_url}}function/OUT] >[OFF:POST:{{garagepi_mondeo_url}}function/IN]"}
 Switch garagepi_motion 			"Bevegelse GPI"
