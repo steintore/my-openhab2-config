@@ -23,7 +23,7 @@ Group:Number:MIN	gBatteryLevel_100	"Batteri [(%d)] %"	<battery>		(All)
 
 /* Heating */
 Group:Switch:OR(ON, OFF) 			gHeating 		"All varme [(%d)]" 				<heating> 				(All)
-Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, gHeating, away_group)	{mqtt="<[broker:zway/Hall1stFloor/OvenSwitch:JS(toUpperCase.js)], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:ON:on], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:OFF:off]"}
+Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, gHeating, away_group)	{mqtt="<[broker:zway/Hall1stFloor/OvenSwitch:state:JS(toUpperCase.js)], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:ON:on], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:OFF:off]"}
 
 /* Energy/Power measuring */
 Group:Number:SUM					gPower			"Nå: [%.1f W]"			<energy>				(All, gPower)
