@@ -184,7 +184,7 @@ sitemap default label="Huset"
 				Switch item=dryer
 				Text item=power_dryer visibility=[dryer==ON]
 
-				Text item=Washingmachine_OpState
+				Text item=washingmachine_OpState
 				Switch item=washingmachine
 				Text item=power_washingmachine
 
@@ -300,7 +300,7 @@ sitemap default label="Huset"
 			Switch item=mode mappings=[0="Hjemme", 3="Kveld", 1="Natt", 2="Borte"]
 
 			Group item=proximity label="Nettverkshelse [(%d)]" icon="present"
-			Group item=Home label="Hjemme [(%d)]" icon="present"
+			Group item=gHome label="Hjemme [(%d)]" icon="present"
 		}
 	}
 
@@ -308,7 +308,7 @@ sitemap default label="Huset"
 		Text item=zWaveStatus
 		Text item=smappee_power icon="energy" {
 			Frame {
-				Group item=Energy
+				Group item=gEnergy
 				Group item=Smappee
 				Group item=gBattery label="Batteri" icon="energy"
 			}
@@ -406,7 +406,6 @@ sitemap default label="Huset"
 	}
 
 	Frame label="Bevegelse" icon="office" {
-		Group item=Motion
-		//Text item=livingroom_update
+		Group item=gMotion
 	}
 }

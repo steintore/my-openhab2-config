@@ -16,16 +16,16 @@ when
 then
   logInfo('org.openhab.rules.household', 'Washing machine changed to: ' + power_washingmachine.state)
     if (power_washingmachine.state < 0.3)
-      Washingmachine_OpState.postUpdate(MODE_OFF)
+      washingmachine_OpState.postUpdate(MODE_OFF)
     else if (power_washingmachine.state > 0.5)
-      Washingmachine_OpState.postUpdate(MODE_ACTIVE)
+      washingmachine_OpState.postUpdate(MODE_ACTIVE)
     else if (power_washingmachine.state <= 0.5) {
-        if (Washingmachine_OpState.state == MODE_OFF) Washingmachine_OpState.postUpdate(MODE_STANDBY)
-        else if (Washingmachine_OpState.state == MODE_ACTIVE) {
+        if (washingmachine_OpState.state == MODE_OFF) washingmachine_OpState.postUpdate(MODE_STANDBY)
+        else if (washingmachine_OpState.state == MODE_ACTIVE) {
             finishLock.lock()
             try {
                 Thread::sleep(10000) // Debounce for 10 seconds
-                if (power_washingmachine.state <= 0.5) Washingmachine_OpState.postUpdate(MODE_FINISHED)
+                if (power_washingmachine.state <= 0.5) washingmachine_OpState.postUpdate(MODE_FINISHED)
             } finally {
                 finishLock.unlock()
             }
@@ -35,9 +35,9 @@ end
 
 rule "Washingmachine Notifications"
 when
-    Item Washingmachine_OpState changed
+    Item washingmachine_OpState changed
 then
-    if (Washingmachine_OpState.state == MODE_FINISHED) {
+    if (washingmachine_OpState.state == MODE_FINISHED) {
         postUpdate(push_message_text, "Vaskemaskinen er ferdig!")
         if (mode.state == 1 || mode.state == 2) // Cut power if AWAY or NIGHT
           sendCommand(washingmachine, OFF)

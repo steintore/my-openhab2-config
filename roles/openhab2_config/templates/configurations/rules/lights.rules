@@ -9,7 +9,8 @@ var Timer sunsetTimer = null
 
 rule "motion detected in the bathroom" 
 	when
-		Item bathroom_motion changed
+		Item bathroom_motion changed or
+		Item bathroom_motion received update
 	then
 	logInfo("org.openhab.rules.lights", "Motion sensor in the bathroom changed to: " + bathroom_motion.state)
 	switch (bathroom_motion.state as OnOffType) {
@@ -66,7 +67,8 @@ end
 
 rule "Motion in hall"
 when
-	Item hall_gf_motion changed
+	Item hall_gf_motion changed or
+	Item hall_gf_motion received update
 then
 	logInfo('org.openhab.rules.lights', 'Item hall_gf_motion changed')
 	switch (hall_gf_motion.state as OnOffType) {
@@ -182,17 +184,11 @@ rule "light in hall 1st floor"
 	logDebug('org.openhab.rules.lights', "Item scene_light_hall received command " + receivedCommand)
 	switch (receivedCommand) {
 		case 0:  { //OFF 
-			light_hall_1.sendCommand(0)
-			light_hall_2.sendCommand(0)
-			light_hall_3.sendCommand(0)
-			light_hall_4.sendCommand(0)
+			gHallLightsDimmer.sendCommand(0)
 			postUpdate(homekit_light_hall_1st_floor, OFF)
 		}
 		case 1: { //ON
-			light_hall_1.sendCommand(100)
-			light_hall_2.sendCommand(100)
-			light_hall_3.sendCommand(100)
-			light_hall_4.sendCommand(100)
+			gHallLightsDimmer.sendCommand(100)
 			postUpdate(homekit_light_hall_1st_floor, ON)
 		}
 		case 2: { //NIGHT MODE
@@ -229,24 +225,15 @@ rule "light in basement hall"
 	logDebug('org.openhab.rules.lights', "Item scene_light_basement_hall received command " + receivedCommand)
 	switch (receivedCommand) {
 		case 0:  { //OFF 
-			light_basement_1.sendCommand(0)
-			light_basement_2.sendCommand(0)
-			light_basement_3.sendCommand(0)
-			light_basement_4.sendCommand(0)
+			gBasementHallLights.sendCommand(0)
 			postUpdate(homekit_basement_light, OFF)
 		}
 		case 1: { //ON
-			light_basement_1.sendCommand(100)
-			light_basement_2.sendCommand(100)
-			light_basement_3.sendCommand(100)
-			light_basement_4.sendCommand(100)
+			gBasementHallLights.sendCommand(100)
 			postUpdate(homekit_basement_light, ON)
 		}
 		case 2: { //NIGHT MODE
-			light_basement_1.sendCommand(50)
-			light_basement_2.sendCommand(50)
-			light_basement_3.sendCommand(50)
-			light_basement_4.sendCommand(50)
+			gBasementHallLights.sendCommand(50)
 			postUpdate(homekit_basement_light, ON)
 		}
 	}
@@ -271,7 +258,8 @@ end
 
 rule "Basement hall motion detector"
 	when
-		Item basement_hall_motion changed
+		Item basement_hall_motion changed or
+		Item basement_hall_motion received update
 	then
 	logInfo('org.openhab.rules.lights', 'Motion sensor in the basement changed to: ' + basement_hall_motion.state)
 	switch (basement_hall_motion.state as OnOffType) {

@@ -103,10 +103,10 @@ rule "A change of mode"
 				sendCommand(scene_light_basement_hall, 0)
 				sendCommand(scene_office_light, 0)
 
-				if (Washingmachine_OpState.state == 2) {
+				if (washingmachine_OpState.state == 2) {
 					postUpdate(push_message_text, "Tørketrommelen tørker, strømmen blir skrudd av når den er ferdig")
 				}
-				if (Washingmachine_OpState.state == 2) {
+				if (washingmachine_OpState.state == 2) {
 					postUpdate(push_message_text, "Vaskemaskinen vasker, strømmen blir skrudd av når den er ferdig")
 				}
 
@@ -165,10 +165,10 @@ rule "A change of mode"
 					postUpdate(push_message_text, t)
 				}
 
-				if (Washingmachine_OpState.state == 2) {
+				if (washingmachine_OpState.state == 2) {
 					postUpdate(push_message_text, "Tørketrommelen tørker, strømmen blir skrudd av når den er ferdig")
 				}
-				if (Washingmachine_OpState.state == 2) {
+				if (washingmachine_OpState.state == 2) {
 					postUpdate(push_message_text, "Vaskemaskinen vasker, strømmen blir skrudd av når den er ferdig")
 				}
 

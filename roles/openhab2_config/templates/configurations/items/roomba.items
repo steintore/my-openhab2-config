@@ -3,7 +3,7 @@
 Group roomba (All)
 
 Number roombaCurrentState "Roomba: [MAP(roombaStatus.map):%s]" <sofa> (gGF, roomba, gInfluxDB)
-Number scene_roomba "Roomba kommando:" <sofa> (gGF, HomeAppliances,roomba)
+Number scene_roomba "Roomba kommando:" <sofa> (gGF, gHomeAppliances,roomba)
 String roombaRaw (gGF) //{http="<[roombaCache:40000:REGEX((.*))]"}
 Number roombaBatteryPercentage "Batteri [%.1f %%]" <battery> (gGF, roomba, gInfluxDB)
 Number roombaChargingStatus "Ladestatus: [MAP(roomba.map):%s]" (gGF, roomba, gInfluxDB)

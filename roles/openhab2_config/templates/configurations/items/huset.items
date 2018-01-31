@@ -18,28 +18,28 @@ Group gMyOpenHAB
 DateTime Date	"[%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
 
 
-Group:Number:MIN	BatteryLevel_10		"Batteri [(%d)]"	<battery>		(All)
-Group:Number:MIN	BatteryLevel_100	"Batteri [(%d)] %"	<battery>		(All)
+Group:Number:MIN	gBatteryLevel_10		"Batteri [(%d)]"	<battery>		(All)
+Group:Number:MIN	gBatteryLevel_100	"Batteri [(%d)] %"	<battery>		(All)
 
 /* Heating */
-Group:Switch:OR(ON, OFF) 			Heating 		"All varme [(%d)]" 				<heating> 				(All)
-Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, Heating, away_group)	{mqtt="<[broker:zway/Hall1stFloor/OvenSwitch:state:on:ON], <[broker:zway/Hall1stFloor/OvenSwitch:state:off:OFF], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:ON:on], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:OFF:off]"}
+Group:Switch:OR(ON, OFF) 			gHeating 		"All varme [(%d)]" 				<heating> 				(All)
+Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, gHeating, away_group)	{mqtt="<[broker:zway/Hall1stFloor/OvenSwitch:JS(toUpperCase.js)], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:ON:on], >[broker:zway/Hall1stFloor/OvenSwitch/set:command:OFF:off]"}
 
 /* Energy/Power measuring */
-Group:Number:SUM					Power			"Nå: [%.1f W]"			<energy>				(All, gPower)
-Group:Number:SUM					PowerHeating	"Varme: [%.1f W]"		<energy>				(All)
-Group:Number:SUM					Energy			"Totalt: [%.1f KWh]"	<energy>				(All)
-Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, Power, PowerHeating, Power_Chart, gInfluxDB) 	{mqtt="<[broker:zway/Hall1stFloor/OvenElectricMeter:state:default]"} // TODO FIX THIS
-Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (Energ, gInfluxDBy) 										{mqtt="<[broker:zway/Hall1stFloor/OvenElectricMeter:state:default]"}
+Group:Number:SUM					gPower			"Nå: [%.1f W]"			<energy>				(All, gPower)
+Group:Number:SUM					gPowerHeating	"Varme: [%.1f W]"		<energy>				(All)
+Group:Number:SUM					gEnergy			"Totalt: [%.1f KWh]"	<energy>				(All)
+Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, gPower, gPowerHeating, gPower_Chart, gInfluxDB) 	{mqtt="<[broker:zway/Hall1stFloor/OvenElectricMeter:state:default]"} // TODO FIX THIS
+Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (gEnerg, gInfluxDBy) 										{mqtt="<[broker:zway/Hall1stFloor/OvenElectricMeter:state:default]"}
 
-Group Power_Chart (Power)
+Group gPower_Chart (Power)
 Number Power_Chart_Period "Periode"
 
 /* Presence detection */
-Group:Switch:OR(ON, OFF)	Home 			"Is someone at home [(%d)]" (All)
-Switch stein_home    		"Stein @ Home"       		<present>	(Home, gInfluxDB){ mqttitude="broker:owntracks/stein/iphone:home" }
-Switch anette_home   		"Anette @ Home"       		<present>	(Home, gInfluxDB){ mqttitude="broker:owntracks/anette/iphone:home" }
-Switch guest_home 			"Guests @ Home" 			<present>	(Home, gInfluxDB)
+Group:Switch:OR(ON, OFF)	gHome 			"Is someone at home [(%d)]" (All)
+Switch stein_home    		"Stein @ Home"       		<present>	(gHome, gInfluxDB){ mqttitude="broker:owntracks/stein/iphone:home" }
+Switch anette_home   		"Anette @ Home"       		<present>	(gHome, gInfluxDB){ mqttitude="broker:owntracks/anette/iphone:home" }
+Switch guest_home 			"Guests @ Home" 			<present>	(gHome, gInfluxDB)
 
 Group:Switch:OR(ON, OFF) proximity (All)
 Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity, gInfluxDB) {channel="network:pingdevice:mobileStein:online"}
@@ -60,13 +60,13 @@ Switch screen_pi_screen		"Monitor screenPi" 		(gGF, gInfluxDB)
 Switch screen_pi_reboot
 
 /* Temperature */
-Group Temperature_Chart (Weather)
+Group gTemperature_Chart (Weather)
 Number Temperature_Chart_Period 			"Periode"
 Number Temperature_Livingroom_Chart_Period  "Periode"
-Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(Temperature_Chart, gInfluxDB)
-Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(Temperature_Chart, gInfluxDB)
+Number Outdoor_Temp_Max 					"Temp max [%.1f °C]"				<temperature> 	(gTemperature_Chart, gInfluxDB)
+Number Outdoor_Temp_Min 					"Temp min [%.1f °C]"				<temperature> 	(gTemperature_Chart, gInfluxDB)
 Number Outdoor_Humidex						"Humidex [%.1f]"					(Weather, gInfluxDB)
-Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,Temperature_Chart, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
+Number OutdoorTemperature 					"Ute [%.1f °C]" 					<temperature> 	(gTemperature, Temperature,gOutdoor,gTemperature_Chart, gInfluxDB) [ "CurrentTemperature" ] {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:temperature" }
 Number OutdoorHumidity 						"Luftfuktighet ute [%.1f %%]" 		<temperature> 	(gOutdoor, gHumidity, Weather, gInfluxDB) {channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:humidity" }
 DateTime OutdoorTemperature_LastUpdate		"Sist oppdatert [%1$ta %1$tR]"		<clock> (gInfluxDB)
 
@@ -99,32 +99,32 @@ Number BathroomGF_OpState_previous
 String BathroomGF_recalc
 
 /* Home appliances */
-Group HomeAppliances (Appliance)
-Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/FreezerPower:state:default]"}
-Switch freezer		  	"Fryser"								<kitchen>   (gBasement, Control, HomeAppliances)					        {mqtt="<[broker:zway/LaundryBasement/Freezer:state:on:ON], <[broker:zway/LaundryBasement/Freezer:state:off:OFF], >[broker:zway/LaundryBasement/Freezer/set:command:ON:on], >[broker:zway/LaundryBasement/Freezer/set:command:OFF:off]"}
-Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(Energy, gBasement, gInfluxDB)									{mqtt="<[broker:zway/LaundryBasement/FreezerEletricMeter:state:default]"}
+Group gHomeAppliances
+Number power_freezer	"Strøm fryser	[%.1f W]" 				<energy> 	(gBasement, gPower, gPower_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/FreezerPower:state:default]"}
+Switch freezer		  	"Fryser"								<kitchen>   (gBasement, gHomeAppliances)					        {mqtt="<[broker:zway/LaundryBasement/Freezer:state:on:ON], <[broker:zway/LaundryBasement/Freezer:state:off:OFF], >[broker:zway/LaundryBasement/Freezer/set:command:ON:on], >[broker:zway/LaundryBasement/Freezer/set:command:OFF:off]"}
+Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(gEnergy, gBasement, gInfluxDB)									{mqtt="<[broker:zway/LaundryBasement/FreezerEletricMeter:state:default]"}
 
-Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/DryerPower:state:default]"}
-Switch dryer			"Tørketrommel"							<dryer>		(gBasement, HomeAppliances, night_group, away_group, gInfluxDB) {mqtt="<[broker:zway/LaundryBasement/Dryer:state:on:ON], <[broker:zway/LaundryBasement/Dryer:state:off:OFF], >[broker:zway/LaundryBasement/Dryer/set:command:ON:on], >[broker:zway/LaundryBasement/Dryer/set:command:OFF:off]"}
-Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(Energy, gBasement, gInfluxDB)									{mqtt="<[broker:zway/LaundryBasement/DryerEletricMeter:state:default]"}
+Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, gPower, gPower_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/DryerPower:state:default]"}
+Switch dryer			"Tørketrommel"							<dryer>		(gBasement, gHomeAppliances, night_group, away_group, gInfluxDB) {mqtt="<[broker:zway/LaundryBasement/Dryer:state:on:ON], <[broker:zway/LaundryBasement/Dryer:state:off:OFF], >[broker:zway/LaundryBasement/Dryer/set:command:ON:on], >[broker:zway/LaundryBasement/Dryer/set:command:OFF:off]"}
+Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(gEnergy, gBasement, gInfluxDB)									{mqtt="<[broker:zway/LaundryBasement/DryerEletricMeter:state:default]"}
 Number dryer_OpState "Tørketrommel [MAP(household-device.map):%s]" <dryer>
 
-Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, Control, HomeAppliances, gInfluxDB)					{mqtt="<[broker:zway/LaundryBasement/Fridge:state:on:ON], <[broker:zway/LaundryBasement/Fridge:state:off:OFF], >[broker:zway/LaundryBasement/Fridge/set:command:ON:on], >[broker:zway/LaundryBasement/Fridge/set:command:OFF:off]"}
-Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, Power, Power_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/FridgePower:state:default]"}
-Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(Energy, gBasement, gInfluxDB)									{mqtt="<[broker:zway/LaundryBasement/FridgeBasementEletricMeter:state:default]"}
+Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, gHomeAppliances, gInfluxDB)					{mqtt="<[broker:zway/LaundryBasement/Fridge:state:on:ON], <[broker:zway/LaundryBasement/Fridge:state:off:OFF], >[broker:zway/LaundryBasement/Fridge/set:command:ON:on], >[broker:zway/LaundryBasement/Fridge/set:command:OFF:off]"}
+Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, gPower, gPower_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/FridgePower:state:default]"}
+Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(gEnergy, gBasement, gInfluxDB)									{mqtt="<[broker:zway/LaundryBasement/FridgeBasementEletricMeter:state:default]"}
 
-Number energy_washingmachine 	"Vaskemaskin totalforbruk: [%.2f KWh]"	<energy> 			(Energy, gInfluxDB) 												{mqtt="<[broker:zway/LaundryBasement/WashingMachineEletricMeter:state:default]"}
-Number power_washingmachine  	"Strøm vaskemaskin	[%.1f W]" 			<energy> 			(gBasement, gPower, HomeAppliances, Power, Power_Chart, gInfluxDB) 	{mqtt="<[broker:zway/LaundryBasement/WashingMachinePower:state:default]"}
-Switch washingmachine  			"Vaskemaskin"							<washingmachine>	(gBasement, HomeAppliances, gInfluxDB)			    				{mqtt="<[broker:zway/LaundryBasement/WashingMachine:state:on:ON], <[broker:zway/LaundryBasement/WashingMachine:state:off:OFF], >[broker:zway/LaundryBasement/WashingMachine/set:command:ON:on], >[broker:zway/LaundryBasement/WashingMachine/set:command:OFF:off]"}
-Number Washingmachine_OpState 	"Vaskemaskinstatus [MAP(household-device.map):%s]" <washingmachine>
+Number energy_washingmachine 	"Vaskemaskin totalforbruk: [%.2f KWh]"	<energy> 			(gEnergy, gInfluxDB) 												{mqtt="<[broker:zway/LaundryBasement/WashingMachineEletricMeter:state:default]"}
+Number power_washingmachine  	"Strøm vaskemaskin	[%.1f W]" 			<energy> 			(gBasement, gPower, gHomeAppliances, gPower, gPower_Chart, gInfluxDB) 	{mqtt="<[broker:zway/LaundryBasement/WashingMachinePower:state:default]"}
+Switch washingmachine  			"Vaskemaskin"							<washingmachine>	(gBasement, gHomeAppliances, gInfluxDB)			    				{mqtt="<[broker:zway/LaundryBasement/WashingMachine:state:on:ON], <[broker:zway/LaundryBasement/WashingMachine:state:off:OFF], >[broker:zway/LaundryBasement/WashingMachine/set:command:ON:on], >[broker:zway/LaundryBasement/WashingMachine/set:command:OFF:off]"}
+Number washingmachine_OpState 	"Vaskemaskinstatus [MAP(household-device.map):%s]" <washingmachine>
 
 
 /* Garage */
 Switch garage_door_1    		"Garasjedør LEAF [MAP(no.map):%s]"		<garagedoor>  	(gOutdoor)						{mqtt="<[broker:zway/Garage/GarageLeaf:state:on:ON], <[broker:zway/Garage/GarageLeaf:state:off:OFF]"}
 Switch garage_door_2    		"Garasjedør MONDEO [MAP(no.map):%s]"    <garagedoor>  	(gOutdoor)						{mqtt="<[broker:zway/Garage/GarageGalaxy:state:on:ON], <[broker:zway/Garage/GarageGalaxy:state:off:OFF]"}
 Switch message_received 		"Garasjedørmelding er mottatt"			<garagedoor>	(gOutdoor)
-Number garage_door_1_battery 	"Leaf [%s %%]"							<battery>		(gBattery, BatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Vision Security Battery (7.0):state:default]"}
-Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, BatteryLevel_100)	{{mqtt="<[broker:zway/globalRoom/Vision Security Battery (8.0):state:default]"}
+Number garage_door_1_battery 	"Leaf [%s %%]"							<battery>		(gBattery, gBatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Vision Security Battery (7.0):state:default]"}
+Number garage_door_2_battery 	"Mondeo [%s %%]"						<battery>		(gBattery, gBatteryLevel_100)	{{mqtt="<[broker:zway/globalRoom/Vision Security Battery (8.0):state:default]"}
 Switch garage_door_1_relay 		"Releet Leaf" 																			{http=">[ON:POST:{{garagepi_leaf_url}}function/OUT] >[OFF:POST:{{garagepi_leaf_url}}function/IN]"}
 Switch garage_door_2_relay 		"Releet Mondeo" 																		{http=">[ON:POST:{{garagepi_mondeo_url}}function/OUT] >[OFF:POST:{{garagepi_mondeo_url}}function/IN]"}
 Switch garagepi_motion 			"Bevegelse GPI"
@@ -138,12 +138,12 @@ Switch left_double_switch 	"Venstre knapp" <network> (gGF) {channel="rfxcom:ligh
 Switch right_double_switch 	"Høyre knapp" 	<network> (gGF) {channel="rfxcom:lighting2:usbrfxcom:bedroom_switch_right:command" }
 
 /* Battery */
-Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, BatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:batteryLevel" }
-Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, BatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:batteryLevel" }
-Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, BatteryLevel_10) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:batteryLevel" }
-Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, BatteryLevel_10)			{channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:batteryLevel" }
-Number battery_freezer_temp		"Fryser [%f]"		<battery> (gBattery, gBasement, BatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_freezer_temperature:batteryLevel" }
-Number battery_storage_temp		"Bod [%f]"			<battery> (gBattery, gBasement, BatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_storage_temperature:batteryLevel" }
+Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, gBatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:batteryLevel" }
+Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, gBatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:batteryLevel" }
+Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, gBatteryLevel_10) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:batteryLevel" }
+Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, gBatteryLevel_10)			{channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:batteryLevel" }
+Number battery_freezer_temp		"Fryser [%f]"		<battery> (gBattery, gBasement, gBatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_freezer_temperature:batteryLevel" }
+Number battery_storage_temp		"Bod [%f]"			<battery> (gBattery, gBasement, gBatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_storage_temperature:batteryLevel" }
 
 /* Text values */
 String push_message_text "Default message"
@@ -154,49 +154,50 @@ Group:Switch:OR(ON, OFF) 		gLivingRoomLights 		"Lys [(%d)]" <light>
 
 Number scene_light_livingroom "Lys stue"			<sofa>  (gGF)
 Switch living_room_lights "Alt lys stua"            <light> (gGF) {mqtt="<[broker:zway/LivingRoom/LightOn:state:on:ON], <[broker:zway/LivingRoom/LightOff:state:on:OFF], >[broker:zway/LivingRoom/LightOn/set:command:ON:on], >[broker:zway/LivingRoom/LightOff/set:command:OFF:on]"}
-Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, gLivingRoomLights)  	                {mqtt="<[broker:zway/LivingRoom/OldLight:state:on:ON], <[broker:zway/LivingRoom/OldLight:state:off:OFF], >[broker:zway/LivingRoom/OldLight/set:command:ON:on], >[broker:zway/LivingRoom/OldLight/set:command:OFF:off]"}
-Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/KitchenBenchLight:state:on:ON], <[broker:zway/LivingRoom/KitchenBenchLight:state:off:OFF], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:ON:on], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:OFF:off]"}
-Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/DiningLightSwitch:state:on:ON], <[broker:zway/LivingRoom/DiningLightSwitch:state:off:OFF], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:ON:on], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:OFF:off]"}
+Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, gLivingRoomLights)  	                {mqtt="<[broker:zway/LivingRoom/OldLight:state:JS(toUpperCase.js)], >[broker:zway/LivingRoom/OldLight/set:command:ON:on], >[broker:zway/LivingRoom/OldLight/set:command:OFF:off]"}
+Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/KitchenBenchLight:JS(toUpperCase.js)], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:ON:on], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:OFF:off]"}
+Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/DiningLightSwitch:JS(toUpperCase.js)], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:ON:on], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:OFF:off]"}
 Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight, gLivingRoomLightsDimmer) 			{mqtt="<[broker:zway/LivingRoom/DiningDimmer:state:default], >[broker:zway/LivingRoom/DiningDimmer/set:command:*:${command}]"}
 
 String remote_living_room           "Fjernkontroll stue [%s]" <remote> (gGF) {mqtt="<[broker:zway/LivingRoom/LivingRoomRemote:command:default]"}
-Number remote_living_room_battery 	"Fjernkontroll [%s %%]"		<battery>		(gBattery, BatteryLevel_100, gGF)	{mqtt="<[broker:zway/globalRoom/Battery (17.0):state:default]"}
+Number remote_living_room_battery 	"Fjernkontroll [%s %%]"		<battery>		(gBattery, gBatteryLevel_100, gGF)	{mqtt="<[broker:zway/globalRoom/Battery (17.0):state:default]"}
 
 /* Philips HUE */
 Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
 Number scene_light_hall "Lys gang" 			<hue> 	(gLight, gHallLights, gFirstFloor)
-Switch light_hall_1_switch "Left bulb"          <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:5:brightness"}
-Switch light_hall_2_switch "Right bulb"         <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:6:brightness"}
-Switch light_hall_3_switch "Left bulb 2"        <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:3:brightness"}
-Switch light_hall_4_switch "Right bulb 2"       <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:4:brightness"}
+Switch light_hall_1_switch "Left bulb"      <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:5:brightness"}
+Switch light_hall_2_switch "Right bulb"     <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:6:brightness"}
+Switch light_hall_3_switch "Left bulb 2"    <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:3:brightness"}
+Switch light_hall_4_switch "Right bulb 2"   <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:4:brightness"}
 
-Dimmer light_hall_1     "Left bulb [%d %%]"    {channel="hue:0100:hue1:5:brightness"}
-Dimmer light_hall_2     "Right bulb [%d %%]"   {channel="hue:0100:hue1:6:brightness"}
-Dimmer light_hall_3     "Left bulb2 [%d %%]"    {channel="hue:0220:hue1:3:brightness"}
-Dimmer light_hall_4     "Right bulb2 [%d %%]"   {channel="hue:0220:hue1:4:brightness"}
+Group:Dimmer gHallLightsDimmer "Lys [%d %%]"  <light>
+Dimmer light_hall_1     "Left bulb [%d %%]"   <hue> (gHallLightsDimmer)  {channel="hue:0100:hue1:5:brightness"}
+Dimmer light_hall_2     "Right bulb [%d %%]"  <hue> (gHallLightsDimmer)  {channel="hue:0100:hue1:6:brightness"}
+Dimmer light_hall_3     "Left bulb2 [%d %%]"  <hue> (gHallLightsDimmer)   {channel="hue:0220:hue1:3:brightness"}
+Dimmer light_hall_4     "Right bulb2 [%d %%]" <hue> (gHallLightsDimmer)   {channel="hue:0220:hue1:4:brightness"}
 
-Switch light_bedroom    "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
-Color color_bedroom     "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
+Switch light_bedroom    "Soverom"               <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
+Color color_bedroom     "Soverom"               <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
 Dimmer dimmer_bedroom   "Soverom [%d %%]"       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
-Dimmer CT_dimm_bedroom  "Soverom"                       <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
 
-Switch light_kid_room_2         "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
-Color color_kid_room_2          "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
+Switch light_kid_room_2         "Maris rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
+Color color_kid_room_2          "Maris rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
 Dimmer dimmer_kid_room_2        "Maris rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:brightness"}
-Dimmer ct_kid_room_2            "Maris rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:color_temperature"}
+Dimmer ct_kid_room_2            "Maris rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:12:color_temperature"}
 
-Switch light_kid_room_1         "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:brightness"}
+Switch light_kid_room_1         "Ivers rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:brightness"}
 Color  color_kid_room_1         "Ivers rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:brightness"}
 Dimmer dimmer_kid_room_1        "Ivers rom [%d %%]"     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:brightness"}
-Dimmer ct_kid_room_1            "Ivers rom"                     <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color_temperature"}
+Dimmer ct_kid_room_1            "Ivers rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color_temperature"}
 
 
-Group:Switch:AND(ON, OFF)               gBasementLights "Lys [(%d)]"     <light>
+Group:Switch:AND(ON, OFF)   gBasementLights     "Lys [(%d)]"    <light>
+Group:Dimmer				gBasementHallLights "Lys [%d %%]" 	<light>
 Number scene_light_basement_hall "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
-Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)  {channel="hue:0100:hue1:9:brightness"}
-Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:10:brightness"}
-Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:7:brightness"}
-Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights)   {channel="hue:0100:hue1:8:brightness"}
+Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:9:brightness"}
+Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:10:brightness"}
+Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:7:brightness"}
+Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:8:brightness"}
 
 /* Living room TV */
 Group TV <tv>
@@ -205,15 +206,15 @@ Switch        	tv_mute		"Lyd av/på" 	<volume>	(TV)		{channel="samsungtv:tv:Livi
 Dimmer		tv_volume     	"Volum"		<volume>	(TV)		{channel="samsungtv:tv:Livingroom:volume"}
 
 /* Astro information */
-Group Astro
-DateTime Sunrise_Time  	"Soloppgang [%1$tH:%1$tM]" 						<sun> 	(Astro) { channel="astro:sun:home:rise#start" }
-DateTime Sunset_Time   	"Solnedgang [%1$tH:%1$tM]" 						<moon>	(Astro) { channel="astro:sun:home:set#start" }
-DateTime Moonrise_Time	"Måneoppgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) { channel="astro:moon:home:rise#start" }
-DateTime Moonset_Time   "Månenedgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(Astro) { channel="astro:moon:home:set#start" }
-DateTime Moon_Full      "Neste fullmåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"<moon>	(Astro) { channel="astro:moon:home:phase#full" }
-DateTime Moon_New     	"Neste nymåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"  <moon>	(Astro) { channel="astro:moon:home:phase#new" }
-String Moon_Phase	"Månefase"					<moon>  (Astro) { channel="astro:moon:home:phase#name" }
-String Season		"Sesong"						(Astro) { channel="astro:sun:home:season#name" }
+Group gAstro
+DateTime Sunrise_Time  	"Soloppgang [%1$tH:%1$tM]" 						<sun> 	(gAstro) { channel="astro:sun:home:rise#start" }
+DateTime Sunset_Time   	"Solnedgang [%1$tH:%1$tM]" 						<moon>	(gAstro) { channel="astro:sun:home:set#start" }
+DateTime Moonrise_Time	"Måneoppgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(gAstro) { channel="astro:moon:home:rise#start" }
+DateTime Moonset_Time   "Månenedgang [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	<moon>	(gAstro) { channel="astro:moon:home:set#start" }
+DateTime Moon_Full      "Neste fullmåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"<moon>	(gAstro) { channel="astro:moon:home:phase#full" }
+DateTime Moon_New     	"Neste nymåne [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"  <moon>	(gAstro) { channel="astro:moon:home:phase#new" }
+String Moon_Phase	"Månefase"					<moon>  (gAstro) { channel="astro:moon:home:phase#name" }
+String Season		"Sesong"						(gAstro) { channel="astro:sun:home:season#name" }
 
 
 /* Samsung AC */
@@ -249,12 +250,12 @@ Number AC_quiet_temp_threshold "Stille terskel [%.1f°C]" (AC)
 Number AC_additional_degrees   "Ekstra grader [%.1f°C]" 	(AC)
 
 
-Group Motion <office>
-Number hall_gf_temp 		"Temp gang [%.1f °C]" 			<temperature> 	(Motion, gGF, gInfluxDB) 								{mqtt="<[broker:zway/HallGroundFloor/Temperature:state:default]"}
-Number hall_gf_luminance 	"Lux gang [%.0f Lux]" 			<sun>			(Motion, gGF, gInfluxDB) 								{mqtt="<[broker:zway/HallGroundFloor/Luminiscence:state:default]"}
+Group gMotion <office>
+Number hall_gf_temp 		"Temp gang [%.1f °C]" 			<temperature> 	(gMotion, gGF, gInfluxDB) 								{mqtt="<[broker:zway/HallGroundFloor/Temperature:state:default]"}
+Number hall_gf_luminance 	"Lux gang [%.0f Lux]" 			<sun>			(gMotion, gGF, gInfluxDB) 								{mqtt="<[broker:zway/HallGroundFloor/Luminiscence:state:default]"}
 DateTime hall_gf_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gGF)
-Switch hall_gf_motion 		"Gang [MAP(motion.map):%s]" 	<present>		(Motion, gGF) 								{mqtt="<[broker:zway/HallGroundFloor/Motion:command:on:ON], <[broker:zway/HallGroundFloor/Motion:command:off:OFF]"}
-Number hall_gf_battery 		"Bev.sensor, gang [%s %%]"		<energy>		(Motion, gGF, gBattery, BatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Fibar Group Battery (16.0):state:default]"}
+Switch hall_gf_motion 		"Gang [MAP(motion.map):%s]" 	<present>		(gMotion, gGF) 								{mqtt="<[broker:zway/HallGroundFloor/Motion:command:JS(toUpperCase.js)]"}
+Number hall_gf_battery 		"Bev.sensor, gang [%s %%]"		<energy>		(gMotion, gGF, gBattery, gBatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Fibar Group Battery (16.0):state:default]"}
 
 /* Modes 0=HOME, 1=NIGHT, 2=AWAY */
 Number mode "Modus:" <present> (gMyOpenHAB)
@@ -262,18 +263,18 @@ Number previous_mode
 Switch holiday_mode "Feriemodus [%s]"	<present>
 
 /* Bathroom 1st floor */
-Switch light_bathroom		 "Taklys"						<light>			(gLight, gFirstFloor) 								{mqtt="<[broker:zway/Bathroom1stFloor/DimmerSwitch:state:on:ON], <[broker:zway/Bathroom1stFloor/DimmerSwitch:state:off:OFF], >[broker:zway/Bathroom1stFloor/DimmerSwitch/set:command:ON:on], >[broker:zway/Bathroom1stFloor/DimmerSwitch/set:command:OFF:off]"}
+Switch light_bathroom		 "Taklys"						<light>			(gLight, gFirstFloor) 								{mqtt="<[broker:zway/Bathroom1stFloor/DimmerSwitch:state:JS(toUpperCase.js)], >[broker:zway/Bathroom1stFloor/DimmerSwitch/set:command:ON:on], >[broker:zway/Bathroom1stFloor/DimmerSwitch/set:command:OFF:off]"}
 Dimmer light_bathroom_dimmer "Dimmer [%s]" 					<light> 		(gFirstFloor)										{mqtt="<[broker:zway/Bathroom1stFloor/Dimmer:state:default], >[broker:zway/Bathroom1stFloor/Dimmer/set:command:*:${command}]"}
-Number bathroom_temp 		 "Temp [%.1f °C]" 				<temperature> 	(Motion, gFirstFloor, gInfluxDB) 					{mqtt="<[broker:zway/Bathroom1stFloor/TemperatureMotion:state:default]"}
-Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>			(Motion, gFirstFloor, gInfluxDB) 					{mqtt="<[broker:zway/Bathroom1stFloor/Luminiscence:state:default]"}
+Number bathroom_temp 		 "Temp [%.1f °C]" 				<temperature> 	(gMotion, gFirstFloor, gInfluxDB) 					{mqtt="<[broker:zway/Bathroom1stFloor/TemperatureMotion:state:default]"}
+Number bathroom_lux 		 "Lys    [%.0f Lux]" 			<sun>			(gMotion, gFirstFloor, gInfluxDB) 					{mqtt="<[broker:zway/Bathroom1stFloor/Luminiscence:state:default]"}
 DateTime bathroom_lux_update "Sist oppdatert [%1$ta %1$tR]"	<clock>			(gFirstFloor)
-Switch bathroom_motion 		 "Bad [MAP(motion.map):%s]" 	<present>		(Motion, gFirstFloor) 								{mqtt="<[broker:zway/Bathroom1stFloor/Motion:command:JS(toUpperCase.js)]"}
-Number bathroom_battery 	 "Bev.sensor, bad [%s %%]"		<battery>		(Motion, gBattery, BatteryLevel_100, gFirstFloor)	{mqtt="<[broker:zway/globalRoom/Fibar Group Battery (15.0):state:default]"}
+Switch bathroom_motion 		 "Bad [MAP(motion.map):%s]" 	<present>		(gMotion, gFirstFloor) 								{mqtt="<[broker:zway/Bathroom1stFloor/Motion:command:JS(toUpperCase.js)]"}
+Number bathroom_battery 	 "Bev.sensor, bad [%s %%]"		<battery>		(gMotion, gBattery, gBatteryLevel_100, gFirstFloor)	{mqtt="<[broker:zway/globalRoom/Fibar Group Battery (15.0):state:default]"}
 Switch light_bathroom_mirror "Speillys"						<light>			(gLight, gFirstFloor)								{mqtt="<[broker:zway/Bathroom1stFloor/MirrorLight:state:JS(toUpperCase.js)], >[broker:zway/Bathroom1stFloor/MirrorLight/set:command:ON:on], >[broker:zway/Bathroom1stFloor/MirrorLight/set:command:OFF:off]"}
 Number scene_bathroom_light
 
 
-Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF)     {mqtt="<[broker:zway/HallGroundFloor/Light:state:on:ON], <[broker:zway/HallGroundFloor/Light:state:off:OFF], >[broker:zway/HallGroundFloor/Light/set:command:ON:on], >[broker:zway/HallGroundFloor/Light/set:command:OFF:off]"}
+Switch light_hall_ground_floor "Lys gang" <light> (gLight, gGF)     {mqtt="<[broker:zway/HallGroundFloor/Light:state:JS(toUpperCase.js)], >[broker:zway/HallGroundFloor/Light/set:command:ON:on], >[broker:zway/HallGroundFloor/Light/set:command:OFF:off]"}
 Number scene_light_hall_gf "Lys gang" <light> (gLight, gGF)
 
 /* Smoke detector */
@@ -348,17 +349,17 @@ String habPanel_hallway "Hallway"
 
 /* Flood sensor kitchen */
 Number flood_sensor_kitchen_temperature "Vannsensortemp: [%.1f °C]" 		<temperature> 	(gGF, gInfluxDB) 					{mqtt="<[broker:zway/LivingRoom/WaterLeakTemperature:state:default]"}
-Number flood_sensor_kitchen_battery 	"Vannsensor: [%s %%]"				<battery>		(gGF, gBattery, BatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Fibar Group Battery (29.0):state:default]"}
+Number flood_sensor_kitchen_battery 	"Vannsensor: [%s %%]"				<battery>		(gGF, gBattery, gBatteryLevel_100)	{mqtt="<[broker:zway/globalRoom/Fibar Group Battery (29.0):state:default]"}
 String flood_sensor_kitchen_alarm 		"Vannsensoralarm: [%s]"								(gGF, gInfluxDB) 					{mqtt="<[broker:zway/LivingRoom/WaterLeakGeneral:state:default]"}
 Switch flood_sensor_kitchen				"Vannsensor [MAP(no.map):%s]"		<garagedoor>  	(gGF)								{mqtt="<[broker:zway/LivingRoom/WaterLeak:state:on:ON], <[broker:zway/LivingRoom/WaterLeak:state:off:OFF]"}
 
 /* Basement motion detector */
-Number basement_hall_motion_temp 		 	"Temp [%.1f °C]" 					<temperature> 	(Motion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/TemperatureHallBasement:state:default]"}
-Number basement_hall_motion_humidity 	 	"Luftfuktighet [%.1f %%]"			<temperature> 	(Motion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/HumidityHallBasement:state:default]"}
-Number basement_hall_motion_ultraviolet		"Ultraviolet [%.1f]"								(Motion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/UltravioletHallBasement:state:default]"}
-Number basement_hall_motion_lux 		 	"Lys    [%.0f Lux]" 				<sun>			(Motion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/LuminiscenceHallBasement:state:default]"}
-Switch basement_hall_motion 				"Kjellergang [MAP(motion.map):%s]" 	<present>		(Motion, gBasement) 							{mqtt="<[broker:zway/HallBasement/PIRHallBasement:command:on:ON], <[broker:zway/HallBasement/PIRHallBasement:command:off:OFF]"}
-Switch basement_hall_motion_tamper			"Kjellergang tamper [%s]"							(Motion, gBasement)								{mqtt="<[broker:zway/HallBasement/TamperHallBasement:command:on:ON], <[broker:zway/HallBasement/TamperHallBasement:command:off:OFF]"}
-Number basement_hall_motion_battery 	 	"Bev.sensor, kjellergang [%s %%]"	<battery>		(Motion, gBattery, BatteryLevel_100, gBasement)	{mqtt="<[broker:zway/globalRoom/Aeotec Battery (30.0):state:default]"}
+Number basement_hall_motion_temp 		 	"Temp [%.1f °C]" 					<temperature> 	(gMotion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/TemperatureHallBasement:state:default]"}
+Number basement_hall_motion_humidity 	 	"Luftfuktighet [%.1f %%]"			<temperature> 	(gMotion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/HumidityHallBasement:state:default]"}
+Number basement_hall_motion_ultraviolet		"Ultraviolet [%.1f]"								(gMotion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/UltravioletHallBasement:state:default]"}
+Number basement_hall_motion_lux 		 	"Lys    [%.0f Lux]" 				<sun>			(gMotion, gBasement, gInfluxDB) 					{mqtt="<[broker:zway/HallBasement/LuminiscenceHallBasement:state:default]"}
+Switch basement_hall_motion 				"Kjellergang [MAP(motion.map):%s]" 	<present>		(gMotion, gBasement) 							{mqtt="<[broker:zway/HallBasement/PIRHallBasement:command:on:ON], <[broker:zway/HallBasement/PIRHallBasement:command:off:OFF]"}
+Switch basement_hall_motion_tamper			"Kjellergang tamper [%s]"							(gMotion, gBasement)								{mqtt="<[broker:zway/HallBasement/TamperHallBasement:command:on:ON], <[broker:zway/HallBasement/TamperHallBasement:command:off:OFF]"}
+Number basement_hall_motion_battery 	 	"Bev.sensor, kjellergang [%s %%]"	<battery>		(gMotion, gBattery, gBatteryLevel_100, gBasement)	{mqtt="<[broker:zway/globalRoom/Aeotec Battery (30.0):state:default]"}
 
 

@@ -136,20 +136,20 @@ end
 
 rule "Battery level changed"
 when
-	Item BatteryLevel_10 changed or
-	Item BatteryLevel_100 changed
+	Item gBatteryLevel_10 changed or
+	Item gBatteryLevel_100 changed
 then
-	logInfo('org.openhab.rules.status', "BatteryLevel changed, BatteryLevel_10: " + BatteryLevel_10.state + " - BatteryLevel_100: " + BatteryLevel_100.state)
-	if (BatteryLevel_10.state <= 2) {
-		BatteryLevel_10?.members.forEach [item |
+	logInfo('org.openhab.rules.status', "BatteryLevel changed, gBatteryLevel_10: " + gBatteryLevel_10.state + " - gBatteryLevel_100: " + gBatteryLevel_100.state)
+	if (gBatteryLevel_10.state <= 2) {
+		gBatteryLevel_10?.members.forEach [item |
 			if (item.state <= 2) {
 				logInfo('battery', item.name + " : " + item.state)
 				sendNotification("{{stein_email}}",'' + item.name + ' har lavt batterinivå: ' + item.state.toString)
 			}
 		]
 	}
-	if (BatteryLevel_100.state <= 20) {
-		BatteryLevel_100?.members.forEach [item |
+	if (gBatteryLevel_100.state <= 20) {
+		gBatteryLevel_100?.members.forEach [item |
 			if (item.state <= 20) {
 				sendNotification("{{stein_email}}",''+ item.name + ' har lavt batterinivå: ' + item.state.toString + '%')
 			}
