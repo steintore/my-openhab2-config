@@ -6,4 +6,5 @@ Strategies {
 
 Items {
     gInfluxDB* : strategy = everyChange, everyHour, everyDay
+    * : strategy = everyChange, everyDay
 }
