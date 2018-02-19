@@ -9,8 +9,7 @@ var Timer sunsetTimer = null
 
 rule "motion detected in the bathroom" 
 	when
-		Item bathroom_motion changed or
-		Item bathroom_motion received update
+		Item bathroom_motion changed
 	then
 	logInfo("org.openhab.rules.lights", "Motion sensor in the bathroom changed to: " + bathroom_motion.state)
 	switch (bathroom_motion.state as OnOffType) {
@@ -67,10 +66,9 @@ end
 
 rule "Motion in hall"
 when
-	Item hall_gf_motion changed or
-	Item hall_gf_motion received update
+	Item hall_gf_motion changed
 then
-	logInfo('org.openhab.rules.lights', 'Item hall_gf_motion changed')
+	logInfo('org.openhab.rules.lights', 'Item hall_gf_motion changed to ' + hall_gf_motion.state.toString)
 	switch (hall_gf_motion.state as OnOffType) {
 		case ON: {
 			light_hall_ground_floor.sendCommand(ON)
@@ -258,8 +256,7 @@ end
 
 rule "Basement hall motion detector"
 	when
-		Item basement_hall_motion changed or
-		Item basement_hall_motion received update
+		Item basement_hall_motion changed
 	then
 	logInfo('org.openhab.rules.lights', 'Motion sensor in the basement changed to: ' + basement_hall_motion.state)
 	switch (basement_hall_motion.state as OnOffType) {

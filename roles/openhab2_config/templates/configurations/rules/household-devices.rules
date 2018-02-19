@@ -78,45 +78,6 @@ then
     }
 end
 
-/*
-rule "Dryer has been started, notify me when it is done"
-when
-	Item power_dryer changed
-then
-	logInfo('org.openhab.rules.household', "Dryer power changed to: " + power_dryer.state)
-	if (dryer.state == ON) {
-		var double w = new Double(power_dryer.state.toString())
-		if (w > 0 && w < 1) w = 1
-		var double maxLastHour = new Double(power_dryer.maximumSince(now.minusHours(1)).state.toString())
-		var double maxLastTwoMinutes = new Double(power_dryer.maximumSince(now.minusMinutes(2)).state.toString())
-		if (w <= 5 && maxLastHour > 200 && (maxLastTwoMinutes <= (w*2) || w == 0)) {
-			if (timerDryer == null) {
-			postUpdate(push_message_text, "Tørketrommelen er ferdig!")
-				timerDryer = createTimer(now.plusSeconds(240)) [|
-					var double w2 = new Double(power_dryer.state.toString())
-					if (w2 > 0 && w2 < 1) w2 = 1
-					var double maxLastTwo = new Double(power_dryer.maximumSince(now.minusMinutes(2)).state.toString())
-					if (maxLastTwo <= (w2*2) || w2 == 0) {
-						sendCommand(dryer, OFF)
-					}
-					if(timerDryer != null) {
-						if(timerDryer.running) {
-							timerDryer.cancel()
-						}
-						timerDryer= null
-					}
-				]
-			}
-		}
-	} else if(timerDryer != null) {
-		if(timerDryer.running) {
-			timerDryer.cancel()
-		}
-		timerDryer= null
-	}
-end
-*/
-
 rule "Freezer is suddenly using less power"
 when
 	Item power_freezer changed

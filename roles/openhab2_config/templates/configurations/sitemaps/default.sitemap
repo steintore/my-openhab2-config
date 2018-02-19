@@ -116,7 +116,7 @@ sitemap default label="Huset"
 					
     		}
     		Frame label="Varme" {
-    			Switch item=Heating
+    			Switch item=gHeating
     			Text item=power_panelovn_gang visibility=[gang_panelovn==ON]
     		}
     		Frame label="Alt" {
@@ -309,7 +309,7 @@ sitemap default label="Huset"
 		Text item=smappee_power icon="energy" {
 			Frame {
 				Group item=gEnergy
-				Group item=Smappee
+				Group item=gSmappee
 				Group item=gBattery label="Batteri" icon="energy"
 			}
 			Frame {
@@ -359,8 +359,8 @@ sitemap default label="Huset"
 		}
 	}
 
-	Frame label="Heating" {
-		Group item=Heating
+	Frame label="Varme" {
+		Group item=gHeating
 	}
 
 	Frame label="Gulvvarme" {

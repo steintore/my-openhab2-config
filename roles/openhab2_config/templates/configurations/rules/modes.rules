@@ -31,6 +31,8 @@ rule "A change of mode"
 				} 
 				restoreStates(stored_states)
 				restoreStates(stored_heating_states)
+				guest_home.sendCommand(ON)
+				
 				// 	If we're coming home it is no longer a holiday..
 				if (holiday_mode.state == ON)
 					sendCommand(holiday_mode, OFF)
@@ -57,14 +59,13 @@ rule "A change of mode"
 						+ LivingRoomTemperature.state.format("%.1f") + " °C i stua. "
 						+ t
 					}
-					sendCommand(guest_home, ON)
 					if (t.length() > 0)
 						postUpdate(push_message_text, t)
 				}
-				sendCommand(screen_pi_screen, ON)
-				sendCommand(roombaDock, ON)
+				screen_pi_screen.sendCommand(ON)
+				roombaDock.sendCommand(ON)
 
-				sendCommand(leaf_request_update, ON)
+				leaf_request_update.sendCommand(ON)
 
 				logInfo('org.openhab.rules.modes', "JustMorning is: " + justMorning.state.toString)
 				if (justMorning.state == ON) {
@@ -239,7 +240,8 @@ rule "A change of mode"
 				logInfo('org.openhab.rules.modes', 'Party MODE activated')
 			}
 		}
-		postUpdate(previous_mode, mode.state.toString)
+		previous_mode.postUpdate(receivedCommand)
+		logInfo('org.openhab.rules.modes', 'previous_mode is now set to: ' + previous_mode.state.toString + " because mode is: " + mode.state.toString)
 	}
 end
 
