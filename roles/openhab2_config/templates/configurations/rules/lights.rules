@@ -264,7 +264,7 @@ rule "Basement hall motion detector"
 			scene_light_basement_hall.sendCommand(1)		
 		}
 		case OFF: {
-			if (mode.state != 99)
+			if (mode.state != 99 && scene_light_laundry.state == OFF && scene_basement_room_light.state == OFF)
 				scene_light_basement_hall.sendCommand(0)
 		}
 	}
@@ -441,3 +441,34 @@ rule "Remote living received command"
 	}
 end
 
+rule "lights in basement room changed from other source"
+	when
+		Item gBasementRoomLights changed or
+		Item gBasementRoomLightsDimmer received update
+	then
+
+	if (gBasementRoomLights.state == OFF) {
+		scene_basement_room_light.postUpdate(0)
+	} else if (gBasementRoomLightsDimmer.state == 30) {
+		scene_basement_room_light.postUpdate(1)
+	} else if (gBasementRoomLightsDimmer.state == 80) {
+		scene_basement_room_light.postUpdate(3)
+	} else if (gBasementRoomLightsDimmer.state == 100) {
+		scene_basement_room_light.postUpdate(2)
+	}
+end
+
+rule "lights in laundry room changed from other source"
+	when
+		Item gLaundryRoomLights changed or
+		Item gLaundryLightsDimmer received update
+	then
+
+	if (gLaundryRoomLights.state == OFF) {
+		scene_basement_room_light.postUpdate(0)
+	} else if (gLaundryLightsDimmer.state == 80) {
+		scene_basement_room_light.postUpdate(3)
+	} else if (gLaundryLightsDimmer.state == 100) {
+		scene_basement_room_light.postUpdate(1)
+	}
+end
