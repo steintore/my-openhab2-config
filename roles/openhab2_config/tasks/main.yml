@@ -83,6 +83,7 @@
         - services/homekit.cfg
         - services/networkupstools.cfg
         - services/openhabcloud.cfg
+        - services/mqtt.cfg
         - things/astro.things
         - things/systeminfo.things
         - things/samsungtv.things

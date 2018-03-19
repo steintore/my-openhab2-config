@@ -134,8 +134,11 @@ then
 			} else if (nightTime.beforeNow && dayTime.afterNow) {
 				mode.sendCommand(1)// NIGHT
 			} else if (nightTime.afterNow || eveningTime.beforeNow) {
-				if (mode.state != 1)
+				if (mode.state != 1) {
+					mode.sendCommand(0)// HOME
+					Thread::sleep(2000)
 					mode.sendCommand(3)// EVENING
+				}
 			} else {
 				mode.sendCommand(0)// HOME
 			}
