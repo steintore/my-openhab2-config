@@ -257,6 +257,9 @@ rule "Switch to evening mode in the evening"
 		if (mode.state == 0) {
 			logInfo('org.openhab.rules.modes', "Evening mode because it is time")
 			sendCommand(mode, 3)
+		} else if (holiday_mode.state == ON) {
+			scene_light_livingroom.sendCommand(2)
+			scene_light_hall_gf.sendCommand(1)
 		}
 end
 
@@ -295,6 +298,14 @@ rule "Switch to night mode in the evening"
 				logInfo('org.openhab.rules.modes', "No one is awake, so going into night mode")
 				sendCommand(mode, 1)
 			}
+		} else if (holiday_mode.state == ON) {
+			sendCommand(scene_light_livingroom, 0)
+			sendCommand(scene_basement_room_light, 0)
+			sendCommand(scene_light_laundry, 0)
+			sendCommand(scene_light_hall, 0)
+			sendCommand(scene_light_basement_hall, 0)
+			sendCommand(scene_office_light, 0)
+			scene_light_hall_gf.sendCommand(0)
 		}
 end
 
@@ -312,6 +323,9 @@ rule "Return to day mode during the week"
 			postUpdate(justMorning, ON)
 			Thread::sleep(100)
 			sendCommand(mode, 0)
+		} else if (holiday_mode.state == ON) {
+			scene_light_livingroom.sendCommand(1)
+			sendCommand(scene_light_hall, 1)
 		}
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
@@ -328,6 +342,9 @@ rule "Return to day mode during weekend"
 			postUpdate(justMorning, ON)
 			Thread::sleep(100)
 			sendCommand(mode, 0)
+		} else if (holiday_mode.state == ON) {
+			scene_light_livingroom.sendCommand(1)
+			sendCommand(scene_light_hall, 1)
 		}
 		postUpdate(left_double_switch, UNDEF)
 		postUpdate(right_double_switch, UNDEF)
