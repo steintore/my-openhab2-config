@@ -283,8 +283,8 @@ rule "Sunset"
  			sunsetTimer.cancel()
  			sunsetTimer = null
  		}
- 		logInfo("org.openhab.rules.lights", 'Creating timer to turn on living room lights at: ' + sunset.minusMinutes(20).toString);
- 		sunsetTimer = createTimer(sunset.minusMinutes(20)) [|
+ 		logInfo("org.openhab.rules.lights", 'Creating timer to turn on living room lights at: ' + sunset.minusMinutes(60).toString);
+ 		sunsetTimer = createTimer(sunset.minusMinutes(60)) [|
  			if (mode.state == 1 || holiday_mode.state == ON) { // IF HOME or holiday
 			 	sendNotification("{{stein_email}}","Slår på lys i stua! Det var: " + scene_light_livingroom.state.toString())
  				scene_light_livingroom.sendCommand(1)
