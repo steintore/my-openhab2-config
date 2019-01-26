@@ -17,8 +17,6 @@ Group gMyOpenHAB
 /* NTP binding demo item */
 DateTime Date	"[%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
 
-
-Group:Number:MIN	gBatteryLevel_10		"Batteri [(%d)]"	<battery>		(All)
 Group:Number:MIN	gBatteryLevel_100	"Batteri [(%d)] %"	<battery>		(All)
 
 /* Heating */
@@ -138,12 +136,12 @@ Switch left_double_switch 	"Venstre knapp" <network> (gGF) {channel="rfxcom:ligh
 Switch right_double_switch 	"Høyre knapp" 	<network> (gGF) {channel="rfxcom:lighting2:usbrfxcom:bedroom_switch_right:command" }
 
 /* Battery */
-Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, gBatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:batteryLevel" }
-Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, gBatteryLevel_10) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:batteryLevel" }
-Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, gBatteryLevel_10) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:batteryLevel" }
-Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, gBatteryLevel_10)			{channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:batteryLevel" }
-Number battery_freezer_temp		"Fryser [%f]"		<battery> (gBattery, gBasement, gBatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_freezer_temperature:batteryLevel" }
-Number battery_storage_temp		"Bod [%f]"			<battery> (gBattery, gBasement, gBatteryLevel_10)			{channel="rfxcom:temperature:usbrfxcom:basement_storage_temperature:batteryLevel" }
+Number battery_outdoor_temp		"Utetemp [%f]" 		<battery>	(gBattery, gOutdoor, gBatteryLevel_100) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:outdoor_temperature:batteryLevel" }
+Number battery_basement_temp	"Kjellertemp [%f]"	<battery>	(gBattery, gBasement, gBatteryLevel_100) 	{channel="rfxcom:temperaturehumidity:usbrfxcom:basement_temperature:batteryLevel" }
+Number battery_office_temp		"Kontortemp [%f]"	<battery>	(gBattery, gFirstFloor, gBatteryLevel_100) {channel="rfxcom:temperaturehumidity:usbrfxcom:office_temperature:batteryLevel" }
+Number battery_living_room_temp	"Stuetemp [%f]"		<battery> (gBattery, gGF, gBatteryLevel_100)			{channel="rfxcom:temperaturehumidity:usbrfxcom:living_room_temperature:batteryLevel" }
+Number battery_freezer_temp		"Fryser [%f]"		<battery> (gBattery, gBasement, gBatteryLevel_100)			{channel="rfxcom:temperature:usbrfxcom:basement_freezer_temperature:batteryLevel" }
+Number battery_storage_temp		"Bod [%f]"			<battery> (gBattery, gBasement, gBatteryLevel_100)			{channel="rfxcom:temperature:usbrfxcom:basement_storage_temperature:batteryLevel" }
 
 /* Text values */
 String push_message_text "Default message"
