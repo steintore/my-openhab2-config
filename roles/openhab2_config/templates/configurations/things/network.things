@@ -9,6 +9,5 @@ Thing network:pingdevice:xbox [ hostname="{{xbox_ip}}", retry=1, timeout=5000, r
 Thing network:pingdevice:appleTv [ hostname="{{appletv_ip}}", retry=1, timeout=5000, refreshInterval=60000]
 Thing network:pingdevice:denon [ hostname="{{denon_ip}}", retry=1, timeout=5000, refreshInterval=60000]
 Thing network:pingdevice:screenPi [ hostname="{{screenpi_ip}}", retry=1, timeout=5000, refreshInterval=60000]
-Thing network:pingdevice:roomba [ hostname="{{roomba_ip}}", retry=1, timeout=5000, refreshInterval=60000]
 Thing network:pingdevice:tv [ hostname="{{samsungtv_ip}}", retry=1, timeout=5000, refreshInterval=60000]
 Thing network:pingdevice:piHole [ hostname="{{pihole_ip}}", retry=1, timeout=5000, refreshInterval=60000]

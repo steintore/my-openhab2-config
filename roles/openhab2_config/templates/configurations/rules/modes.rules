@@ -63,7 +63,6 @@ rule "A change of mode"
 						postUpdate(push_message_text, t)
 				}
 				screen_pi_screen.sendCommand(ON)
-				roombaDock.sendCommand(ON)
 
 				leaf_request_update.sendCommand(ON)
 
@@ -124,7 +123,6 @@ rule "A change of mode"
 				sendCommand(gang_panelovn, OFF)
 
 				postUpdate(justMorning, OFF)
-				sendCommand(roombaDock, OFF)
 
 				alarm_check.postUpdate(""+ now)
 
@@ -194,7 +192,6 @@ rule "A change of mode"
 				postUpdate(justMorning, OFF)
 				sendCommand(screen_pi_reboot, ON)
 
-				sendCommand(scene_roomba, 1) // Start vacuuming
 				habPanel_hallway.postUpdate("Hallway")
 				
 				sendCommand(alarm_door_lock, ON)

@@ -7,7 +7,6 @@ rule "Startup"
 	then
 	logInfo("org.openhab.rules", "System started")
 	sendCommand(alarm_check, "" + now)
-	sendCommand(roomba_lan, ON)
 end
 
 rule "When text is changed, send a push message"

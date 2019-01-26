@@ -46,7 +46,6 @@ Switch router_lan 	        "Router"    			<present>		(proximity, gInfluxDB) {cha
 Switch home_away_lan		"Hjemme/borte"			<present>		(proximity, gInfluxDB) {channel="network:pingdevice:homeAway:online"}
 Switch boss_lan				"Boss server"       	<present>       (proximity, gInfluxDB) {channel="network:pingdevice:boss:online"}
 Switch zwave_lan			"Z-Wave"				<present>		(proximity, gInfluxDB) {channel="network:pingdevice:zwave:online"}
-Switch roomba_lan			"Roomba"				<present>		(proximity, gInfluxDB) {channel="network:pingdevice:roomba:online"}
 Switch garage_pi			"GaragePi"				<present>		(proximity, gInfluxDB) {channel="network:pingdevice:garagePi:online"}
 Switch xbox					"XBox"					<present>		(proximity, gInfluxDB) {channel="network:pingdevice:xbox:online"}
 Switch appletv				"Apple Tv"				<present>		(proximity, gInfluxDB) {channel="network:pingdevice:appleTv:online"}

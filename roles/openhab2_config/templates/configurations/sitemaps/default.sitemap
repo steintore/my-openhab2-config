@@ -58,11 +58,6 @@ sitemap default label="Huset"
 				Setpoint item=BathroomGFHeatedTo minValue=6 maxValue=23 step=1 icon="clock"
 				Text item=BathroomGF_OpState
     		}
-			Frame label="Rengjøring" {
-				Switch item=scene_roomba mappings=[0='Dock', 1='Clean', 2='Spot'] icon="sofa"
-				Text item=roombaCurrentState label="Roomba status: [MAP(roombaStatus.map):%s]"  icon="sofa"
-				Group item=roomba label="Roomba" icon="sofa"
-			}
 			Frame label="Tempdetaljer" {
 				Image url="{{grafana_base_url}}?from=now-48h&to=now&panelId=3&theme=light&width=700&height=350" refresh=120000
 			}

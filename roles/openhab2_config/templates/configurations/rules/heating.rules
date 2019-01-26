@@ -324,7 +324,6 @@ then
 				sendCommand(bathroom_1st_floor_mode, 'ECO') //ECO MODE
 
 			screen_pi.sendCommand(OFF)
-			roombaDock.sendCommand(OFF)
 			washingmachine.sendCommand(OFF)
 		}
 		case OFF: {
@@ -344,7 +343,6 @@ then
 				screen_pi_screen.sendCommand(ON)
 			else
 				sendNotification("{{stein_email}}",'ScreenPi is switched off...')
-			roombaDock.sendCommand(ON)
 		}
 	}
 end
