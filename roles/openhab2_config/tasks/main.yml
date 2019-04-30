@@ -51,7 +51,6 @@
         - rules/weather.rules
         - rules/alarm.rules
         - rules/speedtest.rules
-        - rules/habpanel.rules
         - rules/household-devices.rules
         - scripts/pushMessages.script
         - scripts/alarm-climate.js
