@@ -1,4 +1,4 @@
-Bridge tradfri:gateway:mygateway [ host="{{tradfri_ip}}", code="{{tradfri_code}}" ] {
+Bridge tradfri:gateway:mygateway [ host="{{tradfri_ip}}", code="{{tradfri_code}}", preSharedKey="{{tradfri_psk}}" ] {
     0220 officeRoof         [ id=65537 ]
     0220 officeLeftDesk     [ id=65538 ]
     0220 officeRightDesk    [ id=65539 ]
