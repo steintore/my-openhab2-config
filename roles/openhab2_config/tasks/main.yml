@@ -86,6 +86,7 @@
         - things/rfxcom.things
         - things/network.things
         - things/tradfri.things
+        - things/enocean.things
 
 - name: sync alarm-api script into configurations
   become: yes

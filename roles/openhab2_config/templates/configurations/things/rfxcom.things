@@ -1,7 +1,4 @@
 Bridge rfxcom:bridge:usbrfxcom [ serialPort="/dev/{{rfxcom_tty}}" ] {
-	Thing lighting2				living_room_floor 			[deviceId="{{rfxcom_living_room_floor}}", subType="AC"]
-	Thing lighting2				living_room_window 			[deviceId="{{rfxcom_living_room_window}}", subType="AC"]
-
 	Thing temperaturehumidity   outdoor_temperature			[deviceId="{{rfxcom_outdoor}}", subType="TH1"]
 	Thing temperaturehumidity   office_temperature			[deviceId="{{rfxcom_office}}", subType="TH1"]
 	Thing temperaturehumidity   living_room_temperature		[deviceId="{{rfxcom_living_room}}", subType="TH1"]
@@ -13,9 +10,6 @@ Bridge rfxcom:bridge:usbrfxcom [ serialPort="/dev/{{rfxcom_tty}}" ] {
 
 	Thing lighting2				bedroom_switch_left		[deviceId="{{rfxcom_bedroom_switch_left}}", subType="AC"]
 	Thing lighting2				bedroom_switch_right		[deviceId="{{rfxcom_bedroom_switch_right}}", subType="AC"]
-
-	Thing lighting2 			basement_motion				[deviceId="{{rfxcom_basement_motion}}0", subType="AC"]
-	Thing lighting2 			living_room_motion			[deviceId="{{rfxcom_living_room_motion}}0", subType="AC"]
 
 	Thing security1       smoke_detector             [deviceId="{{rfxcom_smoke_detector}}", subType="KD101"]
 }
