@@ -1,4 +1,4 @@
-Bridge tradfri:gateway:gwb072bf258007 [ host="{{tradfri_ip}}", identity="{{tradfri_identity}}", preSharedKey="" ] {
+Bridge tradfri:gateway:gwb072bf258007 [ host="{{tradfri_ip}}", identity="{{tradfri_identity}}", preSharedKey="{{tradfri_preshared}}" ] {
     0220 officeRoof         [ id=65537 ]
     0220 officeLeftDesk     [ id=65538 ]
     0220 officeRightDesk    [ id=65539 ]
