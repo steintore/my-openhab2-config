@@ -1,0 +1,3 @@
+Bridge enocean:bridge:gtwy "EnOcean Gateway" [ path="{{enocean_path}}" ] {
+    Thing rockerSwitch rs01 "Rocker" @ "Livingroom" [ enoceanId="{{enocean_rocker_id}}", receivingEEPId="F6_02_01" ]
+}

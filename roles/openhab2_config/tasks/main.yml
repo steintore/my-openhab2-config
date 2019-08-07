@@ -47,7 +47,6 @@
         - rules/status.rules
         - rules/modes.rules
         - rules/power.rules
-        - rules/plex.rules
         - rules/weather.rules
         - rules/alarm.rules
         - rules/speedtest.rules
@@ -70,7 +69,6 @@
         - services/http.cfg
         - services/addons.cfg
         - services/influxdb.cfg
-        - services/plex.cfg
         - services/denon.cfg
         - services/weather.cfg
         - services/runtime.cfg

@@ -64,28 +64,6 @@ sitemap default label="Huset"
 			Frame label="TV" visibility=[tv_power==ON] {
 				Group item=TV icon="television"
 			}
-			Frame label="Plex TV" visibility=[PlexTVPower==ON] {
-        		Switch item=PlexTVPower
-        		Text item=PlexTVStatus
-        		Slider item=PlexTVProgress visibility=[PlexTVStatus!="Stopped"]
-        		Setpoint item=PlexTVProgress visibility=[PlexTVStatus!="Stopped"] minValue=0 maxValue=100 step=1
-        		Text item=PlexTVTitle visibility=[PlexTVStatus!="Stopped"]
-        		Text item=PlexTVType visibility=[PlexTVStatus!="Stopped"]
-        		Switch item=PlexTVPause
-        		Switch item=PlexTVPlay
-        		Switch item=PlexTVStop mappings=[ON="Stop"]
-        		Slider item=PlexTVVolume
-
-        		Switch item=PlexTVSelect mappings=[ON="Select"]
-        		Switch item=PlexTVBack mappings=[ON="Back"]
-        		Switch item=PlexTVUp mappings=[ON="⬆"]
-        		Switch item=PlexTVDown mappings=[ON="⬇"]
-        		Switch item=PlexTVLeft mappings=[ON="⬅"]
-        		Switch item=PlexTVRight mappings=[ON="➡"]
-
-        		Switch item=PlexTVForward mappings=[ON="⤏"]
-        		Switch item=PlexTVReverse mappings=[ON="⤎"]
-			}
 			Frame label="Alt"   {
 				Group item=gGF
 			}
@@ -130,30 +108,6 @@ sitemap default label="Huset"
     			Slider item=gBasementRoomLightsDimmer icon="slider"
 				Switch item=scene_light_laundry mappings=[0="Av", 1="Fokus", 3="Normal"]
     			Slider item=gLaundryLightsDimmer icon="slider"
-    		}
-    		Frame label="Plex Xbox" visibility=[xbox==ON] {
-    			Text label="Plex" {
-    				Switch item=PlexXBoxPower
-    				Text item=PlexXBoxStatus
-    				Slider item=PlexXBoxProgress visibility=[PlexTVStatus!="Stopped"]
-    				Setpoint item=PlexXBoxProgress visibility=[PlexTVStatus!="Stopped"] minValue=0 maxValue=100 step=1
-    				Text item=PlexXBoxTitle visibility=[PlexTVStatus!="Stopped"]
-    				Text item=PlexXBoxType visibility=[PlexTVStatus!="Stopped"]
-    				Switch item=PlexXBoxPause
-    				Switch item=PlexXBoxPlay
-    				Switch item=PlexXBoxStop mappings=[ON="Stop"]
-    				Slider item=PlexXBoxVolume
-
-	    			Switch item=PlexXBoxSelect mappings=[ON="Select"]
-    				Switch item=PlexXBoxBack mappings=[ON="Back"]
-    				Switch item=PlexXBoxUp mappings=[ON="⬆"]
-    				Switch item=PlexXBoxDown mappings=[ON="⬇"]
-    				Switch item=PlexXBoxLeft mappings=[ON="⬅"]
-    				Switch item=PlexXBoxRight mappings=[ON="➡"]
-
-	        		Switch item=PlexXBoxForward mappings=[ON="⤏"]
-    				Switch item=PlexXBoxReverse mappings=[ON="⤎"]
-    			}
     		}
     		Frame label="Denon receiver" {
     			Switch item=DenonPower
