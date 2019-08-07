@@ -49,7 +49,7 @@ then
 	                temp_string = transform("JSONPATH", "$.[?(@.location=='vaskerom')].humidity", climate).replace('[\"', '').replace('\"]','').replace(',','.')
 	                humidity = temp_string.split('%')
 	                postUpdate(alarm_humidity_laundry, humidity.get(0).replace(',', '.'))
-	                logDebug("org.openhab.rules.alarm", "Has updated climate-data from json")
+	                logInfo("org.openhab.rules.alarm", "Has updated climate-data from json")
                 } catch (Exception e) {
                 	logError("org.openhab.rules.alarm", "Something went wrong when trying to parse json {}, exception is: {}", json, e)
                 }
@@ -200,7 +200,7 @@ rule "Check the status off the door lock"
 		Item alarm_door_lock_check received update
 	then
 	var result = executeCommandLine("vsure {{alarm_login}} {{alarm_password}} overview doorLockStatusList", 5000)
-	logDebug("org.openhab.rules.alarm", "Door lock state is now: " + result)
+	logInfo("org.openhab.rules.alarm", "Door lock state is now: " + result)
 	if (result != null) {
 		postUpdate(alarm_door_locked_state, transform("JSONPATH", "$..lockedState", result).replace('[\"', '').replace('\"]','').replace(',','.'))
 		postUpdate(alarm_door_current_lock_state, transform("JSONPATH", "$..currentLockState", result).replace('[\"', '').replace('\"]','').replace(',','.'))

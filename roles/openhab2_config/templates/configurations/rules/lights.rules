@@ -73,7 +73,7 @@ then
 		case ON: {
 			light_hall_ground_floor.sendCommand(ON)
 			if (justMorning.state == ON) {
-				logDebug('org.openhab.rules.lights', 'Item hall_gf_motion changed runs the morning routine.. good morning!')
+				logInfo('org.openhab.rules.lights', 'Item hall_gf_motion changed runs the morning routine.. good morning!')
 				scene_light_livingroom.sendCommand(1)
 				justMorning.postUpdate(OFF)
 				Thread::sleep(100)
@@ -83,7 +83,7 @@ then
 			}
 			if (mode.state == 2) {
 				postUpdate(alarm_check_now, "" + now)
-				logDebug('org.openhab.rules.lights', 'Item hall_gf_motion changed want alarm status to be checked')
+				logInfo('org.openhab.rules.lights', 'Item hall_gf_motion changed want alarm status to be checked')
 			}				
 			screen_pi_screen.sendCommand(ON)
 		}
@@ -132,7 +132,7 @@ rule "change scene for lights in hall ground floor"
 when
  	Item scene_light_hall_gf received command
 then
-	logDebug('org.openhab.rules.lights', 'Item scene_light_hall_gf received command ' + receivedCommand)
+	logInfo('org.openhab.rules.lights', 'Item scene_light_hall_gf received command ' + receivedCommand)
  	switch(receivedCommand) {
  		case 0: {
  			light_hall_ground_floor.sendCommand(OFF)
@@ -180,7 +180,7 @@ rule "light in hall 1st floor"
 	when
 		Item scene_light_hall received command
 	then
-	logDebug('org.openhab.rules.lights', "Item scene_light_hall received command " + receivedCommand)
+	logInfo('org.openhab.rules.lights', "Item scene_light_hall received command " + receivedCommand)
 	switch (receivedCommand) {
 		case 0:  { //OFF 
 			gHallLightsDimmer.sendCommand(0)
@@ -207,7 +207,7 @@ rule "lights in hall changed from other source"
 		Item light_hall_3 received update or
 		Item light_hall_4 received update
 	then
-	logDebug('org.openhab.rules.lights', "lights in hall changed from other source")
+	logInfo('org.openhab.rules.lights', "lights in hall changed from other source")
 	if (light_hall_1.state == 0 && light_hall_2.state == 0 && light_hall_3.state == 0 && light_hall_4.state == 0) {
 		postUpdate(scene_light_hall, 0)
 	} else if (light_hall_1.state == 100 && light_hall_2.state == 100 && light_hall_3.state == 100 && light_hall_4.state == 100) {
@@ -221,7 +221,7 @@ rule "light in basement hall"
 	when
 		Item scene_light_basement_hall received command
 	then
-	logDebug('org.openhab.rules.lights', "Item scene_light_basement_hall received command " + receivedCommand)
+	logInfo('org.openhab.rules.lights', "Item scene_light_basement_hall received command " + receivedCommand)
 	switch (receivedCommand) {
 		case 0:  { //OFF 
 			gBasementHallLights.sendCommand(0)
@@ -245,7 +245,7 @@ rule "lights in basement hall changed from other source"
 		Item light_basement_3 received update or
 		Item light_basement_4 received update
 	then
-	logDebug('org.openhab.rules.lights', "Lights in basement hall changed from other source")
+	logInfo('org.openhab.rules.lights', "Lights in basement hall changed from other source")
 	if (light_basement_1.state == 0 && light_basement_2.state == 0 && light_basement_3.state == 0 && light_basement_4.state == 0) {
 		postUpdate(scene_light_basement_hall, 0)
 	} else if (light_basement_1.state == 100 && light_basement_2.state == 100 && light_basement_3.state == 100 && light_basement_4.state == 100) {

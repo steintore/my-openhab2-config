@@ -244,7 +244,7 @@ then
 	timerBFWeekendOn = createTimer(onTime) [|
 		logInfo(logString, "timerBFWeekendOn is running, " + now.getDayOfWeek)
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug(logString, "Basement floor heating is OFF, doing nothing")
+			logInfo(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 5 && now.getDayOfWeek <= 7) {
 			// Only do this if not HOLIDAY and only on weekdays
 			scene_basement_floor_heating.sendCommand(2) // DAY MODE
@@ -261,7 +261,7 @@ then
 	  logInfo(logString, "timerBFWeekendOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug(logString, "Basement floor heating is OFF, doing nothing")
+			logInfo(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && now.getDayOfWeek > 4 && now.getDayOfWeek < 7) {
 			scene_basement_floor_heating.sendCommand(1) // NIGHT MODE
 		}
@@ -278,7 +278,7 @@ then
 		logInfo(logString, "timerBFWeekdaysOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug(logString, "Basement floor heating is OFF, doing nothing")
+			logInfo(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 5 || now.getDayOfWeek > 6)) {
 			scene_basement_floor_heating.sendCommand(1) // NIGHT MODE
 		}
@@ -295,7 +295,7 @@ then
 	  logInfo(logString, "timerBFWeekdaysOn is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
 		if (scene_basement_floor_heating.state == 0) {
-			logDebug(logString, "Basement floor heating is OFF, doing nothing")
+			logInfo(logString, "Basement floor heating is OFF, doing nothing")
 		} else if (holiday_mode.state == OFF && (now.getDayOfWeek < 6)) {
 			scene_basement_floor_heating.sendCommand(2) // DAY MODE
 		}
