@@ -135,11 +135,12 @@ rule "Homekit coming home"
 		postUpdate(homekit_cominghome, OFF)
 end
 
-rule "Restart the HomeKit bundle"
+rule "Restart the HomeKit and TRÅDFRI bundle"
 	when
-		Time cron "0 0 1 * * ?"
+		Time cron "0 0 1 * * ?" or
+		Time cron "0 0 12 * * ?"
 	then
-		logInfo("homekit.rules", "Going to restart the HomeKit-bundle")
+		logInfo("homekit.rules", "Going to restart the HomeKit and TRÅDFRI-bundles")
 		var String result = executeCommandLine("{{openhab_configuration_dir}}/scripts/restartHomeKitBundle.sh", 5000)
 		if (result != null) {
 			logInfo("homekit.rules", "Tried to restart bundle, got result: " + result)
