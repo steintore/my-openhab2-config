@@ -237,8 +237,8 @@ rule "A change of mode"
 				logInfo('org.openhab.rules.modes', 'Party MODE activated')
 			}
 		}
-		previous_mode.postUpdate(receivedCommand)
-		logInfo('org.openhab.rules.modes', 'previous_mode is now set to: ' + previous_mode.state.toString + " because mode is: " + mode.state.toString)
+		previous_mode.sendCommand(receivedCommand)
+		logInfo('org.openhab.rules.modes', 'previous_mode is now set to: ' + previous_mode.state.toString + " because mode is: " + mode.state.toString + " received:" + receivedCommand)
 	}
 end
 
