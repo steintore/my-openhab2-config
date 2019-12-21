@@ -108,7 +108,7 @@ when
 	Item ac_mode changed
 then
 	logInfo('org.openhab.rules.status', "Someone changed the ac_mode to: " + ac_mode.state)
-	if (tv_power.state == ON && (ac_mode_previous.state == NULL || ac_mode_previous.state.toString == '99')) {
+	if (tv_power.state == ON && (ac_mode_previous.state === null || ac_mode_previous.state.toString == '99')) {
 		ac_mode_previous.sendCommand(ac_mode.previousState(true).state.toString())
 	}
 end
