@@ -14,7 +14,7 @@ rule "Washingmachine Consumption State Machine (Extended)"
 when
     Item power_washingmachine changed
 then
-  logInfo('org.openhab.rules.household', 'Washing machine changed to: ' + power_washingmachine.state)
+  logDebug('org.openhab.rules.household', 'Washing machine changed to: ' + power_washingmachine.state)
     if (power_washingmachine.state < 0.3)
       washingmachine_OpState.postUpdate(MODE_OFF)
     else if (power_washingmachine.state > 0.5)
@@ -48,7 +48,7 @@ rule "Dryer Consumption State Machine (Extended)"
 when
     Item power_dryer changed
 then
-    logInfo('org.openhab.rules.household', 'Dryer changed to: ' + power_dryer.state)
+    logDebug('org.openhab.rules.household', 'Dryer changed to: ' + power_dryer.state)
     if (power_dryer.state <= 0.5)
       dryer_OpState.postUpdate(MODE_OFF)
     else if (power_dryer.state > 2)
