@@ -28,7 +28,7 @@ rule "motion detected in the bathroom"
 						} else {
 							scene_bathroom_light.sendCommand(0)
 					
-							if(timerBathroom!=null) {
+							if(timerBathroom!== null) {
 								if(timerBathroom.running) {
 									timerBathroom.cancel()
 								}	
@@ -51,7 +51,7 @@ rule "motion detected in the bathroom"
 					} else {
 						scene_bathroom_light.sendCommand(0)
 				
-						if(timerBathroom!=null) {
+						if(timerBathroom!== null) {
 							if(timerBathroom.running) {
 								timerBathroom.cancel()
 							}	
@@ -279,7 +279,7 @@ rule "Sunset"
  		var DateTime sunset = new DateTime((Sunset_Time.state as DateTimeType).calendar.timeInMillis)
  		if (sunset.beforeNow) sunset = sunset.plusDays(1)
  		
- 		if (sunsetTimer != null) {
+ 		if (sunsetTimer !== null) {
  			sunsetTimer.cancel()
  			sunsetTimer = null
  		}

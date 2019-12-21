@@ -11,7 +11,7 @@ rule "Set alarm climate items"
 		Item alarm_climate received update
 then
 		var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm-climate.js", 5000)
-        if (json != null && json != "") {
+        if (json !== null && json != "") {
         	logInfo("org.openhab.rules.alarm", "Got response from alarm-climate: ["+ json + "]")
         		try {
         			var String climate = json.replace('&#176;', '')
@@ -66,10 +66,10 @@ then
 	var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
 	logInfo("org.openhab.rules.alarm", "JSON is [" + json + "]")
 	var String alarmstate = null
-	if (json != null && json != '') {
+	if (json !== null && json != '') {
 		alarmstate = transform("JSONPATH", "$.status", json)
 		logInfo("org.openhab.rules.alarm", "Alarm state is now [" +  alarmstate + "]")
-		if (alarmstate != null)
+		if (alarmstate !== null)
 			alarm_alarm.sendCommand(alarmstate)
 	}
 	if (json == null || alarmstate == null) { 
@@ -89,16 +89,16 @@ then
         	var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
         	logInfo("org.openhab.rules.alarm", "JSON is [" + json + "]")
         	var String alarmstate = null
-        	if (json != null && json != '' && !json.contains("Error")) {
+        	if (json !== null && json != '' && !json.contains("Error")) {
 				alarmstate = transform("JSONPATH", "$.status", json)
 				logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
 			}
 			if (alarmstate == null || alarmstate.contains("Error")) {
 				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
-				if (checkAlarmTimer != null) 
+				if (checkAlarmTimer !== null) 
 					checkAlarmTimer.reschedule(now.plusSeconds(30))
 			} else {
-				if(checkAlarmTimer != null) {
+				if(checkAlarmTimer !== null) {
 					if(checkAlarmTimer.running) {
 						checkAlarmTimer.cancel()
 					}
@@ -201,7 +201,7 @@ rule "Check the status off the door lock"
 	then
 	var result = executeCommandLine("vsure {{alarm_login}} {{alarm_password}} overview doorLockStatusList", 5000)
 	logInfo("org.openhab.rules.alarm", "Door lock state is now: " + result)
-	if (result != null) {
+	if (result !== null) {
 		postUpdate(alarm_door_locked_state, transform("JSONPATH", "$..lockedState", result).replace('[\"', '').replace('\"]','').replace(',','.'))
 		postUpdate(alarm_door_current_lock_state, transform("JSONPATH", "$..currentLockState", result).replace('[\"', '').replace('\"]','').replace(',','.'))
 		postUpdate(alarm_door_motor_jam, transform("JSONPATH", "$..motorJam", result).replace('[\"', '').replace('\"]','').replace(',','.'))

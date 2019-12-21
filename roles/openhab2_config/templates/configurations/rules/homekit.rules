@@ -142,7 +142,7 @@ rule "Restart the HomeKit and TRÅDFRI bundle"
 	then
 		logInfo("homekit.rules", "Going to restart the HomeKit and TRÅDFRI-bundles")
 		var String result = executeCommandLine("{{openhab_configuration_dir}}/scripts/restartHomeKitBundle.sh", 5000)
-		if (result != null) {
+		if (result !== null) {
 			logInfo("homekit.rules", "Tried to restart bundle, got result: " + result)
 		}
 end

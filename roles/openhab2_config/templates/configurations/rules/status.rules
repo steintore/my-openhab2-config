@@ -183,7 +183,7 @@ rule "Switch ON or OFF the screen in the hall way"
 		logInfo('org.openhab.status.screenpi', 'ScreenPi is offline, so no request sent')
 	}
 	postUpdate(screen_pi_screen, OFF)
-	if (result != null && result.length() > 0)
+	if (result !== null && result.length() > 0)
 		logInfo("org.openhab.status.screenpi", result)
 end
 
@@ -193,7 +193,7 @@ rule "Switch OFF the computer in the hallway"
 	then
 	logInfo('org.openhab.rules.status.shutdown', "Item screen_pi received command OFF")
 	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@pkill chromium;sleep 5;sudo shutdown -h now", 5000)
-	if (result != null && result.length() > 0)
+	if (result !== null && result.length() > 0)
 		logInfo("org.openhab.status.shutdown", result)
 end
 
@@ -203,7 +203,7 @@ rule "Reboot computer in the hallway"
 	then
 	logInfo('org.openhab.rules.status.reboot', "Item screen_pi_reboot received command ON")
 	val result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@pkill chromium;sleep 5;sudo shutdown -r now", 5000)
-	if (result != null && result.length() > 0)
+	if (result !== null && result.length() > 0)
 		logInfo("org.openhab.status.reboot", result)
 end
 

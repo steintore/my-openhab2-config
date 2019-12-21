@@ -23,7 +23,7 @@ rule "Updated power"
 
 	postUpdate(smappee_power, total)
 	postUpdate(smappee_kwh, total*0.000017)
-	if(smappee_power != null) {
+	if(smappee_power !== null) {
 		val startOfDay = now.toLocalDate.toDateTimeAtStartOfDay
         postUpdate(smappee_power_max, smappee_power.maximumSince(startOfDay).state)
         postUpdate(smappee_power_min, smappee_power.minimumSince(startOfDay).state)
@@ -35,7 +35,7 @@ rule "Smappee kWh changed"
 		Item smappee_kwh changed
 	then
 	var DateTime lastUpdate = now
-	if (smappee_kwh_lastupdate.state != UNDEF && smappee_kwh_lastupdate.state != NULL  && smappee_kwh_lastupdate.state != null) {
+	if (smappee_kwh_lastupdate.state != UNDEF && smappee_kwh_lastupdate.state !== null  && smappee_kwh_lastupdate.state !== null) {
 		lastUpdate = new DateTime((smappee_kwh_lastupdate.state as DateTimeType).calendar.timeInMillis)
 		logInfo("org.openhab.rules.power", "Item smappee_kwh changed " + smappee_kwh_lastupdate.state.toString())
 	}

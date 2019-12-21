@@ -24,7 +24,7 @@ rule "A change of mode"
 			case 0: { // HOME
 				logInfo('org.openhab.rules.modes', 'HOME MODE')
 			 	sendCommand(activate_cameras, OFF)
-				if (camera_timer != null) {
+				if (camera_timer !== null) {
 					if(camera_timer.running)
 						camera_timer.cancel()
 					camera_timer = null
@@ -75,7 +75,7 @@ rule "A change of mode"
 							habPanel_hallway.postUpdate("Hallway")
 						}
 
-						if(habPanelTimer!=null) {
+						if(habPanelTimer !== null) {
 							if(habPanelTimer.running) {
 								habPanelTimer.cancel()
 							}
@@ -134,7 +134,7 @@ rule "A change of mode"
 
 			case 2: { //AWAY
 				logInfo('org.openhab.rules.modes', 'AWAY MODE')
-				if (camera_timer != null) {
+				if (camera_timer !== null) {
 					camera_timer.reschedule(now.plusSeconds(360))
 				}  else {
 					camera_timer = createTimer(now.plusSeconds(360)) [|
@@ -143,7 +143,7 @@ rule "A change of mode"
 							sendCommand(activate_cameras, ON)
 						}
 
-						if(camera_timer!=null) {
+						if(camera_timer !== null) {
 							if(camera_timer.running) {
 								camera_timer.cancel()
 							}
@@ -205,7 +205,7 @@ rule "A change of mode"
 				stored_heating_states = storeStates(floorHeatingNight)
 				sendCommand(scene_light_hall, 2) // NIGHT
 
-				if (floor_night_power_level.state != NULL) {
+				if (floor_night_power_level.state !== null) {
 
 					floorHeatingNight?.members.forEach [item |
 						if (floor_night_power_level.state == 0 && item.state > 0)
@@ -217,7 +217,7 @@ rule "A change of mode"
 				postUpdate(justMorning, OFF)
 				sendCommand(leaf_request_update, ON)
 				sendCommand(activate_cameras, OFF)
-				if (camera_timer != null) {
+				if (camera_timer !== null) {
 					if(camera_timer.running)
 						camera_timer.cancel()
 					camera_timer = null
@@ -283,7 +283,7 @@ rule "Switch to night mode in the evening"
 							sendCommand(mode, 1)
 						}
 
-						if(night_timer!=null) {
+						if(night_timer !== null) {
 							if(night_timer.running) {
 								night_timer.cancel()
 							}
@@ -354,7 +354,7 @@ rule "Switch to night/day mode when button is pressed"
 		Item left_double_switch changed
 	then
 		logInfo('org.openhab.rules.modes', "Left double switch has been pressed, the state is now: " + left_double_switch.state)
-		if (left_double_switch.state != UNDEF && left_double_switch.state != null && (left_double_switch.state == ON || left_double_switch.state == OFF)) {
+		if (left_double_switch.state != UNDEF && left_double_switch.state !== null && (left_double_switch.state == ON || left_double_switch.state == OFF)) {
 			switch (left_double_switch.state as OnOffType) {
 				case ON: { // DAY MODE
 					if(mode.state != 0) {

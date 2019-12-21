@@ -24,7 +24,7 @@ then
 				} else {
 					postUpdate(push_message_text, "Leaf er fulladet" + connected)
 				}
-				if(timerLeafInfo != null) {
+				if(timerLeafInfo !== null) {
 					if(timerLeafInfo.running) {
 						timerLeafInfo.cancel()
 					}
@@ -47,7 +47,7 @@ rule "Stop requesting climate control to be switched OFF after 10 minutes"
 		if (timerHeater == null) {
 			timerHeater = createTimer(now.plusMinutes(10)) [|
 					sendCommand(leaf_heating, OFF)
-					if(timerHeater != null) {
+					if(timerHeater !== null) {
 						if(timerHeater.running) {
 							timerHeater.cancel()
 						}

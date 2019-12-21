@@ -106,12 +106,12 @@ then
 				else if (tempOutdoor <= lowerTempThreshold )
 					sendCommand(ac_set_temp, (new Double(ac_heat_temp.state.toString) + additionalDegrees).toString())
 			} else if (mode.state == 1) { //NIGHT
-				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_heat_temp.state)
+				if (ac_night_temp.state !== null && ac_night_temp.state != ac_heat_temp.state)
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 				if (tempOutdoor <= lowerTempThreshold)
 					sendCommand(ac_set_temp, (new Double(ac_night_temp.state.toString) + additionalDegrees).toString())
 			} else { //AWAY
-				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_heat_temp.state)
+				if (ac_night_temp.state !== null && ac_night_temp.state != ac_heat_temp.state)
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 					else if (tempOutdoor <= lowerTempThreshold)
 					sendCommand(ac_set_temp, (new Double(ac_night_temp.state.toString) + additionalDegrees).toString())
@@ -240,7 +240,7 @@ then
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo(logString, "Scheduling basement floor ON (weekend) for: " + onTime)
-	if (timerBFWeekendOn != null) timerBFWeekendOn.cancel()
+	if (timerBFWeekendOn !== null) timerBFWeekendOn.cancel()
 	timerBFWeekendOn = createTimer(onTime) [|
 		logInfo(logString, "timerBFWeekendOn is running, " + now.getDayOfWeek)
 		if (scene_basement_floor_heating.state == 0) {
@@ -256,7 +256,7 @@ then
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo(logString, "Scheduling basement floor OFF (weekend) for: " + onTime)
-	if (timerBFWeekendOff != null) timerBFWeekendOff.cancel()
+	if (timerBFWeekendOff !== null) timerBFWeekendOff.cancel()
 	timerBFWeekendOff = createTimer(onTime) [|
 	  logInfo(logString, "timerBFWeekendOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
@@ -273,7 +273,7 @@ then
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo(logString, "Scheduling basement floor OFF for: " + onTime)
-	if (timerBFWeekdaysOff != null) timerBFWeekdaysOff.cancel()
+	if (timerBFWeekdaysOff !== null) timerBFWeekdaysOff.cancel()
 	timerBFWeekdaysOff = createTimer(onTime) [|
 		logInfo(logString, "timerBFWeekdaysOff is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
@@ -290,7 +290,7 @@ then
 
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo(logString, "Scheduling basement floor ON for: " + onTime)
-	if (timerBFWeekdaysOn != null) timerBFWeekdaysOn.cancel()
+	if (timerBFWeekdaysOn !== null) timerBFWeekdaysOn.cancel()
 	timerBFWeekdaysOn = createTimer(onTime) [|
 	  logInfo(logString, "timerBFWeekdaysOn is running, " + now.getDayOfWeek)
 		// Only do this if not HOLIDAY and only on weekdays
@@ -315,7 +315,7 @@ then
 			if (bathroom_gf_floor_power_level.state > 0 && bathroom_gf_floor_power_level.state != floor_holiday_power_level.state)
 				sendCommand(bathroom_gf_floor_power_level, floor_holiday_power_level.state.toString)
 			if (ac_scene.state == 1) {
-				if (ac_night_temp.state != NULL && ac_night_temp.state != ac_set_temp.state)
+				if (ac_night_temp.state !== null && ac_night_temp.state != ac_set_temp.state)
 					sendCommand(ac_set_temp, ac_night_temp.state.toString)
 			} else if(ac_scene.state != 0) { // switch of air conditioner if not heating
 				ac_scene.sendCommand(0)
@@ -336,7 +336,7 @@ then
 			if (bathroom_1st_floor_mode.state.toString.equalsIgnoreCase('ECO'))
 				sendCommand(bathroom_1st_floor_mode, 'HEATING') //HEATING MODE
 			if (ac_scene.state == 1) {
-				if (ac_heat_temp.state != NULL && ac_heat_temp.state != ac_set_temp.state)
+				if (ac_heat_temp.state !== null && ac_heat_temp.state != ac_set_temp.state)
 					sendCommand(ac_set_temp, ac_heat_temp.state.toString)
 			}
 			if (screen_pi.state == ON)
@@ -359,7 +359,7 @@ then
 	if (onTime.beforeNow) onTime = onTime.plusDays(1)
 	logInfo(logString, "BathroomGF Scheduling floor ON for: " + onTime)
 	
-	if (timerBathroomGFOn != null) timerBathroomGFOn.cancel()
+	if (timerBathroomGFOn !== null) timerBathroomGFOn.cancel()
 	timerBathroomGFOn = createTimer(onTime) [|
 	  	logInfo(logString, "timerBathroomGFOn is doing nothing..")
 	  	sendNotification("{{stein_email}}","BathroomGF should be " + BathroomGFTargetTemperature.state + ", it is:" + BathroomGFTemperature.state)
@@ -374,7 +374,7 @@ then
 		offTime = offTime.plusDays(1)
 	} 
 	logInfo(logString, "BathroomGF Scheduling floor OFF for: " + offTime)
-	if (timerBathroomGFOff != null) timerBathroomGFOff.cancel()
+	if (timerBathroomGFOff !== null) timerBathroomGFOff.cancel()
 	timerBathroomGFOff = createTimer(offTime) [|
 	  	logInfo(logString, "timerBathroomGFOff is turning heating off")
 		BathroomGF_OpState.sendCommand(1) //STANDBY 

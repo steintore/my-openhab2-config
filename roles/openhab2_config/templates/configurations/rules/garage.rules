@@ -17,7 +17,7 @@ rule "Send a message if garage door LEAF has been open for 15 minutes"
 		postUpdate(scene_garage_1, 1)
 		garageDoorOpenLeaf = createTimer(now.plusSeconds(900)) [|
 			if (garage_door_1.state == OFF) {
-				if(garageDoorOpenLeaf != null) {
+				if(garageDoorOpenLeaf !== null) {
 					if(garageDoorOpenLeaf.running) {
 						garageDoorOpenLeaf.cancel()
 					}
@@ -48,7 +48,7 @@ rule "Send a message if garage door MONDEO has been open for 15 minutes"
 		postUpdate(scene_garage_2, 1)
 		garageDoorOpenMondeo = createTimer(now.plusSeconds(900)) [|
 			if (garage_door_2.state == OFF) {
-				if(garageDoorOpenMondeo != null) {
+				if(garageDoorOpenMondeo !== null) {
 					if(garageDoorOpenMondeo.running) {
 						garageDoorOpenMondeo.cancel()
 					}
@@ -79,7 +79,7 @@ rule "Reset timer if someone closes the garage door, and both is closed"
 		sendCommand(message_received, OFF)
 		if (garage_door_1.state == OFF) {
 			postUpdate(scene_garage_1, 0)
-			if(garageDoorOpenLeaf!=null) {
+			if(garageDoorOpenLeaf!== null) {
 				garageDoorOpenLeaf.cancel
 				garageDoorOpenLeaf = null
 			}
@@ -92,7 +92,7 @@ rule "Reset timer if someone closes the garage door, and both is closed"
 		 
 		if (garage_door_2.state == OFF) {
 			postUpdate(scene_garage_2, 0)
-			if(garageDoorOpenMondeo != null) {
+			if(garageDoorOpenMondeo !== null) {
 				garageDoorOpenMondeo.cancel()
 				garageDoorOpenMondeo = null
 			}
@@ -160,7 +160,7 @@ then
 				sendCommand(garage_door_1_relay, OFF)
 				garageDoorOpen1Timed = createTimer(now.plusSeconds(600)) [|
 					if (garage_door_1.state == OFF) {
-						if(garageDoorOpen1Timed != null) {
+						if(garageDoorOpen1Timed !== null) {
 							if(garageDoorOpen1Timed.running) {
 								garageDoorOpen1Timed.cancel()
 							}
@@ -169,7 +169,7 @@ then
 						sendNotification("{{stein_email}}","Cancelling timer, door 1 is already closed")	
 					} else { // SHOULD WE CHECK FOR MOTION?
 						sendCommand(scene_garage_1, 0) // CLOSE
-						if(garageDoorOpen1Timed != null) {
+						if(garageDoorOpen1Timed !== null) {
 							if(garageDoorOpen1Timed.running) {
 								garageDoorOpen1Timed.cancel()
 							}
@@ -210,7 +210,7 @@ then
 				sendCommand(garage_door_2_relay, OFF)
 				garageDoorOpen2Timed = createTimer(now.plusSeconds(600)) [|
 					if (garage_door_2.state == OFF) {
-						if(garageDoorOpen2Timed != null) {
+						if(garageDoorOpen2Timed !== null) {
 							if(garageDoorOpen2Timed.running) {
 								garageDoorOpen2Timed.cancel()
 							}
@@ -219,7 +219,7 @@ then
 						sendNotification("{{stein_email}}","Cancelling timer, door 2 is already closed")	
 					} else { // SHOULD WE CHECK FOR MOTION?
 						sendCommand(scene_garage_2, 0) // CLOSE
-						if(garageDoorOpen2Timed != null) {
+						if(garageDoorOpen2Timed !== null) {
 							if(garageDoorOpen2Timed.running) {
 								garageDoorOpen2Timed.cancel()
 							}
@@ -248,7 +248,7 @@ then
 	logInfo('garage.rules', "GaragePi-network state changed to: " + garage_pi.state)
 	switch(garage_pi.state as OnOffType) {
 		case ON: {
-			if (garagePiTimer != null) {
+			if (garagePiTimer !== null) {
 				if (garagePiTimer.running)
 					garagePiTimer.cancel()
 				garagePiTimer = null
@@ -256,7 +256,7 @@ then
 			logInfo('garage.rules', "GaragePiTimer is now (should always be null): " + garagePiTimer)
 		}		
 		case OFF: {
-			if (garagePiTimer != null) {
+			if (garagePiTimer !== null) {
 				if (garagePiTimer.running)
 					garagePiTimer.cancel()
 				garagePiTimer.reschedule(now.plusHours(12))
@@ -266,7 +266,7 @@ then
 				garagePiTimer = createTimer(now.plusHours(12)) [|
 					logInfo('garage.rules', "GaragePiTimer executing " + garagePiTimer.running)
 					sendNotification("{{stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
-					if (garagePiTimer != null && garagePiTimer.running)
+					if (garagePiTimer !== null && garagePiTimer.running)
 						garagePiTimer.cancel()
 					garagePiTimer = null
 					logInfo('garage.rules', 'GarageTimer has been rescheduled to ' + now.plusHours(6))

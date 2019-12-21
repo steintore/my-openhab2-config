@@ -8,7 +8,7 @@ rule "Stein Mobile Wlan Proximity Enter"
 when
 	Item Mobile_Stein_Wlan changed from OFF to ON
 then
-	if(timerSteinMobileWlan!=null) {
+	if(timerSteinMobileWlan!== null) {
 		logInfo("org.openhab.rules","steinwlan ON. stopping timer.")
 		timerSteinMobileWlan.cancel()
 		timerSteinMobileWlan = null
@@ -20,7 +20,7 @@ rule "Anette Mobile Wlan Proximity Enter"
 when
 	Item Mobile_Anette_Wlan changed from OFF to ON
 then
-	if(timerAnetteMobileWlan!=null) {
+	if(timerAnetteMobileWlan!== null) {
 		timerAnetteMobileWlan.cancel()
 		timerAnetteMobileWlan = null
 	}
@@ -36,7 +36,7 @@ then
 		timerSteinMobileWlan = createTimer(now.plusSeconds(2400)) [|
 			logInfo("org.openhab.rules", "Stein mobile timer has timed out. Executing proximity off")
 			sendCommand(stein_home, OFF)
-			if(timerSteinMobileWlan!=null) {
+			if(timerSteinMobileWlan!== null) {
 				if(timerSteinMobileWlan.running) {
 					timerSteinMobileWlan.cancel()
 				}
@@ -57,7 +57,7 @@ then
 		timerAnetteMobileWlan = createTimer(now.plusSeconds(2400)) [|
 			logInfo("org.openhab.rules", "Anette timer has timed out. Executing proximity off")
 			sendCommand(anette_home, OFF)
-			if(timerAnetteMobileWlan!=null) {
+			if(timerAnetteMobileWlan!== null) {
 				if(timerAnetteMobileWlan.running) {
 					timerAnetteMobileWlan.cancel()
 				}
