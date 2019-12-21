@@ -6,7 +6,7 @@ rule "Disable fetching of status when status has arrived"
 	when Item leaf_last_updated changed
 then
 	if (leaf_request_update.state == ON) {
-		if (timerLeafInfo == null) {
+		if (timerLeafInfo === null) {
 			timerLeafInfo = createTimer(now.plusMinutes(1)) [|
 				var String charging = ''
 				var String connected = ''
@@ -44,7 +44,7 @@ rule "Stop requesting climate control to be switched OFF after 10 minutes"
 	when 
 		Item leaf_heating changed to ON
 	then
-		if (timerHeater == null) {
+		if (timerHeater === null) {
 			timerHeater = createTimer(now.plusMinutes(10)) [|
 					sendCommand(leaf_heating, OFF)
 					if(timerHeater !== null) {

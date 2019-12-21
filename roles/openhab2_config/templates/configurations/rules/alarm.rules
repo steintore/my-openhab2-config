@@ -72,7 +72,7 @@ then
 		if (alarmstate !== null)
 			alarm_alarm.sendCommand(alarmstate)
 	}
-	if (json == null || alarmstate == null) { 
+	if (json === null || alarmstate === null) { 
 		logInfo("org.openhab.rules.alarm", "Result from checking alarm was [" + json + "] - [" + alarmstate + "], so we will check again in 15 seconds or so...")
 		postUpdate(alarm_check, "" + now)
 	}
@@ -83,7 +83,7 @@ when
 	Item alarm_check received update
 then
 	logInfo("org.openhab.rules.alarm", "Item alarm_check received update: " + alarm_check)
-	if (checkAlarmTimer == null) {
+	if (checkAlarmTimer === null) {
 		checkAlarmTimer = createTimer(now.plusSeconds(15)) [|
 			logInfo("org.openhab.rules.alarm", "Timer [checkAlarmTimer] has timed out. Checking status from Alarm")
         	var String json = executeCommandLine("node@@{{openhab_configuration_dir}}/scripts/alarm.js", 5000)
@@ -93,7 +93,7 @@ then
 				alarmstate = transform("JSONPATH", "$.status", json)
 				logInfo("org.openhab.rules.alarm", "Alarm state is then [" +  alarmstate + "]")
 			}
-			if (alarmstate == null || alarmstate.contains("Error")) {
+			if (alarmstate === null || alarmstate.contains("Error")) {
 				logInfo("org.openhab.rules.alarm", "Could not get alarm state, trying again in 30 seconds..., json is: [" + json + "], alarmstate is: [" + alarmstate + "]")
 				if (checkAlarmTimer !== null) 
 					checkAlarmTimer.reschedule(now.plusSeconds(30))
@@ -116,7 +116,7 @@ when
 then
 	Thread::sleep(100)
 	logInfo("org.openhab.rules.alarm", "[Item alarm_alarm received command] Alarm state changed to: " + alarm_alarm.state.toString() + " receivedCommand:" + receivedCommand)
-	if (alarm_alarm.state == null) {
+	if (alarm_alarm.state === null) {
 		logInfo("org.openhab.rules.alarm", "Alarm state is null, trying to fetch state again...")
 		postUpdate(alarm_check, ""+ now)
 	} else {

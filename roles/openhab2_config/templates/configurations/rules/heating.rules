@@ -387,7 +387,7 @@ rule "Bathroom ground floor heating mode"
 when
 	Item BathroomGF_OpState received command
 then
-	if (BathroomGFStandbyPowerLevel.state ==  UNDEF || BathroomGFStandbyPowerLevel == null) {
+	if (BathroomGFStandbyPowerLevel.state ==  UNDEF || BathroomGFStandbyPowerLevel === null) {
 		postUpdate(BathroomGFStandbyPowerLevel, 2)
 		logInfo(logString, "BathroomGF Standby Power level was not set, set to 1")
 	}
@@ -434,7 +434,7 @@ then
 	postUpdate(BathroomGFTemperature_LastUpdate, new DateTimeType())
 	
 	// A timer to make sure that we turn of the heating if no temperature update in the last 2 hours
-	if (timerBathroomGFHeating == null) {
+	if (timerBathroomGFHeating === null) {
 		timerBathroomGFHeating = createTimer(now.plusHours(2)) [|
 	  		logInfo(logString, "BathroomGF timer is executed, " + now.getDayOfWeek)
 	  		BathroomGF_OpState.sendCommand(1) //STANDBY
@@ -456,15 +456,15 @@ rule "BathroomGF calculate what to do"
 then
 	logInfo(logString, "BathroomGF_recalc received update.. checking")
 	
-	if (BathroomGFHeatedFrom.state == UNDEF || BathroomGFHeatedFrom.state == null) {
+	if (BathroomGFHeatedFrom.state == UNDEF || BathroomGFHeatedFrom.state === null) {
 		postUpdate(BathroomGFHeatedFrom, 16)
 		logInfo(logString, "BathroomGF Heated from was not defined, set to 16")
 	}
-	if (BathroomGFHeatedTo.state == UNDEF || BathroomGFHeatedTo.state == null) {
+	if (BathroomGFHeatedTo.state == UNDEF || BathroomGFHeatedTo.state === null) {
 		postUpdate(BathroomGFHeatedTo, 20)
 		logInfo(logString, "BathroomGF Heated to was not defined, set to 20")
 	}
-	if (BathroomGFTargetTemperature.state == UNDEF || BathroomGFTargetTemperature == null) {
+	if (BathroomGFTargetTemperature.state == UNDEF || BathroomGFTargetTemperature === null) {
 		postUpdate(BathroomGFTargetTemperature, 25)
 		logInfo(logString, "BathroomGF target temp was not set, changed to 25")
 	}

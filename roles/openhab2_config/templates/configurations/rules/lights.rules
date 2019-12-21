@@ -20,7 +20,7 @@ rule "motion detected in the bathroom"
 				} else {
 					scene_bathroom_light.sendCommand(1) // NIGHT
 				}	
-				if (timerBathroom == null) {
+				if (timerBathroom === null) {
 					timerBathroom = createTimer(now.plusSeconds(240)) [|
 						logInfo("org.openhab.rules.lights", "Bathroom dimmer timer timed out, state for motion: " + bathroom_motion.state)
 						if (bathroom_motion.state == ON) {
@@ -43,7 +43,7 @@ rule "motion detected in the bathroom"
 			}
 		}
 		case OFF: {
-			if (timerBathroom == null) {
+			if (timerBathroom === null) {
 				timerBathroom = createTimer(now.plusSeconds(120)) [|
 					logInfo("org.openhab.rules.lights", "Bathroom dimmer timer created by OFF-signal timed out, state for motion: '" + bathroom_motion.state)
 					if (bathroom_motion.state == ON) {
