@@ -1,9 +1,19 @@
-Dimmer office_roof_light "Taklys [%d %%]"				<light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{ channel="tradfri:0220:gwb072bf258007:officeRoof:brightness" }
-Dimmer office_roof_light_color "Taklystemp [%d %%]"		<hue> 	(gFirstFloor) 			{ channel="tradfri:0220:gwb072bf258007:officeRoof:color_temperature" }
-Dimmer office_left_light "Venstre kontorpult [%d %%]"	<light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{ channel="tradfri:0220:gwb072bf258007:officeLeftDesk:brightness" }
-Dimmer office_left_light_color "Venstre temp [%d %%]"	<hue> 	(gFirstFloor) 			{ channel="tradfri:0220:gwb072bf258007:officeLeftDesk:color_temperature" }
-Dimmer office_right_light "Høyre kontorpult [%d %%]" 	<light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{ channel="tradfri:0220:gwb072bf258007:officeRightDesk:brightness" }
-Dimmer office_right_light_color "Høyre temp [%d %%]" 	<hue> 	(gFirstFloor) 			{ channel="tradfri:0220:gwb072bf258007:officeRightDesk:color_temperature" }
+Switch office_roof_light "Taklys"				            <light> (gLight, gFirstFloor, gOfficeLights) 	    {mqtt="<[broker:deconz/status/lights/office_roof/status:state:default], >[broker:deconz/control/lights/office_roof/set/on:command:ON:true], >[broker:deconz/control/lights/office_roof/set/on:command:OFF:false]"}
+Dimmer office_roof_light_brightness "Taklysstyrke [%d %%]"	<light> (gFirstFloor, gOfficeLightsDimmer) 	        {mqtt="<[broker:deconz/status/lights/office_roof/brightness:state:default], >[broker:deconz/control/lights/office_roof/set/bri:command:*:${command}"}
+Dimmer office_roof_light_color "Taklystemp [%d %%]"		    <hue> 	(gFirstFloor) 			                    {mqtt="<[broker:deconz/status/lights/office_roof/color_temperature:state:default], >[broker:deconz/control/lights/office_roof/set/cti:command:*:${command}"}
+
+Dimmer office_left_light "Venstre kontorpult [%d %%]"	    <light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{mqtt="<[broker:deconz/status/lights/office_desk_left/status:state:default], >[broker:deconz/control/lights/office_desk_left/set/on:command:ON:true], >[broker:deconz/control/lights/office_desk_left/set/on:command:OFF:false]"}
+Dimmer office_left_light_brightness "Venstre stykre [%d %%]"<hue> 	(gFirstFloor, gOfficeLightsDimmer)  			            {mqtt="<[broker:deconz/status/lights/office_desk_left/brightness:state:default], >[broker:deconz/control/lights/office_desk_left/set/bri:command:*:${command}"}
+Dimmer office_left_light_color "Venstre temp [%d %%]"	    <hue> 	(gFirstFloor) 			                                    {mqtt="<[broker:deconz/status/lights/office_desk_left/color_temperature:state:default], >[broker:deconz/control/lights/office_desk_left/set/cti:command:*:${command}"}
+
+Dimmer office_right_light "Høyre kontorpult [%d %%]"	    <light> (gLight, gFirstFloor, gOfficeLights,gOfficeLightsDimmer) 	{mqtt="<[broker:deconz/status/lights/office_desk_right/status:state:default], >[broker:deconz/control/lights/office_desk_right/set/on:command:ON:true], >[broker:deconz/control/lights/office_desk_right/set/on:command:OFF:false]"}
+Dimmer office_right_light_brightness "Høyre stykre [%d %%]"<hue> 	(gFirstFloor, gOfficeLightsDimmer)  			            {mqtt="<[broker:deconz/status/lights/office_desk_right/brightness:state:default], >[broker:deconz/control/lights/office_desk_right/set/bri:command:*:${command}"}
+Dimmer office_right_light_color "Høyre temp [%d %%]"	    <hue> 	(gFirstFloor) 			                                    {mqtt="<[broker:deconz/status/lights/office_desk_right/color_temperature:state:default], >[broker:deconz/control/lights/office_desk_right/set/cti:command:*:${command}"}
+
+/*
+Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/DiningLightSwitch:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:ON:on], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:OFF:off]"}
+Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight, gLivingRoomLightsDimmer) 			{mqtt="<[broker:zway/LivingRoom/DiningDimmer:state:default], >[broker:zway/LivingRoom/DiningDimmer/set:command:*:${command}]"}
+*/
 
 Number office_remote_battery "Kontor - Batteri [%d %%]" <battery> (gFirstFloor, gBatteryLevel_100) {channel="tradfri:0830:gwb072bf258007:officeRemote:battery_level"}
 Switch office_remote_low_battery "Lavt batteri [(%d)]" <battery> (gFirstFloor) {channel="tradfri:0830:gwb072bf258007:officeRemote:battery_low"}
