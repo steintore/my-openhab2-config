@@ -10,7 +10,7 @@ Dimmer office_right_light "Høyre kontorpult [%d %%]"	    <light> (gLight, gFirs
 Dimmer office_right_light_brightness "Høyre stykre [%d %%]"<hue> 	(gFirstFloor, gOfficeLightsDimmer)  			            {mqtt="<[broker:deconz/status/lights/office_desk_right/brightness:state:default], >[broker:deconz/control/lights/office_desk_right/set/bri:command:*:${command}"}
 Dimmer office_right_light_color "Høyre temp [%d %%]"	    <hue> 	(gFirstFloor) 			                                    {mqtt="<[broker:deconz/status/lights/office_desk_right/color_temperature:state:default], >[broker:deconz/control/lights/office_desk_right/set/cti:command:*:${command}"}
 
-Switch office_light "Kontorlys"				                <light> (gLight, gFirstFloor, gOfficeLights) 	    {mqtt="<[broker:deconz/status/groups/office/status:state:default], >[broker:deconz/control/groups/office/on:command:ON:true], >[broker:deconz/control/groups/office/on:command:OFF:false]"}
+Switch office_light "Kontorlys"				                <light> (gLight, gFirstFloor, gOfficeLights) 	    {channel="enocean:rockerSwitch:gtwy:rs01:rockerswitchA" [profile="system:rawrocker-to-dimmer"], mqtt="<[broker:deconz/status/groups/office/status:state:default], >[broker:deconz/control/groups/office/on:command:ON:true], >[broker:deconz/control/groups/office/on:command:OFF:false]"}
 Dimmer office_light_brightness "Kontorlyst styrke [%d %%]"	<light> (gFirstFloor, gOfficeLightsDimmer) 	        {mqtt="<[broker:deconz/status/groups/office/brightness:state:default], >[broker:deconz/control/groups/office/action/bri:command:*:${command}"}
 Dimmer office_light_color "Kontorlyst temp [%d %%]"		    <hue> 	(gFirstFloor) 			                    {mqtt="<[broker:deconz/status/groups/office/color_temperature:state:default], >[broker:deconz/control/groups/office/action/cti:command:*:${command}"}
 
@@ -26,9 +26,6 @@ Dimmer bathroom_basement "Toalett kjeller [%d %%]" 	            <light> (gLight,
 Dimmer bathroom_basement_color "Toalett kjeller temp [%d %%]" 	<hue> 	(gBasement) 			{ channel="tradfri:0100:gwb072bf258007:bathroomBasement:color_temperature" }
 Number bathroom_basement_occupancy_battery "Batteri [%d %%]"       <battery> (gBasement, gBatteryLevel_100)           { channel="tradfri:0107:gwb072bf258007:bathroomOccupancy:battery_level"}
 Switch bathroom_basement_occupancy_low_battery "Lavt batteri [(%d)]" <battery> (gBasement)         { channel="tradfri:0107:gwb072bf258007:bathroomOccupancy:battery_low"}
-
-Dimmer livingroom_oslo          "Oslo-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLightsDimmer, gLivingRoomLights)  { channel="tradfri:0220:gwb072bf258007:livingRoomOslo:brightness" }
-Dimmer livingroom_oslo_color    "Oslo-lampe temp [%d %%]"   <light> (gGF)          { channel="tradfri:0220:gwb072bf258007:livingRoomOslo:color_temperature" }
 
 Switch livingroom_oslo          "Oslo-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLights)            {mqtt="<[broker:deconz/status/lights/oslo_light_living_room/status:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/on:command:ON:true], >[broker:deconz/control/lights/oslo_light_living_room/set/on:command:OFF:false]"}
 Dimmer livingroom_oslo_color    "Oslo-lampe temp [%d %%]"   <light> (gGF)                                       {mqtt="<[broker:deconz/status/lights/oslo_light_living_room/color_temperature:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/cti:command:*:${command}"}
