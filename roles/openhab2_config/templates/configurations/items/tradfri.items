@@ -10,10 +10,9 @@ Dimmer office_right_light "Høyre kontorpult [%d %%]"	    <light> (gLight, gFirs
 Dimmer office_right_light_brightness "Høyre stykre [%d %%]"<hue> 	(gFirstFloor, gOfficeLightsDimmer)  			            {mqtt="<[broker:deconz/status/lights/office_desk_right/brightness:state:default], >[broker:deconz/control/lights/office_desk_right/set/bri:command:*:${command}"}
 Dimmer office_right_light_color "Høyre temp [%d %%]"	    <hue> 	(gFirstFloor) 			                                    {mqtt="<[broker:deconz/status/lights/office_desk_right/color_temperature:state:default], >[broker:deconz/control/lights/office_desk_right/set/cti:command:*:${command}"}
 
-/*
-Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/DiningLightSwitch:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:ON:on], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:OFF:off]"}
-Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight, gLivingRoomLightsDimmer) 			{mqtt="<[broker:zway/LivingRoom/DiningDimmer:state:default], >[broker:zway/LivingRoom/DiningDimmer/set:command:*:${command}]"}
-*/
+Switch office_light "Kontorlys"				                <light> (gLight, gFirstFloor, gOfficeLights) 	    {mqtt="<[broker:deconz/status/groups/office/status:state:default], >[broker:deconz/control/groups/office/on:command:ON:true], >[broker:deconz/control/groups/office/on:command:OFF:false]"}
+Dimmer office_light_brightness "Kontorlyst styrke [%d %%]"	<light> (gFirstFloor, gOfficeLightsDimmer) 	        {mqtt="<[broker:deconz/status/groups/office/brightness:state:default], >[broker:deconz/control/groups/office/action/bri:command:*:${command}"}
+Dimmer office_light_color "Kontorlyst temp [%d %%]"		    <hue> 	(gFirstFloor) 			                    {mqtt="<[broker:deconz/status/groups/office/color_temperature:state:default], >[broker:deconz/control/groups/office/action/cti:command:*:${command}"}
 
 Number office_remote_battery "Kontor - Batteri [%d %%]" <battery> (gFirstFloor, gBatteryLevel_100) {channel="tradfri:0830:gwb072bf258007:officeRemote:battery_level"}
 Switch office_remote_low_battery "Lavt batteri [(%d)]" <battery> (gFirstFloor) {channel="tradfri:0830:gwb072bf258007:officeRemote:battery_low"}
@@ -30,6 +29,11 @@ Switch bathroom_basement_occupancy_low_battery "Lavt batteri [(%d)]" <battery> (
 
 Dimmer livingroom_oslo          "Oslo-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLightsDimmer, gLivingRoomLights)  { channel="tradfri:0220:gwb072bf258007:livingRoomOslo:brightness" }
 Dimmer livingroom_oslo_color    "Oslo-lampe temp [%d %%]"   <light> (gGF)          { channel="tradfri:0220:gwb072bf258007:livingRoomOslo:color_temperature" }
+
+Switch livingroom_oslo          "Oslo-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLights)            {mqtt="<[broker:deconz/status/lights/oslo_light_living_room/status:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/on:command:ON:true], >[broker:deconz/control/lights/oslo_light_living_room/set/on:command:OFF:false]"}
+Dimmer livingroom_oslo_color    "Oslo-lampe temp [%d %%]"   <light> (gGF)                                       {mqtt="<[broker:deconz/status/lights/oslo_light_living_room/color_temperature:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/cti:command:*:${command}"}
+Dimmer livingroom_oslo_brightness "Oslo-lampe styrke [%d %%]"	<light> (gFirstFloor, gLivingRoomLightsDimmer) 	{mqtt="<[broker:deconz/status/lights/oslo_light_living_room/brightness:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/bri:command:*:${command}"}
+
 
 Dimmer livingroom_window          "Vindu-lampe [%d %%]"        <light> (gLight, gGF, gLivingRoomLightsDimmer, gLivingRoomLights)  { channel="tradfri:0220:gwb072bf258007:livingRoomWindow:brightness" }
 Dimmer livingroom_window_color    "Vindu-lampe temp [%d %%]"   <light> (gGF)          { channel="tradfri:0220:gwb072bf258007:livingRoomWindow:color_temperature" }
