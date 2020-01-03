@@ -303,31 +303,19 @@ rule "Sunset"
  			gOfficeLights.sendCommand(OFF)
  		}
  		case 1: { // RELAX
- 			gOfficeLights.sendCommand(ON)
- 			Thread::sleep(600)
- 			office_left_light_color.sendCommand(100)
- 			office_right_light_color.sendCommand(100)
- 			office_roof_light_color.sendCommand(100)
- 			Thread::sleep(600)
- 			gOfficeLightsDimmer.sendCommand(30)
+ 			office_light.sendCommand(ON)
+ 			office_light_color.sendCommand(100)
+ 			office_light_brightness.sendCommand(30)
  		}
  		case 2: { // WORK
- 			gOfficeLights.sendCommand(ON)
- 			Thread::sleep(600)
- 			office_left_light_color.sendCommand(0)
- 			office_right_light_color.sendCommand(0)
- 			office_roof_light_color.sendCommand(0)
- 			Thread::sleep(600)
- 			gOfficeLightsDimmer.sendCommand(100)
+ 			office_light.sendCommand(ON)
+ 			office_light_color.sendCommand(0)
+ 			office_light_brightness.sendCommand(100)
  		}
  		case 3: { // NORMAL
- 			gOfficeLights.sendCommand(ON)
- 			Thread::sleep(600)
- 			office_left_light_color.sendCommand(50)
- 			office_right_light_color.sendCommand(50)
- 			office_roof_light_color.sendCommand(50)
- 			Thread::sleep(600)
- 			gOfficeLightsDimmer.sendCommand(80)
+ 			office_light.sendCommand(ON)
+ 			office_light_color.sendCommand(50)
+ 			office_light_brightness.sendCommand(80)
  		}
  	}
 end

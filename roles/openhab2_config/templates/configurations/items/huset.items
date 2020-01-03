@@ -155,12 +155,12 @@ Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, gLivingRoomLi
 Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/DiningLightSwitch:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:ON:on], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:OFF:off]"}
 Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight, gLivingRoomLightsDimmer) 			{mqtt="<[broker:zway/LivingRoom/DiningDimmer:state:default], >[broker:zway/LivingRoom/DiningDimmer/set:command:*:${command}]"}
 
-String remote_living_room           "Fjernkontroll stue [%s]" <remote> (gGF) {mqtt="<[broker:zway/LivingRoom/LivingRoomRemote:command:default]"}
-Number remote_living_room_battery 	"Fjernkontroll [%s %%]"		<battery>		(gBattery, gBatteryLevel_100, gGF)	{mqtt="<[broker:zway/globalRoom/Battery (17.0):state:default]"}
+String remote_living_room           "Fjernkontroll stue [%s]"   <remote> (gGF) {mqtt="<[broker:zway/LivingRoom/LivingRoomRemote:command:default]"}
+Number remote_living_room_battery 	"Bryter stue [%s %%]"		<battery>		(gBattery, gBatteryLevel_100, gGF)	{mqtt="<[broker:zway/globalRoom/Battery (17.0):state:default]"}
 
 /* Philips HUE */
 Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
-Number scene_light_hall "Lys gang" 			<hue> 	(gLight, gHallLights, gFirstFloor)
+Number scene_light_hall "Lys gang [%s]" 			<hue> 	(gLight, gHallLights, gFirstFloor)
 Switch light_hall_1_switch "Left bulb"      <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:5:brightness"}
 Switch light_hall_2_switch "Right bulb"     <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:6:brightness"}
 Switch light_hall_3_switch "Left bulb 2"    <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:3:brightness"}
