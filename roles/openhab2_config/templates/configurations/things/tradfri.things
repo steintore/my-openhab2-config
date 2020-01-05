@@ -1,6 +1,5 @@
 Bridge tradfri:gateway:gwb072bf258007 [ host="{{tradfri_ip}}", identity="{{tradfri_identity}}", preSharedKey="{{tradfri_preshared}}" ] {
     0100 bathroomBasement   [ id=65541 ]
-    0220 livingRoomWindow   [ id=65544 ]
     0220 basementBar        [ id=65560 ]
     0220 basementCanvas     [ id=65554 ]
     0220 basementOslo       [ id=65553 ]
