@@ -197,6 +197,13 @@ rule "light in hall 1st floor"
 			light_hall_4.sendCommand(0)
 			postUpdate(homekit_light_hall_1st_floor, ON)
 		}
+		case 3: { // EVENING MODE
+			light_hall_1.sendCommand(60)
+			light_hall_2.sendCommand(60)
+			light_hall_3.sendCommand(60)
+			light_hall_4.sendCommand(60)
+			postUpdate(homekit_light_hall_1st_floor, ON)
+		}
 	}
 end
 

@@ -186,6 +186,7 @@ rule "A change of mode"
 				sendCommand(scene_light_hall_gf, 2) // AUTO
 				sendCommand(light_hall_ground_floor, OFF)
 				sendCommand(scene_office_light, 0)
+				sendCommand(light_bathroom_mirror, OFF)
 				if (ac_scene.state > 1) {
 					sendCommand(ac_scene, 0)
 				}
@@ -203,7 +204,7 @@ rule "A change of mode"
 			case 3: { // EVENING MODE
 				logInfo('org.openhab.rules.modes', 'EVENING MODE')
 				stored_heating_states = storeStates(floorHeatingNight)
-				sendCommand(scene_light_hall, 2) // NIGHT
+				sendCommand(scene_light_hall, 3) // EVENING
 
 				if (floor_night_power_level.state !== null) {
 
@@ -243,17 +244,18 @@ rule "A change of mode"
 end
 
 /*
- * At 21 in the evening we'll go into evening mode, but only if someone is at home.
+ * At 21:00 in the evening we'll go into evening mode, but only if someone is at home.
  * Away mode overrules evening mode
  */
 rule "Switch to evening mode in the evening"
 	when
-		Time cron "0 30 21 ? * *"
+		Time cron "0 0 21 ? * *"
 	then
 		alarm_check.postUpdate(""+ now)
 		if (mode.state == 0) {
 			logInfo('org.openhab.rules.modes', "Evening mode because it is time")
 			sendCommand(mode, 3)
+			sendCommand(light_bathroom_mirror, ON)
 		} else if (holiday_mode.state == ON) {
 			scene_light_livingroom.sendCommand(2)
 			scene_light_hall_gf.sendCommand(1)

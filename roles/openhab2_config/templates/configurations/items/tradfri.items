@@ -11,7 +11,7 @@ Dimmer office_right_light_brightness "Høyre styrke [%d %%]" <light> (gFirstFloo
 Dimmer office_right_light_color "Høyre temp [%d %%]"	    <hue> 	(gFirstFloor) 			                {mqtt="<[broker:deconz/status/lights/office_desk_right/ct:state:default], >[broker:deconz/control/lights/office_desk_right/set/ct:command:*:${command}"}
 
 Switch office_light "Kontorlys"				                <light> (gLight, gFirstFloor, gOfficeLights) 	{channel="enocean:rockerSwitch:gtwy:rs01:rockerswitchA" [profile="system:rawrocker-to-dimmer"], mqtt="<[broker:deconz/status/groups/office/on:state:default], >[broker:deconz/control/groups/office/on:command:ON:true], >[broker:deconz/control/groups/office/on:command:OFF:false]"}
-Dimmer office_light_brightness "Kontorlyst styrke [%d %%]"	<light> (gFirstFloor, gOfficeLightsDimmer) 	    {mqtt="<[broker:deconz/status/groups/office/bri:state:default], >[broker:deconz/control/groups/office/action/bri:command:*:${command}"}
+Dimmer office_light_brightness "Kontorlyst styrke [%d %%]"	<light> (gFirstFloor, gOfficeLightsDimmer) 	[ "Lighting" ]  {mqtt="<[broker:deconz/status/groups/office/bri:state:default], >[broker:deconz/control/groups/office/action/bri:command:*:${command}"}
 Dimmer office_light_color "Kontorlyst temp [%d %%]"		    <hue> 	(gFirstFloor) 			                {mqtt="<[broker:deconz/status/groups/office/ct:state:default], >[broker:deconz/control/groups/office/action/ct:command:*:${command}"}
 
 Number office_remote_battery "Kontor - Batteri [%d %%]"            <battery>  (gFirstFloor, gBattery, gBatteryLevel_100) {mqtt="<[broker:deconz/status/sensors/remote_office/battery:state:default]"}
