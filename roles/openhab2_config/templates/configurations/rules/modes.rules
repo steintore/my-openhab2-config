@@ -64,8 +64,6 @@ rule "A change of mode"
 				}
 				screen_pi_screen.sendCommand(ON)
 
-				leaf_request_update.sendCommand(ON)
-
 				logInfo('org.openhab.rules.modes', "JustMorning is: " + justMorning.state.toString)
 				if (justMorning.state == ON) {
 					logInfo('org.openhab.rules.modes', 'Good morning..')
@@ -127,7 +125,6 @@ rule "A change of mode"
 				alarm_check.postUpdate(""+ now)
 
 				sendCommand(screen_pi_reboot, ON)
-				sendCommand(leaf_request_update, OFF)
 				sendCommand(alarm_door_lock, ON)
 				logInfo('org.openhab.rules.modes', 'Night MODE activated')
 			}
@@ -216,7 +213,6 @@ rule "A change of mode"
 					]
 				}
 				postUpdate(justMorning, OFF)
-				sendCommand(leaf_request_update, ON)
 				sendCommand(activate_cameras, OFF)
 				if (camera_timer !== null) {
 					if(camera_timer.running)

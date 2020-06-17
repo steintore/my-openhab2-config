@@ -12,39 +12,3 @@
 
   # Password set manually like this:
   # sudo mosquitto_passwd -c /etc/mosquitto/passwd mosquitto
-
-- name: Install required PIP-packages
-  pip: name={{item}}
-  with_items:
-    - schedule
-    - datetime
-    - paho-mqtt
-
-#- name: PyCarwings
-#  pip: name=git+https://github.com/jdhorne/pycarwings2.git
-#  become: yes
-
-- name: Clone github repo
-  git:
-    repo: git://github.com/glynhudson/leaf-python-mqtt.git
-    clone: yes
-    dest: "{{leaf_mqtt_install_dir}}"
-  become: yes
-
-- name: leaf-python config file
-  template: dest="{{leaf_mqtt_install_dir}}/config.ini" src=../templates/config.ini
-  become: yes
-
-- name: copy service file for leaf-python
-  template: dest=/etc/systemd/system/leaf-python-mqtt.service src=../templates/leaf-python-mqtt.service mode=664
-  become: yes
-
-- name: register the service
-  shell: systemctl daemon-reload
-  become: yes
-
-- name: enable the service
-  service:
-    name: leaf-python-mqtt.service
-    enabled: yes
-    state: started

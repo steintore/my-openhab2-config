@@ -170,14 +170,6 @@ sitemap default label="Huset"
 					Text item=garage_stream_link
 					Image url="{{garagepi_screenshot_url}}" refresh=5000
 				}
-				Text label="Leaf" {
-					Text item=leaf_last_updated
-					Text item=leaf_battery
-					Text item=leaf_connected
-					Text item=leaf_charging_status
-					Switch item=leaf_heating mappings=[ON="Slå på"] icon="fire"
-					Switch item=leaf_request_update mappings=[ON="Nå"] icon="settings"
-				}
 			}
 			Frame label="Ute" icon="garden" {
 				Text item=Outdoor_Temp_Max valuecolor=[>25="orange",>15="green",>5="orange",<=5="blue"]
