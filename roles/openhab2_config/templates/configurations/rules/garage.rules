@@ -251,8 +251,8 @@ then
 			if (garagePiTimer !== null) {
 				if (garagePiTimer.running)
 					garagePiTimer.cancel()
-				garagePiTimer = null
 			}
+			garagePiTimer = null
 			logInfo('garage.rules', "GaragePiTimer is now (should always be null): " + garagePiTimer)
 		}		
 		case OFF: {
@@ -261,7 +261,7 @@ then
 					garagePiTimer.cancel()
 				garagePiTimer.reschedule(now.plusHours(12))
 				logInfo('garage.rules', "GaragePiTimer has been rescheduled to: " + now.plusHours(12))
-			} else {
+			} else if (garagePiTimer === null ) {
 				logInfo('garage.rules', "creating new GaragePiTimer has scheduled to run at: " + now.plusHours(12))
 				garagePiTimer = createTimer(now.plusHours(12)) [|
 					logInfo('garage.rules', "GaragePiTimer executing " + garagePiTimer.running)
