@@ -26,3 +26,8 @@ After you are up and running, open a browser and point it to [openHAB2 http://lo
 
 ### Deploying changes
 Run the ansible command again. It will download some things all over again. I'm currently using my own github repo for the configurations as well, so i can `git pull` in the configurations folder.
+
+### Some useful commands
+
+* Connect to mqtt to listen to all messages. `mosquitto_sub -p 1883 -v -t '#' -u <username> -P <password>`
+* Mqtt for the z-wave server: https://github.com/hackercowboy/zway-mqtt
