@@ -35,7 +35,7 @@ rule "Smappee kWh changed"
 		Item smappee_kwh changed
 	then
 	var DateTime lastUpdate = now
-	if (smappee_kwh_lastupdate.state != UNDEF && smappee_kwh_lastupdate.state !== null  && smappee_kwh_lastupdate.state !== null) {
+	if (smappee_kwh_lastupdate.state != UNDEF && smappee_kwh_lastupdate.state !== null && smappee_kwh_lastupdate.state !== NULL) {
 		lastUpdate = new DateTime((smappee_kwh_lastupdate.state as DateTimeType).calendar.timeInMillis)
 		logInfo("org.openhab.rules.power", "Item smappee_kwh changed " + smappee_kwh_lastupdate.state.toString())
 	}
