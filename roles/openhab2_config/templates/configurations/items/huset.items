@@ -27,7 +27,7 @@ Switch gang_panelovn 	"Panelovn gang" 	<heating> 	(gFirstFloor, gHeating, away_g
 Group:Number:SUM					gPower			"Nå: [%.1f W]"			<energy>				(All, gPower)
 Group:Number:SUM					gPowerHeating	"Varme: [%.1f W]"		<energy>				(All)
 Group:Number:SUM					gEnergy			"Totalt: [%.1f KWh]"	<energy>				(All)
-Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, gPower, gPowerHeating, gPower_Chart, gInfluxDB) 	{mqtt="<[broker:zway/Hall1stFloor/OvenElectricMeter:state:default]"} // TODO FIX THIS
+Number power_panelovn_gang  	"Strøm panelovn gang	[%.1f W]" 			<energy> (gPower, gPowerHeating, gPower_Chart, gInfluxDB) 	{mqtt="<[broker:zway/Hall1stFloor/OvenElectricMeter:state:default]"} // TODO FIX THIS
 Number panelovn_gang_energy 	"Panelovn gang totalforbruk: [%.2f KWh]"	<energy> (gEnerg, gInfluxDBy) 										{mqtt="<[broker:zway/Hall1stFloor/OvenElectricMeter:state:default]"}
 
 Group gPower_Chart (Power)

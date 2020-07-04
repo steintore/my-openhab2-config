@@ -262,10 +262,11 @@ then
 				garagePiTimer.reschedule(now.plusHours(12))
 				logInfo('garage.rules', "GaragePiTimer has been rescheduled to: " + now.plusHours(12))
 			} else if (garagePiTimer === null ) {
-				logInfo('garage.rules', "creating new GaragePiTimer has scheduled to run at: " + now.plusHours(12) + " - timer is now:" + garagePiTimer)
+				logInfo('garage.rules', "creating new GaragePiTimer has scheduled to run at: " + now.plusHours(12))
 				garagePiTimer = createTimer(now.plusHours(12)) [|
 					logInfo('garage.rules', "GaragePiTimer executing " + garagePiTimer)
-					sendNotification("{{stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
+					//sendNotification("{{stein_email}}", "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
+					logInfo('garage.rules', "GaragePi har vært offline siden: " + garage_pi.lastUpdate)
 					if (garagePiTimer !== null && garagePiTimer.running)
 						garagePiTimer.cancel()
 					garagePiTimer = null
