@@ -7,7 +7,7 @@ then {
     SpeedtestRunning.postUpdate("Kjører...")
 
     // update timestamp for last execution
-    SpeedtestResultDate.postUpdate(new DateTimeType())
+    SpeedtestResultDate.postUpdate(now.toString())
 
     // execute the script, you may have to change the path depending on your system
     var String speedtestCliOutput = executeCommandLine("/usr/local/bin/speedtest-cli@@--simple", 240*1000)

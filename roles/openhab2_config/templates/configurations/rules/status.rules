@@ -1,4 +1,3 @@
-import org.eclipse.smarthome.core.library.types.DateTimeType
 import org.eclipse.smarthome.core.library.types.DecimalType
 
 rule "Startup"
@@ -27,28 +26,28 @@ rule "Records last outdoor update time"
 when
   Item OutdoorTemperature received update
 then
-  postUpdate(OutdoorTemperature_LastUpdate, new DateTimeType())
+  postUpdate(OutdoorTemperature_LastUpdate, now.toString())
 end
 
 rule "Records last office temperature update time"
 when
   Item OfficeTemperature received update
 then
-  postUpdate(OfficeTemperature_LastUpdate, new DateTimeType())
+  postUpdate(OfficeTemperature_LastUpdate, now.toString())
 end
 
 rule "Records last basement temperature update time"
 when
   Item BasementTemperature received update
 then
-  postUpdate(BasementTemperature_LastUpdate, new DateTimeType())
+  postUpdate(BasementTemperature_LastUpdate, now.toString())
 end
 
 rule "Records last living room temperature update time"
 when
   Item LivingRoomTemperature received update
 then
-  postUpdate(LivingRoomTemperature_LastUpdate, new DateTimeType())
+  postUpdate(LivingRoomTemperature_LastUpdate, now.toString())
 end
 
 /**
@@ -81,7 +80,7 @@ rule "Record last update received from Samsung Air Conditioner"
 when
  	Item ac_current_temp received update
 then
-	postUpdate(ac_lastUpdate, new DateTimeType())
+	postUpdate(ac_lastUpdate, now.toString())
 end
 
 rule "Set TV to same state as LAN-checking, and set Air Conditioner to QUIET-mode if TV is being switched on"
@@ -153,7 +152,7 @@ when
 	Item hall_gf_luminance changed
 	then
 		logInfo('org.openhab.rules.status', "Item hall_gf_luminance changed " + hall_gf_luminance)
-		postUpdate(hall_gf_lux_update, new DateTimeType(now.toGregorianCalendar))
+		postUpdate(hall_gf_lux_update, now.toString())
 end
 
 rule "Luminance Bathroom 1st floor changed"
@@ -161,7 +160,7 @@ when
 	Item bathroom_lux changed
 then
 	logInfo('org.openhab.rules.status', "Item bathroom_lux changed: " + bathroom_lux.state)
-	postUpdate(bathroom_lux_update, new DateTimeType(now.toGregorianCalendar))
+	postUpdate(bathroom_lux_update, now.toString())
 end
 
 rule "Switch ON or OFF the screen in the hall way"
@@ -174,9 +173,11 @@ rule "Switch ON or OFF the screen in the hall way"
 		switch (receivedCommand) {
 			case ON: {
 				result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@xscreensaver-command -deactivate", 5000)
+				logInfo('org.openhab.rules.status.screenpi', "Result from deactivate: " + result)
 			}
 			case OFF: {
 				result = executeCommandLine("ssh@@pi@{{screenpi_ip}}@@xscreensaver-command -activate", 5000)
+				logInfo('org.openhab.rules.status.screenpi', "Result from active: " + result)
 			}
 		}
 	} else {

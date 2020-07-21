@@ -37,7 +37,7 @@ rule "Smappee kWh changed"
 	var DateTime lastUpdate = now
 	if (smappee_kwh_lastupdate.state != UNDEF && smappee_kwh_lastupdate.state !== null && smappee_kwh_lastupdate.state !== NULL) {
 		lastUpdate = new DateTime((smappee_kwh_lastupdate.state as DateTimeType).calendar.timeInMillis)
-		logInfo("org.openhab.rules.power", "Item smappee_kwh changed " + smappee_kwh_lastupdate.state.toString())
+		logDebug("org.openhab.rules.power", "Item smappee_kwh changed " + smappee_kwh_lastupdate.state.toString())
 	}
 	
 	var kwh = new Double(smappee_kwh.state.toString())
@@ -81,7 +81,7 @@ rule "Smappee kWh changed"
 		postUpdate(smappee_total_year, kwh + year)
 	}
 	
-	postUpdate(smappee_kwh_lastupdate, new DateTimeType())
+	postUpdate(smappee_kwh_lastupdate, now.toString())
 end
 
 rule "Updated ampere"
