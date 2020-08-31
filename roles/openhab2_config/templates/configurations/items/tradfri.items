@@ -72,7 +72,7 @@ Switch basement_remote_low_battery "Lavt batteri [(%d)]" <battery> (gGF)      {c
 
 
 Number scene_light_laundry  "Vaskerom lys [%s]" <light> (gBasement)
-Group:Switch:AND(ON, OFF) 	gLaundryRoomLights	"Lys [(%d)]"  		<light> 
+Group:Switch:AND(ON, OFF) 	gLaundryRoomLights	"Lys [(%s)]"  		<light> 
 Group:Dimmer				gLaundryLightsDimmer "Lys [%d %%]" 	<light>
 
 Dimmer laundry_roof_1     "Taklampe #1 [%d %%]"        <light> (gLight, gBasement, gLaundryRoomLights)   { channel="tradfri:0220:gwb072bf258007:laundryRoof1:brightness" }

@@ -187,13 +187,13 @@ Dimmer dimmer_kid_room_1        "Ivers rom [%d %%]"     <hue> (gLight, gFirstFlo
 Dimmer ct_kid_room_1            "Ivers rom"             <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:11:color_temperature"}
 
 
-Group:Switch:AND(ON, OFF)   gBasementLights     "Lys [(%d)]"    <light>
-Group:Dimmer				gBasementHallLights "Lys [%d %%]" 	<light>
+Group:Switch:AND(ON, OFF)   gBasementLights     "Lys [(%s)]"    <light>
+Group:Dimmer				gBasementHallLights "Lys [%s %%]" 	<light>
 Number scene_light_basement_hall "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
-Dimmer light_basement_1     "Kjellerlys 1.1 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:9:brightness"}
-Dimmer light_basement_2     "Kjellerlys 1.2 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:10:brightness"}
-Dimmer light_basement_3     "Kjellerlys 2.1 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:7:brightness"}
-Dimmer light_basement_4     "Kjellerlys 2.2 [%d %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:8:brightness"}
+Dimmer light_basement_1     "Kjellerlys 1.1 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:9:brightness"}
+Dimmer light_basement_2     "Kjellerlys 1.2 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:10:brightness"}
+Dimmer light_basement_3     "Kjellerlys 2.1 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:7:brightness"}
+Dimmer light_basement_4     "Kjellerlys 2.2 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:8:brightness"}
 
 /* Living room TV */
 Group TV <tv>

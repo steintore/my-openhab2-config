@@ -269,10 +269,6 @@ sitemap default label="Huset"
 			Frame {
 				Text item=uptime
 			}
-			Frame {
-				Text item=cpuCombined icon="system"
-			}
-
 			Frame label="Load" {
 				Text item=loadAverage1min
 				Text item=loadAverage5min
