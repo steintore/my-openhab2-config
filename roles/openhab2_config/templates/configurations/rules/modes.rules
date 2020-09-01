@@ -219,6 +219,7 @@ rule "A change of mode"
 						camera_timer.cancel()
 					camera_timer = null
 				} 
+				sendCommand(scene_light_livingroom, 1)
 				logInfo('org.openhab.rules.modes', 'Evening MODE activated')
 			}
 

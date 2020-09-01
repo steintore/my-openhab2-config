@@ -153,6 +153,11 @@ when
 	then
 		logInfo('org.openhab.rules.status', "Item hall_gf_luminance changed " + hall_gf_luminance)
 		postUpdate(hall_gf_lux_update, now.toString())
+
+		if ((mode.state == 0 || mode.state == 3) && hall_gf_luminance.state > 200 && scene_light_livingroom.state == 0)
+			sendCommand(scene_light_livingroom, 1)
+		else if (hall_gf_luminance.state < 50 && scene_light_livingroom.state == 1 && mode.state == 0)
+			sendCommand(scene_light_livingroom, 0)
 end
 
 rule "Luminance Bathroom 1st floor changed"
