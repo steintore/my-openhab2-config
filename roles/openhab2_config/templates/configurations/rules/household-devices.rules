@@ -1,10 +1,10 @@
 import java.util.concurrent.locks.ReentrantLock
 import org.eclipse.smarthome.model.script.actions.Timer
 
-val Number MODE_OFF = 0
-val Number MODE_STANDBY = 1
-val Number MODE_ACTIVE = 2
-val Number MODE_FINISHED = 3
+val String MODE_OFF = 0
+val String MODE_STANDBY = 1
+val String MODE_ACTIVE = 2
+val String MODE_FINISHED = 3
 var ReentrantLock finishLock  = new ReentrantLock()
 var ReentrantLock finishLockDryer  = new ReentrantLock()
 

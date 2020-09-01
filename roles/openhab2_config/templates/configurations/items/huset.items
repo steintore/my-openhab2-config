@@ -103,7 +103,7 @@ Number energy_freezer 	"Fryser totalforbruk: [%.2f KWh]" 		<energy> 	(gEnergy, g
 Number power_dryer		"Strøm tørketrommel	[%.1f W]" 			<dryer> 	(gBasement, gPower, gPower_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/DryerPower:state:default]"}
 Switch dryer			"Tørketrommel"							<dryer>		(gBasement, gHomeAppliances, night_group, away_group, gInfluxDB) {mqtt="<[broker:zway/LaundryBasement/Dryer:command:JS(toUpperCase.js)], >[broker:zway/LaundryBasement/Dryer/set:command:ON:on], >[broker:zway/LaundryBasement/Dryer/set:command:OFF:off]"}
 Number energy_dryer 	"Tørketrommel totalforbruk: [%.2f KWh]"	<dryer> 	(gEnergy, gBasement, gInfluxDB)									{mqtt="<[broker:zway/LaundryBasement/DryerEletricMeter:state:default]"}
-Number dryer_OpState "Tørketrommel [MAP(household-device.map):%s]" <dryer>
+String dryer_OpState "Tørketrommel [MAP(household-device.map):%s]" <dryer>
 
 Switch fridge_basement  "Kjøleskap kjeller" 					<kitchen>  (gBasement, gHomeAppliances, gInfluxDB)					{mqtt="<[broker:zway/LaundryBasement/Fridge:state:default], >[broker:zway/LaundryBasement/Fridge/set:command:ON:on], >[broker:zway/LaundryBasement/Fridge/set:command:OFF:off]"}
 Number power_fridge		"Strøm kjøleskap [%.1f W]" 				<energy> 	(gBasement, gPower, gPower_Chart, gInfluxDB) 						{mqtt="<[broker:zway/LaundryBasement/FridgePower:state:default]"}
@@ -112,7 +112,7 @@ Number energy_fridge 	"Kjøleskap totalforbruk: [%.2f KWh]"	<energy> 	(gEnergy, 
 Number energy_washingmachine 	"Vaskemaskin totalforbruk: [%.2f KWh]"	<energy> 			(gEnergy, gInfluxDB) 												{mqtt="<[broker:zway/LaundryBasement/WashingMachineEletricMeter:state:default]"}
 Number power_washingmachine  	"Strøm vaskemaskin	[%.1f W]" 			<energy> 			(gBasement, gPower, gHomeAppliances, gPower, gPower_Chart, gInfluxDB) 	{mqtt="<[broker:zway/LaundryBasement/WashingMachinePower:state:default]"}
 Switch washingmachine  			"Vaskemaskin"							<washingmachine>	(gBasement, gHomeAppliances, gInfluxDB)			    				{mqtt="<[broker:zway/LaundryBasement/WashingMachine:state:JS(toUpperCase.js)], >[broker:zway/LaundryBasement/WashingMachine/set:command:ON:on], >[broker:zway/LaundryBasement/WashingMachine/set:command:OFF:off]"}
-Number washingmachine_OpState 	"Vaskemaskinstatus [MAP(household-device.map):%s]" <washingmachine>
+String washingmachine_OpState 	"Vaskemaskinstatus [MAP(household-device.map):%s]" <washingmachine>
 
 
 /* Garage */
