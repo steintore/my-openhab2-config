@@ -48,20 +48,22 @@ rule "Dryer Consumption State Machine (Extended)"
 when
     Item power_dryer changed
 then
-    logDebug('org.openhab.rules.household', 'Dryer changed to: ' + power_dryer.state)
-    if (power_dryer.state <= 0.5)
-      dryer_OpState.postUpdate(MODE_OFF)
-    else if (power_dryer.state > 2)
-      dryer_OpState.postUpdate(MODE_ACTIVE)
-    else if (power_dryer.state <= 2) {
-        if (dryer_OpState.state == MODE_OFF) dryer_OpState.postUpdate(MODE_STANDBY)
-        else if (dryer_OpState.state == MODE_ACTIVE) {
-            finishLockDryer.lock()
-            try {
-                Thread::sleep(10000) // Debounce for 10 seconds
-                if (power_dryer.state <= 2) dryer_OpState.postUpdate(MODE_FINISHED)
-            } finally {
-                finishLockDryer.unlock()
+    if (power_dyryer.state != null) {
+        logDebug('org.openhab.rules.household', 'Dryer changed to: ' + power_dryer.state)
+        if (power_dryer.state <= 0.5)
+          dryer_OpState.postUpdate(MODE_OFF)
+        else if (power_dryer.state > 2)
+          dryer_OpState.postUpdate(MODE_ACTIVE)
+        else if (power_dryer.state <= 2) {
+            if (dryer_OpState.state == MODE_OFF) dryer_OpState.postUpdate(MODE_STANDBY)
+            else if (dryer_OpState.state == MODE_ACTIVE) {
+                finishLockDryer.lock()
+                try {
+                    Thread::sleep(10000) // Debounce for 10 seconds
+                    if (power_dryer.state <= 2) dryer_OpState.postUpdate(MODE_FINISHED)
+                } finally {
+                    finishLockDryer.unlock()
+                }
             }
         }
     }
