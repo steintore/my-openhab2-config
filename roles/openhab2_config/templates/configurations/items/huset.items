@@ -147,30 +147,39 @@ String push_message_url ""
 
 /* Lighting */
 Group:Switch:OR(ON, OFF) 		gLivingRoomLights 		"Lys [(%d)]" <light>
+Group:Dimmer gLivingRoomLightsDimmer "Lys [%d %%]" 	<light>
 
-Number scene_light_livingroom "Lys stue"			<sofa>  (gGF)
-Switch living_room_lights "Alt lys stua"            <light> (gGF) {mqtt="<[broker:zway/LivingRoom/LightOn:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/LightOn/set:command:ON:on], >[broker:zway/LivingRoom/LightOff/set:command:OFF:on]"}
-Switch light_living_old "Gamlelyset" 				<light> (gGF, gLight, gLivingRoomLights)  	                {mqtt="<[broker:zway/LivingRoom/OldLight:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/OldLight/set:command:ON:on], >[broker:zway/LivingRoom/OldLight/set:command:OFF:off]"}
-Switch light_kitchen_bench 			"Kjøkkenbenk"	<light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/KitchenBenchLight:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:ON:on], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:OFF:off]"}
-Switch light_dining_table           "Taklys"        <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/DiningLightSwitch:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:ON:on], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:OFF:off]"}
-Dimmer light_dining_table_dimmer	"Taklys [%d %%]"   <light> (gGF, gLight, gLivingRoomLightsDimmer) 			{mqtt="<[broker:zway/LivingRoom/DiningDimmer:state:default], >[broker:zway/LivingRoom/DiningDimmer/set:command:*:${command}]"}
+Number scene_light_livingroom "Lys stue"			 <sofa>  (gGF)
+Switch living_room_lights "Alt lys stua"             <light> (gGF) {mqtt="<[broker:zway/LivingRoom/LightOn:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/LightOn/set:command:ON:on], >[broker:zway/LivingRoom/LightOff/set:command:OFF:on]"}
+Switch light_living_old             "Gamlelyset" 	 <light> (gGF, gLight, gLivingRoomLights)  	                {mqtt="<[broker:zway/LivingRoom/OldLight:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/OldLight/set:command:ON:on], >[broker:zway/LivingRoom/OldLight/set:command:OFF:off]"}
+Switch light_kitchen_bench 			"Kjøkkenbenk"	 <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/KitchenBenchLight:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:ON:on], >[broker:zway/LivingRoom/KitchenBenchLight/set:command:OFF:off]"}
+Switch light_dining_table           "Taklys"         <light> (gGF, gLight, gLivingRoomLights)                    {mqtt="<[broker:zway/LivingRoom/DiningLightSwitch:command:JS(toUpperCase.js)], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:ON:on], >[broker:zway/LivingRoom/DiningLightSwitch/set:command:OFF:off]"}
+Dimmer light_dining_table_dimmer	"Taklys [%d %%]" <light> (gGF, gLight, gLivingRoomLightsDimmer) 			{mqtt="<[broker:zway/LivingRoom/DiningDimmer:state:default], >[broker:zway/LivingRoom/DiningDimmer/set:command:*:${command}]"}
 
 String remote_living_room           "Fjernkontroll stue [%s]"   <remote> (gGF) {mqtt="<[broker:zway/LivingRoom/LivingRoomRemote:command:default]"}
 Number remote_living_room_battery 	"Bryter stue [%s %%]"		<battery>		(gBattery, gBatteryLevel_100, gGF)	{mqtt="<[broker:zway/globalRoom/Battery (17.0):state:default]"}
 
+Switch livingroom_oslo            "Oslo-lampe"                <light> (gLight, gGF, gLivingRoomLights) {channel="hue:0220:hue1:oslo-living:brightness"}
+Dimmer livingroom_oslo_brightness "Oslo-lampe styrke [%d %%]" <light> (gGF, gLivingRoomLightsDimmer)   {channel="hue:0220:hue1:oslo-living:brightness"}
+Dimmer livingroom_oslo_color      "Oslo-lampe temp [%d %%]"   <light> (gGF)                            {channel="hue:0220:hue1:oslo-living:color_temperature"}
+
+Switch livingroom_window            "Vindu-lampe"                <light> (gLight, gGF, gLivingRoomLights) {channel="hue:0220:hue1:vindu-living:brightness"}
+Dimmer livingroom_window_brightness "Vindu-lampe styrke [%d %%]" <light> (gGF, gLivingRoomLightsDimmer)   {channel="hue:0220:hue1:vindu-living:brightness"}
+Dimmer livingroom_window_color      "Vindu-lampe temp [%d %%]"   <light> (gGF)                            {channel="hue:0220:hue1:vindu-living:color_temperature"}
+
 /* Philips HUE */
 Group:Switch:AND(ON, OFF) 		gHallLights	"Lys [(%d)]"  <light>
 Number scene_light_hall "Lys gang [%s]" 			<hue> 	(gLight, gHallLights, gFirstFloor)
-Switch light_hall_1_switch "Left bulb"      <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:5:brightness"}
-Switch light_hall_2_switch "Right bulb"     <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:6:brightness"}
-Switch light_hall_3_switch "Left bulb 2"    <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:3:brightness"}
-Switch light_hall_4_switch "Right bulb 2"   <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:4:brightness"}
+Switch light_hall_1_switch "Left bulb"      <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:roof-1st-1:brightness"}
+Switch light_hall_2_switch "Right bulb"     <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0220:hue1:roof-1st-2:brightness"}
+Switch light_hall_3_switch "Left bulb 2"    <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:roof-1st-3:brightness"}
+Switch light_hall_4_switch "Right bulb 2"   <hue>   (gLight, gHallLights, gFirstFloor) {channel="hue:0100:hue1:roof-1st-4:brightness"}
 
 Group:Dimmer gHallLightsDimmer "Lys [%d %%]"  <light>
-Dimmer light_hall_1     "Left bulb [%d %%]"   <hue> (gHallLightsDimmer)  {channel="hue:0100:hue1:5:brightness"}
-Dimmer light_hall_2     "Right bulb [%d %%]"  <hue> (gHallLightsDimmer)  {channel="hue:0100:hue1:6:brightness"}
-Dimmer light_hall_3     "Left bulb2 [%d %%]"  <hue> (gHallLightsDimmer)   {channel="hue:0220:hue1:3:brightness"}
-Dimmer light_hall_4     "Right bulb2 [%d %%]" <hue> (gHallLightsDimmer)   {channel="hue:0220:hue1:4:brightness"}
+Dimmer light_hall_1     "Left bulb [%d %%]"   <hue> (gHallLightsDimmer)   {channel="hue:0220:hue1:roof-1st-1:brightness"}
+Dimmer light_hall_2     "Right bulb [%d %%]"  <hue> (gHallLightsDimmer)   {channel="hue:0220:hue1:roof-1st-2:brightness"}
+Dimmer light_hall_3     "Left bulb2 [%d %%]"  <hue> (gHallLightsDimmer)   {channel="hue:0100:hue1:roof-1st-3:brightness"}
+Dimmer light_hall_4     "Right bulb2 [%d %%]" <hue> (gHallLightsDimmer)   {channel="hue:0100:hue1:roof-1st-4:brightness"}
 
 Switch light_bedroom    "Soverom"               <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
 Color color_bedroom     "Soverom"               <hue> (gLight, gFirstFloor) {channel="hue:0210:hue1:13:brightness"}
@@ -190,10 +199,10 @@ Dimmer ct_kid_room_1            "Ivers rom"             <hue> (gLight, gFirstFlo
 Group:Switch:AND(ON, OFF)   gBasementLights     "Lys [(%s)]"    <light>
 Group:Dimmer				gBasementHallLights "Lys [%s %%]" 	<light>
 Number scene_light_basement_hall "Lys kjellergang" <light> (gLight, gBasementLights, gBasement)
-Dimmer light_basement_1     "Kjellerlys 1.1 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:9:brightness"}
-Dimmer light_basement_2     "Kjellerlys 1.2 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:10:brightness"}
-Dimmer light_basement_3     "Kjellerlys 2.1 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:7:brightness"}
-Dimmer light_basement_4     "Kjellerlys 2.2 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:8:brightness"}
+Dimmer light_basement_1     "Kjellerlys 1.1 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:roof-basement-1:brightness"}
+Dimmer light_basement_2     "Kjellerlys 1.2 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:roof-basement-2:brightness"}
+Dimmer light_basement_3     "Kjellerlys 2.1 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:roof-basement-3:brightness"}
+Dimmer light_basement_4     "Kjellerlys 2.2 [%s %%]" <light> (gBasement, gLight, gBasementLights, gBasementHallLights)   {channel="hue:0100:hue1:roof-basement-4:brightness"}
 
 /* Living room TV */
 Group TV <tv>

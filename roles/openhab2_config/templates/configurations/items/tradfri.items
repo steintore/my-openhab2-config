@@ -29,21 +29,6 @@ Dimmer bathroom_basement_color "Toalett kjeller temp [%d %%]" 	<hue> 	(gBasement
 Number bathroom_basement_occupancy_battery "Batteri [%d %%]"       <battery> (gBasement, gBatteryLevel_100)           { channel="tradfri:0107:gwb072bf258007:bathroomOccupancy:battery_level"}
 Switch bathroom_basement_occupancy_low_battery "Lavt batteri [(%d)]" <battery> (gBasement)         { channel="tradfri:0107:gwb072bf258007:bathroomOccupancy:battery_low"}
 
-Switch livingroom_oslo            "Oslo-lampe"                <light> (gLight, gGF, gLivingRoomLights) {mqtt="<[broker:deconz/status/lights/oslo_light_living_room/on:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/on:command:ON:true], >[broker:deconz/control/lights/oslo_light_living_room/set/on:command:OFF:false]"}
-Dimmer livingroom_oslo_brightness "Oslo-lampe styrke [%d %%]" <light> (gGF, gLivingRoomLightsDimmer)   {mqtt="<[broker:deconz/status/lights/oslo_light_living_room/bri:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/bri:command:*:${command}"}
-Dimmer livingroom_oslo_color      "Oslo-lampe temp [%d %%]"   <light> (gGF)                            {mqtt="<[broker:deconz/status/lights/oslo_light_living_room/ct:state:default], >[broker:deconz/control/lights/oslo_light_living_room/set/ct:command:*:${command}"}
-
-Switch livingroom_window            "Vindu-lampe"                <light> (gLight, gGF, gLivingRoomLights) {mqtt="<[broker:deconz/status/lights/window_light_living_room/on:state:default], >[broker:deconz/control/lights/window_light_living_room/set/on:command:ON:true], >[broker:deconz/control/lights/window_light_living_room/set/on:command:OFF:false]"}
-Dimmer livingroom_window_brightness "Vindu-lampe styrke [%d %%]" <light> (gGF, gLivingRoomLightsDimmer)   {mqtt="<[broker:deconz/status/lights/window_light_living_room/bri:state:default], >[broker:deconz/control/lights/window_light_living_room/set/bri:command:*:${command}"}
-Dimmer livingroom_window_color      "Vindu-lampe temp [%d %%]"   <light> (gGF)                            {mqtt="<[broker:deconz/status/lights/window_light_living_room/ct:state:default], >[broker:deconz/control/lights/window_light_living_room/set/ct:command:*:${command}"}
-
-Number   living_remote_battery      "Stue - Batteri [%d %%]"   <battery>  (gGF, gBattery, gBatteryLevel_100) {mqtt="<[broker:deconz/status/sensors/remote_living_room/battery:state:default]"}
-String   living_remote_event        "Stue - event [%s]"                   (gGF)                    {mqtt="<[broker:deconz/status/sensors/remote_living_room/buttonevent:state:default]"}
-DateTime living_remote_last_updated "Stue - oppdatert [%s]"    <calendar> (gGF)                    {mqtt="<[broker:deconz/status/sensors/remote_living_room/lastupdated:state:default]"}
-Switch   living_remote_reachable    "Stue - tilgjengelig"      <switch>   (gGF)                    {mqtt="<[broker:deconz/status/sensors/remote_living_room/reachable:state:default]"}
-
-Group:Dimmer gLivingRoomLightsDimmer "Lys [%d %%]" 	<light>
-
 
 Number scene_basement_room_light  "Kjellerstue lys [%s]" <light> (gBasement)
 
