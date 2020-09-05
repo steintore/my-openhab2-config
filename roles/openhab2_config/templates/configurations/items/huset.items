@@ -35,13 +35,17 @@ Number Power_Chart_Period "Periode"
 
 /* Presence detection */
 Group:Switch:OR(ON, OFF)	gHome 			"Is someone at home [(%d)]" (All)
-Switch stein_home    		"Stein @ Home"       		<present>	(gHome, gInfluxDB){ mqttitude="broker:owntracks/stein/iphone:home" }
-Switch anette_home   		"Anette @ Home"       		<present>	(gHome, gInfluxDB){ mqttitude="broker:owntracks/anette/iphone:home" }
-Switch guest_home 			"Guests @ Home" 			<present>	(gHome, gInfluxDB)
+Switch stein_home    	"S @ Home"      <present>	(gHome, gInfluxDB)
+Switch a_home   		"A @ Home"      <present>	(gHome, gInfluxDB)
+Switch i_home   		"I @ Home"      <present>	(gHome, gInfluxDB)
+Switch m_home   		"M @ Home"      <present>	(gHome, gInfluxDB)
+Switch guest_home 		"Guests @ Home" <present>	(gHome, gInfluxDB)
 
 Group:Switch:OR(ON, OFF) proximity (All)
-Switch Mobile_Stein_Wlan 	"Steins iPhone Wlan" 	<present>		(proximity, gInfluxDB) {channel="network:pingdevice:mobileStein:online"}
-Switch Mobile_Anette_Wlan	"Anettes iPhone Wlan" 	<present> 		(proximity, gInfluxDB) {channel="network:pingdevice:mobileAnette:online"}
+Switch Mobile_s_wlan 	    "Steins phone Wifi" 	<present>		(proximity, gInfluxDB) {channel="network:pingdevice:mobileS:online"}
+Switch Mobile_a_wlan	    "A phone Wifi"      	<present> 		(proximity, gInfluxDB) {channel="network:pingdevice:mobileA:online"}
+Switch Mobile_i_wlan    	"I phone Wifi" 	        <present> 		(proximity, gInfluxDB) {channel="network:pingdevice:mobileI:online"}
+Switch Mobile_m_wlan	    "M phone Wifi" 	        <present> 		(proximity, gInfluxDB) {channel="network:pingdevice:mobileM:online"}
 Switch router_lan 	        "Router"    			<present>		(proximity, gInfluxDB) {channel="network:pingdevice:router:online"}
 Switch home_away_lan		"Hjemme/borte"			<present>		(proximity, gInfluxDB) {channel="network:pingdevice:homeAway:online"}
 Switch boss_lan				"Boss server"       	<present>       (proximity, gInfluxDB) {channel="network:pingdevice:boss:online"}

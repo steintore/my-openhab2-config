@@ -1,8 +1,8 @@
-if (gHome.state != ON || (stein_home.state == ON && anette_home.state == ON)) {
+if (gHome.state != ON || (stein_home.state == ON && a_home.state == ON)) {
 	sendBroadcastNotification(push_message_text.state.toString)
 } else if (stein_home.state == ON) {
 	sendNotification("{{stein_email}}", push_message_text.state.toString)
-} else if (anette_home.state == ON) {
+} else if (a_home.state == ON) {
 	sendNotification("{{anette_email}}", push_message_text.state.toString)
 }
 

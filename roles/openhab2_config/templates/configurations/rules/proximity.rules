@@ -1,12 +1,14 @@
 import org.eclipse.smarthome.model.script.actions.Timer
 
 var Timer timerSteinMobileWlan = null
-var Timer timerAnetteMobileWlan = null
+var Timer timerAMobileWlan = null
+var Timer timerIMobileWlan = null
+var Timer timerMMobileWlan = null
 
 
-rule "Stein Mobile Wlan Proximity Enter"
+rule "S Mobile Wlan Proximity Enter"
 when
-	Item Mobile_Stein_Wlan changed from OFF to ON
+	Item Mobile_s_wlan changed from OFF to ON
 then
 	if(timerSteinMobileWlan!== null) {
 		logInfo("org.openhab.rules","steinwlan ON. stopping timer.")
@@ -16,25 +18,49 @@ then
 	sendCommand(stein_home, ON)
 end
 
-rule "Anette Mobile Wlan Proximity Enter"
+rule "A Mobile Wlan Proximity Enter"
 when
-	Item Mobile_Anette_Wlan changed from OFF to ON
+	Item Mobile_a_wlan changed from OFF to ON
 then
-	if(timerAnetteMobileWlan!== null) {
-		timerAnetteMobileWlan.cancel()
-		timerAnetteMobileWlan = null
+	if(timerAMobileWlan!== null) {
+		timerAMobileWlan.cancel()
+		timerAMobileWlan = null
 	}
-	sendCommand(anette_home, ON)
+	sendCommand(a_home, ON)
 end
 
-rule "Stein Mobile Wlan Proximity Timer Leave"
+rule "I Mobile Wlan Proximity Enter"
 when
-	Item Mobile_Stein_Wlan changed from ON to OFF
+	Item Mobile_i_wlan changed from OFF to ON
+then
+	if(timerIMobileWlan!== null) {
+		logInfo("org.openhab.rules","I wlan ON. stopping timer.")
+		timerIMobileWlan.cancel()
+		timerIMobileWlan = null
+	}
+	sendCommand(i_home, ON)
+end
+
+rule "M Mobile Wlan Proximity Enter"
+when
+	Item Mobile_m_wlan changed from OFF to ON
+then
+	if(timerMMobileWlan!== null) {
+		logInfo("org.openhab.rules","M wlan ON. stopping timer.")
+		timerMMobileWlan.cancel()
+		timerMMobileWlan = null
+	}
+	sendCommand(m_home, ON)
+end
+
+rule "S Mobile Wlan Proximity Timer Leave"
+when
+	Item Mobile_s_wlan changed from ON to OFF
 then
 	logInfo("org.openhab.rules","steinwlan off. starting timer.")
 	if( timerSteinMobileWlan==null ) {
 		timerSteinMobileWlan = createTimer(now.plusSeconds(2400)) [|
-			logInfo("org.openhab.rules", "Stein mobile timer has timed out. Executing proximity off")
+			logInfo("org.openhab.rules", "S mobile timer has timed out. Executing proximity off")
 			sendCommand(stein_home, OFF)
 			if(timerSteinMobileWlan!== null) {
 				if(timerSteinMobileWlan.running) {
@@ -48,24 +74,66 @@ then
 	}
 end
 
-rule "Anette Mobile Wlan Proximity Timer Leave"
+rule "A Mobile Wlan Proximity Timer Leave"
 when
-	Item Mobile_Anette_Wlan changed from ON to OFF
+	Item Mobile_a_wlan changed from ON to OFF
 then
-	logInfo("org.openhab.rules","anettewlan off. starting timer.")
-	if( timerAnetteMobileWlan==null ) {
-		timerAnetteMobileWlan = createTimer(now.plusSeconds(2400)) [|
-			logInfo("org.openhab.rules", "Anette timer has timed out. Executing proximity off")
-			sendCommand(anette_home, OFF)
-			if(timerAnetteMobileWlan!== null) {
-				if(timerAnetteMobileWlan.running) {
-					timerAnetteMobileWlan.cancel()
+	logInfo("org.openhab.rules","A wlan off. starting timer.")
+	if( timerAMobileWlan==null ) {
+		timerAMobileWlan = createTimer(now.plusSeconds(2400)) [|
+			logInfo("org.openhab.rules", "A timer has timed out. Executing proximity off")
+			sendCommand(a_home, OFF)
+			if(timerAMobileWlan!== null) {
+				if(timerAMobileWlan.running) {
+					timerAMobileWlan.cancel()
 				}
-				timerAnetteMobileWlan = null
+				timerAMobileWlan = null
 			}
 		]
 	} else {
-		timerAnetteMobileWlan.reschedule(now.plusSeconds(1200))
+		timerAMobileWlan.reschedule(now.plusSeconds(1200))
+	}
+end
+
+rule "I Mobile Wlan Proximity Timer Leave"
+when
+	Item Mobile_i_wlan changed from ON to OFF
+then
+	logInfo("org.openhab.rules","i wlan off. starting timer.")
+	if( timerIMobileWlan==null ) {
+		timerIMobileWlan = createTimer(now.plusSeconds(2400)) [|
+			logInfo("org.openhab.rules", "I mobile timer has timed out. Executing proximity off")
+			sendCommand(i_home, OFF)
+			if(timerIMobileWlan!== null) {
+				if(timerIMobileWlan.running) {
+					timerIMobileWlan.cancel()
+				}
+				timerIMobileWlan = null
+			}
+		]
+	} else {
+		timerIMobileWlan.reschedule(now.plusSeconds(1200))
+	}
+end
+
+rule "M Mobile Wlan Proximity Timer Leave"
+when
+	Item Mobile_m_wlan changed from ON to OFF
+then
+	logInfo("org.openhab.rules","m wlan off. starting timer.")
+	if( timerMMobileWlan==null ) {
+		timerMMobileWlan = createTimer(now.plusSeconds(2400)) [|
+			logInfo("org.openhab.rules", "M mobile timer has timed out. Executing proximity off")
+			sendCommand(m_home, OFF)
+			if(timerMMobileWlan!== null) {
+				if(timerMMobileWlan.running) {
+					timerMMobileWlan.cancel()
+				}
+				timerMMobileWlan = null
+			}
+		]
+	} else {
+		timerMMobileWlan.reschedule(now.plusSeconds(1200))
 	}
 end
 
@@ -79,8 +147,10 @@ end
 rule "When someone comes home"
 when
 	Item Home changed from OFF to ON or
-	Item anette_home changed from OFF to ON or
-	Item stein_home changed from OFF to ON
+	Item a_home changed from OFF to ON or
+	Item stein_home changed from OFF to ON or
+	Item i_home changed from OFF to ON or
+	Item m_home changed from OFF to ON 
 then
 	sendCommand(activate_cameras, OFF)
 	logInfo("proximity.rules", "Deactivating cameras as someone is coming home.")

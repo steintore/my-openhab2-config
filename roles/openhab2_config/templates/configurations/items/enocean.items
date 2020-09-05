@@ -1,0 +1,2 @@
+Dimmer office_right_dimmer "Office right light dimmer" <light> {channel="enocean:rockerSwitch:gtwy:rs01:rockerswitchB" [profile="system:rawrocker-to-dimmer"], channel="tradfri:0220:gwb072bf258007:officeRightDesk:brightness"}
+Dimmer office_left_dimmer "Office left light dimmer" <light> {channel="enocean:rockerSwitch:gtwy:rs01:rockerswitchA" [profile="system:rawrocker-to-dimmer"], channel="tradfri:0220:gwb072bf258007:officeLeftDesk:brightness"}
