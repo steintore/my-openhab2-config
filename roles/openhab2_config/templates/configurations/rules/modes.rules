@@ -195,6 +195,7 @@ rule "A change of mode"
 				sendCommand(alarm_door_lock, ON)
 				sendCommand(stein_home, OFF)
 				sendCommand(a_home, OFF)
+				sendCommand(gHome, OFF)
 				logInfo('org.openhab.rules.modes', 'Away MODE activated')
 			}
 
