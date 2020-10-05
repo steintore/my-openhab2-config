@@ -165,12 +165,15 @@ rule "light bathroom 1st floor"
 		}
 		case 1: {//NIGHT
 			light_bathroom_dimmer.sendCommand(10)
+			light_bathroom_mirror.sendCommand(ON)
 		}
 		case 2: {//DAY
 			light_bathroom_dimmer.sendCommand(80)
+			light_bathroom_mirror.sendCommand(ON)
 		}
 		case 3: {//FULL
 			light_bathroom_dimmer.sendCommand(100)
+			light_bathroom_mirror.sendCommand(ON)
 		}
 	}
 end
