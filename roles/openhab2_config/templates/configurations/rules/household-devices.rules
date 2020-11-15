@@ -1,10 +1,10 @@
 import java.util.concurrent.locks.ReentrantLock
 import org.eclipse.smarthome.model.script.actions.Timer
 
-val String MODE_OFF = 0
-val String MODE_STANDBY = 1
-val String MODE_ACTIVE = 2
-val String MODE_FINISHED = 3
+val String MODE_OFF = "0"
+val String MODE_STANDBY = "1"
+val String MODE_ACTIVE = "2"
+val String MODE_FINISHED = "3"
 var ReentrantLock finishLock  = new ReentrantLock()
 var ReentrantLock finishLockDryer  = new ReentrantLock()
 
@@ -48,7 +48,7 @@ rule "Dryer Consumption State Machine (Extended)"
 when
     Item power_dryer changed
 then
-    if (power_dyryer.state != null) {
+    if (power_dryer.state != null) {
         logDebug('org.openhab.rules.household', 'Dryer changed to: ' + power_dryer.state)
         if (power_dryer.state <= 0.5)
           dryer_OpState.postUpdate(MODE_OFF)
